@@ -1,0 +1,109 @@
+<!-- snippets/mobile-nav.liquid -->
+
+{%- doc -%}
+  Provides the wrapper structure for the mobile navigation drawer.
+{%- enddoc -%}
+
+<div class="mobile-nav">
+  <ul class="mobile-nav--utilities" data-text-color="body" data-mq="small">
+    <li class="mobile-nav--search">
+      {%- comment %} Copied from header {% endcomment -%}
+    </li>
+    <li class="mobile-nav--account">
+      {%- comment %} Copied from header {% endcomment -%}
+    </li>
+  </ul>
+
+  <nav class="mobile-nav--menu" data-item="nav-text">
+    {%- comment %} Copied from header {% endcomment -%}
+  </nav>
+
+  <div class="mobile-nav--footer" data-mq="small">
+    <div class="mobile-nav--social-icons">
+      {%- comment %} Copied from announcement {% endcomment -%}
+    </div>
+
+    <div class="mobile-nav--localization">
+      {%- comment %} Copied from announcement or header {% endcomment -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    @media (max-width: 767px) {
+      min-height: 100dvh;
+    }
+  }
+
+  .mobile-nav--menu {
+    padding: var(--spacing--block) var(--spacing--item) 0 var(--spacing--item);
+
+    @media (min-width: 768px) {
+      [data-item='nav-text'] {
+        line-height: 1;
+      }
+    }
+  }
+
+  .mobile-nav--utilities {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing--block) var(--spacing--item) 0 var(--spacing--item);
+
+    @media (min-width: 768px) {
+      gap: var(--spacing--0);
+    }
+
+    @media (max-width: 767px) {
+      gap: var(--spacing--1);
+    }
+
+    @media (hover: hover) {
+      &:has(+ .mobile-nav--menu .y-menu[data-hover-disabled='false']) [data-item='nav-text']:hover {
+        font-weight: 700;
+      }
+    }
+
+    &:has(> :first-child:empty):has(> :last-child:empty) {
+      display: none;
+    }
+
+    > *:empty {
+      display: none;
+    }
+  }
+
+  .mobile-nav--social-icons {
+    display: contents;
+
+    &:has(.social-media--root:empty),
+    &:empty {
+      display: none;
+    }
+  }
+
+  .mobile-nav--footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing--block);
+    padding: var(--spacing--block) var(--spacing--item);
+    margin-top: auto;
+
+    &:has(.disclosure--root[data-id='mobile-nav--locale']) {
+      flex-direction: column;
+    }
+  }
+
+  .mobile-nav--localization {
+    display: inline-flex;
+
+    &:empty {
+      display: none;
+    }
+  }
+{% endstylesheet %}

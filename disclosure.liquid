@@ -1,0 +1,268 @@
+<!-- snippets/disclosure.liquid -->
+
+{%- doc -%}
+  Renders a disclosure control for option selection. If option_values != option_names, arrays should have matched indices. current_value and input_name are needed for some forms (ie. localization).
+  @param {string} id - Unique disclosure id.
+  @param {string} label_name - Visible label text.
+  @param {string[]} option_names - Display labels.
+  @param [current_value] - Active value.
+  @param {boolean} [display_label] - Show the label visually.
+  @param {string} [input_name] - Hidden input name.
+  @param {object[]} [option_values] - Submitted values.
+  @param {string} [type] - Optional root type. Also sets onchange behavior: 'localization' submits the closest form, 'url-redirect' navigates to the selected value.
+{%- enddoc -%}
+
+{%- liquid
+  unless option_values
+    assign option_values = option_names
+  endunless
+
+  case type
+    when 'localization'
+      assign onchange = "this.closest('form').submit();"
+    when 'url-redirect'
+      assign onchange = 'window.location.href = this.value;'
+    when 'sort-by'
+      assign onchange = "window.trigger('theme:navigation:updateSort')"
+  endcase
+
+  capture disclosure_name
+    assign label = label_name | downcase | remove: ' '
+    echo id | downcase | append: '-' | append: label
+  endcapture
+-%}
+
+<disclosure-element
+  class="disclosure--root"
+  data-id="{{ id | downcase }}"
+  {% unless type == blank %}
+    data-type="{{ type }}"
+  {% endunless %}
+>
+  <label
+    class="disclosure--label"
+    id="{{ disclosure_name }}-toggle"
+    data-item="{% if display_label %}nav{% else %}hidden{% endif %}-text"
+  >
+    {%- comment -%} label_name needed for a11y {%- endcomment -%}
+    <span>{{- label_name | escape -}}</span>
+  </label>
+
+  <div class="disclosure--main">
+    <button
+      class="disclosure--toggle"
+      data-item="nav-text"
+      aria-expanded="false"
+      aria-controls="{{ disclosure_name }}"
+      aria-labelledby="{{ disclosure_name }}-toggle"
+    >
+      {%- liquid
+        echo '<div class="disclosure--current-option">'
+          if current_value != blank
+            for value in option_values
+              if value == current_value
+                echo option_names[forloop.index0]
+                break
+              endif
+            endfor
+          else
+            echo label_name
+          endif
+        echo '</div>'
+
+        render 'icons', icon: 'chevron-down'
+      -%}
+    </button>
+
+    <ul
+      class="disclosure--form"
+      id="{{ disclosure_name }}"
+      data-background-color="none"
+      data-text-color="body"
+      data-transition-item="viewport"
+      data-transition-type="scale-in"
+      data-transition-trigger="custom"
+      aria-hidden="true"
+    >
+      {%- for name in option_names -%}
+        {%- assign option_value = option_values[forloop.index0] -%}
+        <li
+          class="disclosure--option"
+          tabindex="0"
+          data-item="sub-nav-text"
+          data-value="{{ option_value | escape }}"
+          {% if option_value.id %}
+            data-option-value-id="{{ option_value.id }}"
+            data-option-name="{{ label_name | strip | downcase }}"
+            data-product-url="{{ option_value.product_url }}"
+            {% unless option_value.available %}
+              data-unavailable="true"
+            {% endunless %}
+          {% endif %}
+          {% if option_value == current_value %}
+            aria-current="true"
+          {% else %}
+            aria-current="false"
+          {% endif %}
+        >
+          {{ name }}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    <input
+      class="disclosure--input"
+      type="hidden"
+      {% if input_name %}
+        name="{{ input_name }}"
+      {% endif %}
+      {% if current_value %}
+        value="{{ current_value | escape }}"
+      {% endif %}
+      {% if current_value.id %}
+        data-option-value-id="{{ current_value.id }}"
+        data-option-name="{{ label_name | strip | downcase }}"
+        data-product-url="{{ current_value.product_url }}"
+      {% endif %}
+      {% if onchange %}
+        onchange="{{ onchange }}"
+      {% endif %}
+      data-item="disclosure"
+    />
+  </div>
+</disclosure-element>
+
+{% stylesheet %}
+  .disclosure--root {
+    --form-transform: translate3d(0, 8px, 0);
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    text-align: left;
+    user-select: none;
+  }
+
+  .disclosure--label {
+    width: 100%;
+    display: flex;
+    gap: var(--spacing--1);
+
+    &:not(:has(> *:only-child)) {
+      justify-content: space-between;
+    }
+  }
+
+  .disclosure--main {
+    width: 100%;
+    height: 100%;
+    flex: 1 0 50%;
+    position: relative;
+    outline: none;
+  }
+
+  .disclosure--toggle {
+    display: flex;
+    gap: var(--spacing--1);
+    align-items: center;
+    justify-content: space-between;
+    line-height: unset;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .disclosure--root:is([data-type='option-picker'], [data-type='url-redirect']) button& {
+      background-color: var(--input--bg-color);
+      color: var(--input--color);
+      border: 1px solid var(--border--color-dark);
+      padding: var(--spacing--1) 24px var(--spacing--1) var(--spacing--item);
+      border-radius: var(--input--radius);
+    }
+
+    .icon--root {
+      pointer-events: none;
+      width: var(--font--size);
+      height: var(--font--size);
+      transform: scaleY(1);
+      transition: transform 0.2s var(--transition--standard);
+    }
+
+    &[aria-expanded='true'] > .icon--root {
+      transform: scaleY(-1);
+    }
+  }
+
+  .disclosure--current-option {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: var(--spacing--1);
+
+    &[data-unavailable='true'] {
+      color: var(--color--body--light);
+      text-decoration: line-through;
+    }
+  }
+
+  .disclosure-option--wrapper {
+    z-index: 1;
+
+    & + p {
+      z-index: 1;
+    }
+  }
+
+  .disclosure--form {
+    border: 1px solid var(--border--color-dark);
+    border-radius: var(--input--radius);
+    min-width: 100%;
+    position: absolute;
+    overflow-y: auto;
+    z-index: 5;
+    max-height: 280px;
+    max-width: 300px;
+    top: 100%;
+    left: 0;
+    transform: var(--form-transform);
+
+    @media (max-width: 767px) {
+      max-width: 225px;
+    }
+
+    .layout--viewport[data-drop-shadows='true'] & {
+      box-shadow: var(--box-shadow--center);
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+
+  .disclosure--option {
+    color: var(--color--body);
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing--1);
+    padding: 9px 15px; /* to match select box styles */
+    white-space: nowrap;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+
+    &[data-unavailable='true'] {
+      color: var(--color--body--light);
+      text-decoration: line-through;
+    }
+
+    &:is(:focus-visible, :hover):after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color--gray);
+      opacity: 0.3;
+    }
+  }
+{% endstylesheet %}

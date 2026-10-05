@@ -1,0 +1,296 @@
+<!-- snippets/y-menu.liquid -->
+
+{%- doc -%}
+  Renders the mobile vertical navigation (y-menu).
+  @param {object[]} [blocks] - Associated menu blocks.
+  @param {string} [highlight_color] - Highlight color token.
+  @param {string} [highlight_item] - Menu item handle to highlight.
+  @param {boolean} [hover_disabled] - Whether hover animation is disabled.
+  @param {string} [id] - Menu ID.
+  @param {boolean} [inside_drawer] - Whether the menu is inside a drawer.
+  @param {string} [menu] - Navigation menu handle. Defaults to `main-menu`.
+  @param {string} [modal_item] - Menu item handle that opens a modal.
+{%- enddoc -%}
+
+{%- liquid
+  unless menu
+    assign menu = 'main-menu'
+  endunless
+
+  assign list_lvl_1 = menu
+
+  if id
+    assign id = 'y-menu_' | append: id
+  else
+    assign id = 'y-menu'
+  endif
+-%}
+
+<y-menu-element
+  class="y-menu"
+  data-id="{{ id }}"
+  data-hover-disabled="{{ hover_disabled }}"
+  data-inside-drawer="{{ inside_drawer }}"
+  style="--highlight-color:{{ highlight_color }};"
+>
+  <ul class="y-menu--level-1--container" id="{{ id }}">
+    {% comment %} Level 1 {% endcomment %}
+    {%- for link_1 in linklists[list_lvl_1].links -%}
+      {%- liquid
+        assign current_menu_item = link_1.handle | handleize | downcase
+
+        capture menu_blocks
+          render 'menu-blocks', blocks: blocks, menu_item: current_menu_item, location: id, inside_drawer: inside_drawer
+        endcapture
+
+        assign has_sub_menu = false
+        if link_1.links != blank or menu_blocks != blank
+          assign has_sub_menu = true
+        endif
+      -%}
+
+      <li
+        class="y-menu--level-1--link"
+        data-depth="{{ link_1.levels | plus: 1 }}"
+        {% if highlight_item == current_menu_item %}
+          data-highlight="true"
+        {% endif %}
+      >
+        {%- if modal_item == current_menu_item and has_sub_menu == false -%}
+          <modal-trigger
+            data-id="header-modal"
+            data-delay="450"
+            data-item="nav-text"
+            tabindex="0"
+            aria-haspopup="true"
+            {% unless settings.transitions--other %}
+              data-transition-item="{{ id }}"
+              data-transition-active="true"
+            {% endunless %}
+          >
+            {{- link_1.title -}}
+          </modal-trigger>
+        {%- else -%}
+          {%- if has_sub_menu -%}
+            <animated-details data-id="{{ id }}_{{ current_menu_item }}">
+              <details class="y-menu--level-1--details">
+                <summary
+                  class="y-menu--details-toggle"
+                  data-item="nav-text"
+                  {% unless settings.transitions--other %}
+                    data-transition-item="{{ id }}"
+                    data-transition-active="true"
+                  {% endunless %}
+                >
+                  <span>{{- link_1.title -}}</span>
+                </summary>
+
+                {%- comment -%} Level 2 {%- endcomment -%}
+                {%- liquid
+                  assign parent_link = true
+                  if link_1.url == '#' or link_1.url == '/#'
+                    assign parent_link = false
+                  endif
+                -%}
+
+                <div class="y-menu--details-content">
+                  <ul
+                    class="y-menu--level-2--container"
+                    {% if parent_link %}
+                      data-depth="2"
+                    {% endif %}
+                  >
+                    {%- assign list_lvl_2 = link_1.handle -%}
+                    {%- for link_2 in linklists[list_lvl_2].links -%}
+                      <li class="y-menu--level-2--link" data-item="nav-text">
+                        {%- if link_2.links != blank -%}
+                          {%- liquid
+                            assign parent_link_2 = true
+                            if link_2.url == '#' or link_2.url == '/#'
+                              assign parent_link_2 = false
+                            endif
+                          -%}
+
+                          <animated-details data-id="{{ id }}_{{ current_menu_item }}_{{ link_2.handle }}">
+                            <details class="y-menu--level-2--details">
+                              <summary
+                                class="y-menu--details-toggle"
+                                data-item="nav-text"
+                                {% unless settings.transitions--other %}
+                                  data-transition-item="{{ id }}"
+                                {% endunless %}
+                              >
+                                <span>{{- link_2.title -}}</span>
+                              </summary>
+
+                              {% comment %} Level 3 {% endcomment %}
+                              <div class="y-menu--details-content">
+                                <ul
+                                  class="y-menu--level-3--container"
+                                  {% if parent_link_2 %}
+                                    data-depth="3"
+                                  {% endif %}
+                                >
+                                  {%- assign list_lvl_3 = link_2.handle -%}
+                                  {%- for link_3 in linklists[list_lvl_3].links -%}
+                                    <li class="y-menu--level-3--link" data-item="nav-text">
+                                      <a
+                                        href="{{ link_3.url }}"
+                                        data-item="nav-text"
+                                        {% unless settings.transitions--other %}
+                                          data-transition-item="{{ id }}"
+                                        {% endunless %}
+                                      >
+                                        {{- link_3.title -}}
+                                      </a>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            </details>
+                          </animated-details>
+
+                        {%- else -%}
+                          <a
+                            href="{{ link_2.url }}"
+                            data-item="nav-text"
+                            {% unless settings.transitions--other %}
+                              data-transition-item="{{ id }}"
+                            {% endunless %}
+                          >
+                            {{- link_2.title -}}
+                          </a>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+
+                    {%- unless menu_blocks == blank -%}
+                      <li class="y-menu--blocks">
+                        {{- menu_blocks -}}
+                      </li>
+                    {%- endunless -%}
+                  </ul>
+                </div>
+              </details>
+            </animated-details>
+          {%- else -%}
+            <a
+              href="{{ link_1.url }}"
+              data-item="nav-text"
+              {% unless settings.transitions--other %}
+                data-transition-item="{{ id }}"
+                data-transition-active="true"
+              {% endunless %}
+            >
+              {{- link_1.title -}}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%} End Level 2 {%- endcomment -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- comment -%} End level 1 {%- endcomment -%}
+</y-menu-element>
+
+{% stylesheet %}
+  .y-menu {
+    display: block;
+    width: 100%;
+
+    .menu-block--description {
+      padding-top: var(--spacing--1);
+      text-align: center;
+    }
+
+    .menu-block--products {
+      @media (min-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .menu-block--featured {
+      --image--radius: 0;
+      container-type: inline-size; /* create container query for image-block */
+    }
+
+
+    [data-container='panel'] {
+      --grid-row-gap: var(--spacing--item);
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing--1);
+
+      @media (min-width: 768px) {
+        gap: var(--spacing--0);
+      }
+    }
+
+    @media (hover: hover) {
+      &[data-hover-disabled='false']
+        :is(
+          a[data-item='nav-text'],
+          summary[data-item='nav-text'],
+          modal-trigger[data-item='nav-text']
+        ):hover {
+        font-weight: 700;
+      }
+    }
+  }
+
+  .y-menu :is(a[data-item='nav-text'], modal-trigger[data-item='nav-text'], .y-menu--details-toggle) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing--item);
+    width: 100%;
+    padding: 0;
+    line-height: 1.3;
+    color: var(--color--body); /* iOS */
+  }
+
+  .y-menu--details-toggle {
+    user-select: none;
+    cursor: pointer;
+    list-style: none;
+    line-height: 1.3;
+    padding: var(--spacing--item) 0;
+
+    [open] > & {
+      font-weight: 700;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .y-menu--level-1--link[data-highlight='true'] {
+    > :is(a, modal-trigger, animated-details > details > summary) {
+      color: var(--highlight-color);
+    }
+  }
+
+  .y-menu--details-content {
+    padding: var(--spacing--item) 0 var(--spacing--item) var(--spacing--item);
+
+    & & {
+      padding-bottom: var(--spacing--item);
+    }
+  }
+
+  .y-menu--blocks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--item);
+
+    &:not(:first-child) {
+      padding-top: var(--spacing--2);
+    }
+  }
+{% endstylesheet %}

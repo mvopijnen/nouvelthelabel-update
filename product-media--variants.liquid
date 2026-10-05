@@ -1,0 +1,389 @@
+<!-- snippets/product-media--variants.liquid -->
+
+{%- doc -%}
+  Renders the stacked product media gallery with optional modals and thumbnails.
+  @param {string} layout - Gallery layout mode (`one`, `two`, `mixed`, `thumbnails`).
+  @param {string} media_size - Media size token (`desktop`, `mobile`).
+  @param {product} product - Product with media.
+  @param {string} product_id - Unique gallery id.
+  @param {string} [column_spacing] - Spacing token for two-column layouts.
+  @param {string} [media_gap] - Gap applied to masonry layouts.
+  @param {boolean} [modal_enabled] - Enable fullscreen modal.
+  @param {string} [sizes] - Image `sizes` attribute.
+  @param {number} [thumbnail_width] - Thumbnail width in pixels.
+  @param {boolean} [variant_scroll_enabled] - Scroll to variant media when selected.
+  @param {boolean} [video_looping_enabled] - Loop videos.
+  @param {boolean} [zoom_enabled] - Enable image zoom.
+{%- enddoc -%}
+
+{%- liquid
+  assign load_model = false
+  assign load_video = false
+  assign load_zoom = false
+  assign load_thumbs = false
+  assign modal_index = 0
+
+  assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  if product.has_only_default_variant
+    assign featured_media = product.media[0]
+  endif
+
+  assign columns = 1
+  if layout == 'mixed' or layout == 'two'
+    assign columns = 2
+  endif
+
+  if layout == 'thumbnails' and product.media.size != 1
+    assign load_thumbs = true
+  endif
+-%}
+
+{%- if product.media.size > 0 -%}
+  {%- for media in product.media -%}
+    {%- liquid
+      if media.media_type == "model"
+        assign load_model = true
+      elsif media.media_type == "video" or media.media_type == "external_video"
+        assign load_video = true
+      elsif media.media_type == "image" and zoom_enabled
+        assign load_zoom = true
+      endif
+
+      assign media_active = false
+      if media.id == featured_media.id
+        assign media_active = true
+      endif
+
+      if request.page_type != 'product'
+        assign loading = 'lazy'
+        assign fetchpriority = 'auto'
+      elsif media_active and layout == 'thumbnails'
+        assign fetchpriority = 'high'
+        assign loading = 'eager'
+      elsif media_active and layout == 'mixed'
+        assign fetchpriority = 'high'
+        assign loading = 'eager'
+      elsif layout == 'one' and forloop.index0 < 2
+        assign loading = 'eager'
+        if forloop.index0 == 0
+          assign fetchpriority = 'high'
+        endif
+      elsif layout == 'two' and forloop.index0 < 4
+        assign loading = 'eager'
+        if forloop.index0 < 2
+          assign fetchpriority = 'high'
+        endif
+      else
+        assign loading = 'lazy'
+        assign fetchpriority = 'auto'
+      endif
+    -%}
+
+    {%- capture media_html -%}
+      {%-
+        render 'product-media',
+        index: forloop.index0,
+        fetchpriority: fetchpriority,
+        product: product,
+        product_id: product_id,
+        product_media: media,
+        loading: loading,
+        media_active: media_active,
+        media_size: media_size,
+        modal_enabled: modal_enabled,
+        modal_index: modal_index,
+        sizes: sizes,
+        zoom_enabled: zoom_enabled,
+        video_looping_enabled: video_looping_enabled
+      -%}
+    {%- endcapture -%}
+
+    {%- capture modal_html -%}
+      {%- echo modal_html -%}
+
+      {%- if modal_enabled and media.media_type == 'image' -%}
+        <div
+          class="modal--view"
+          aria-hidden="true"
+          data-modal-index="{{ modal_index }}"
+          data-id="{{ media.id }}"
+          data-background-color="none"
+          data-transition-item="viewport"
+          data-transition-type="{% if media_active %}scale-out{% else %}scale-in{% endif %}"
+          data-transition-trigger="custom"
+        >
+          {{-
+            media.preview_image |
+            image_url: width: media.preview_image.width |
+            image_tag:
+              widths: "500, 767, 1000, 1200, 1500, 1800, 2100, 2400, 3000",
+              sizes: '100vw',
+              loading: 'lazy'
+          -}}
+        </div>
+
+        {%- assign modal_index = modal_index | plus: 1 -%}
+      {%- endif -%}
+
+    {%- endcapture -%}
+
+    {%- liquid
+      unless layout == 'mixed'
+        capture all_media_html
+          echo all_media_html
+          echo media_html
+        endcapture
+
+      elsif media_active
+        capture active_media_html
+          echo media_html
+        endcapture
+
+      else
+        capture inactive_media_html
+          echo inactive_media_html
+          echo media_html
+        endcapture
+      endunless
+    -%}
+
+    {%- if load_thumbs -%}
+      {%- capture thumbs_html -%}
+        {{- thumbs_html -}}
+
+        <button
+          class="product-media--thumb"
+          aria-current="{{ media_active }}"
+          data-id="{{ media.id }}"
+        >
+          {%- assign thumbnail_sizes = thumbnail_width | append: 'px' -%}
+          {{-
+            media.preview_image |
+            image_url: width: media.preview_image.width |
+            image_tag:
+              widths: "50, 100, 200",
+              sizes: thumbnail_sizes,
+              loading: 'lazy'
+          -}}
+
+          {%- if media.media_type == "model" or media.media_type contains "video" -%}
+            <div class="product-media--thumb-icon">
+              {%- liquid
+                if media.media_type == "model"
+                  render 'icons', icon: '3d-badge'
+                elsif media.media_type == "video" or media.media_type == "external_video"
+                  render 'icons', icon: 'play-badge'
+                endif
+              -%}
+            </div>
+          {%- endif -%}
+        </button>
+      {%- endcapture -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if load_model -%}
+  <script type="application/json" id="{{ product_id }}-model_json">
+    {%- assign product_models = product.media | where: 'media_type', 'model' -%}
+    {{- product_models | json -}}
+  </script>
+  <link
+    href="/cdn/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+    rel="stylesheet"
+    media="all"
+  />
+{%- endif -%}
+
+<product-media-variants
+  class="product-media--variants--root"
+  data-id="{{ product_id }}"
+  data-layout="{{ layout }}"
+  data-first-variant-media="{{ featured_media.id }}"
+  data-variant-scroll="{{ variant_scroll_enabled }}"
+>
+  <div class="product-media--variants">
+    {%- if layout == 'mixed' -%}
+      <div class="product-media--active">
+        {%- if product.media.size > 0 -%}
+          {{- active_media_html -}}
+        {%- else -%}
+          <div class="product-media--root" data-active="true" data-id="1">
+            {%- render 'placeholder', type: 'product', aspect_ratio: 1, placeholder_index: 1 -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div
+      class="product-media--container"
+      {%- if columns == 2 and column_spacing == 'close' -%}
+        data-masonry-layout
+        data-gap="{{ media_gap }}"
+      {%- else -%}
+        data-container="panel"
+        data-columns="{{ columns }}"
+      {%- endif -%}
+    >
+      {%- if product.media.size > 0 -%}
+        {%- liquid
+          unless layout == 'mixed'
+            echo all_media_html
+          else
+            echo inactive_media_html
+          endunless
+        -%}
+
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div
+            class="product-media--root"
+            data-id="{{ i }}"
+            data-active="{% if i == 1 %}true{% else %}false{% endif %}"
+          >
+            {%-
+              render 'placeholder',
+              type: 'product',
+              aspect_ratio: 1,
+              placeholder_index: i
+            -%}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if load_thumbs -%}
+    <product-thumbs-element class="product-media--thumbs" data-id="{{ product_id }}">
+      <div class="product-media--thumbs-wrapper">
+        {%- if product.media.size > 0 -%}
+          {{- thumbs_html -}}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <button
+              class="product-media--thumb"
+              data-id="{{ i }}"
+              aria-current="{% if i == 1 %}true{% else %}false{% endif %}"
+            >
+              {%- render 'placeholder', type: 'product', aspect_ratio: 1, placeholder_index: i -%}
+            </button>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </product-thumbs-element>
+  {%- endif -%}
+</product-media-variants>
+
+{%- if modal_index > 0 -%}
+  <modal-element
+    class="modal--root"
+    data-id="{{ product_id }}_main-product"
+    data-background-color="dark"
+    data-translucent="true"
+    data-transition-item="viewport"
+    data-transition-type="fade-in"
+    data-transition-trigger="custom"
+    aria-hidden="true"
+  >
+    {{- modal_html -}}
+  </modal-element>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-media--variants--root {
+    display: block;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      position: sticky;
+      top: var(--sticky-offset);
+    }
+
+    &[data-layout='thumbnails'] {
+      display: flex;
+
+      @media (min-width: 768px) {
+        gap: var(--media-gap);
+
+        .product-media--container {
+          order: 2;
+        }
+
+        .product-media--root {
+          display: flex;
+          margin: 0 auto;
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 767px) {
+        flex-direction: column;
+      }
+    }
+
+    &:is([data-layout='thumbnails'], [data-layout='full-screen']) {
+      .product-media--root[data-active='false'] {
+        display: none;
+      }
+    }
+  }
+
+  .product-media--variants {
+    display: block;
+    width: 100%;
+
+    .product-media--variants--root[data-layout='thumbnails'] & {
+      @media (min-width: 768px) {
+        order: 2;
+      }
+    }
+
+    .product-media--variants--root[data-layout='one'] & {
+      grid-gap: var(--media-gap);
+    }
+
+    .product-media--variants--root[data-layout='two'] & {
+      @media (min-width: 768px) {
+        &[data-container] {
+          grid-gap: var(--media-gap);
+        }
+      }
+    }
+
+    .product-media--variants--root[data-layout='mixed'] & {
+      display: grid;
+      grid-gap: var(--media-gap);
+
+      .product-media--active {
+        width: 100%;
+      }
+    }
+  }
+
+  .product-media--container {
+    width: 100%;
+
+    &[data-container] {
+      grid-gap: var(--media-gap);
+    }
+
+    &[data-masonry-layout] {
+      display: flex;
+      flex-flow: column wrap;
+      align-content: space-between;
+      gap: var(--media-gap);
+
+      > * {
+        width: calc((100% - var(--media-gap)) / 2);
+
+        &:nth-child(odd) {
+          order: 1;
+        }
+
+        &:nth-child(even) {
+          order: 2;
+        }
+      }
+    }
+  }
+{% endstylesheet %}

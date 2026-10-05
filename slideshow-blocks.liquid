@@ -1,0 +1,256 @@
+<!-- snippets/slideshow-blocks.liquid -->
+
+{%- doc -%}
+  Renders a media block with one or two media slots and optional stacked text.
+  Supports image, video, or no media per slot via block.settings.media-type-1 / media-type-2.
+  @param {block} block - Block settings for media and text.
+  @param {string} [heading_type] - Heading tag override.
+  @param {string} [image_aspect_ratio] - Desktop aspect ratio.
+  @param {string} [image_display_type] - Desktop display mode.
+  @param {string} [mobile_image_aspect_ratio] - Mobile aspect ratio.
+  @param {string} [mobile_image_display_type] - Mobile display mode.
+  @param {string} [mobile_text_color] - Mobile text color override.
+  @param {string} [overlay_style] - Media overlay style.
+  @param {string} [text_bg_color] - Text background color.
+  @param {string} [text_color] - Text color.
+  @param {string} [text_style] - Stacked text style token.
+{%- enddoc -%}
+
+{%- for block in section.blocks -%}
+  {%- liquid
+    assign button_link_1 = block.settings.button-link-1
+    assign button_link_2 = block.settings.button-link-2
+    assign button_style_1 = block.settings.button-style-1
+    assign button_style_2 = block.settings.button-style-2
+    assign button_text_1 = block.settings.button-text-1
+    assign button_text_2 = block.settings.button-text-2
+    assign description = block.settings.description
+    assign highlight_color = block.settings.highlight-color
+    assign highlight_text = block.settings.highlight-text
+    assign highlight_type = block.settings.highlight-type
+    assign image = block.settings.media-1
+    assign media_type_1 = block.settings.media-type-1 | default: 'image'
+    assign media_type_2 = block.settings.media-type-2 | default: 'none'
+    assign mobile_hide_description = block.settings.mobile-hide-description
+    assign mobile_image = block.settings.mobile-media
+    assign mobile_text_x_alignment = block.settings.mobile-text-horizontal-alignment
+    assign mobile_text_y_alignment = block.settings.mobile-text-vertical-alignment
+    assign overline = block.settings.overline
+    assign slide_modulo = forloop.index | modulo: 2
+    assign text_width = block.settings.text-width
+    assign text_x_alignment = block.settings.text-horizontal-alignment
+    assign text_y_alignment = block.settings.text-vertical-alignment
+    assign title = block.settings.heading
+
+    assign loading = 'lazy'
+    if forloop.first and section_index < 3
+      assign loading = 'eager'
+    endif
+
+    assign fetchpriority = 'auto'
+    if forloop.first and section_index == 1
+      assign fetchpriority = 'high'
+    endif
+
+    assign columns = 1
+    unless media_type_2 == 'none'
+      assign columns = 2
+    endunless
+
+    assign placeholder_1_index = 1
+    assign placeholder_2_index = 2
+    if slide_modulo == 0
+      assign placeholder_1_index = 2
+      assign placeholder_2_index = 1
+    endif
+
+    capture sizes
+      render 'sizes-cover', aspect_ratio: image_aspect_ratio, columns: columns, container_width: '6', display_type: image_display_type, mobile_aspect_ratio: mobile_image_aspect_ratio, mobile_columns: 1, mobile_display_type: mobile_image_display_type, mobile_full_width: true, original_aspect_ratio: image.aspect_ratio
+    endcapture
+  -%}
+
+  <div
+    class="slideshow-block--root"
+    data-id="{{ block.id }}"
+    {% if transition_type == 'fade' or transition_type == 'wipe' %}
+      data-active="{{ forloop.first }}"
+    {% endif %}
+    style="--columns:{{ columns }};"
+    {{ block.shopify_attributes }}
+  >
+    <div
+      class="slideshow-block--media"
+      {% if transition_type == 'wipe' %}
+        data-transition-item="viewport"
+        data-transition-type="image"
+      {% endif %}
+    >
+      {%- if media_type_1 == 'image' -%}
+        {%- if image -%}
+          {%-
+            render 'image',
+            image: image,
+            aspect_ratio: image_aspect_ratio,
+            display_type: image_display_type,
+            fetchpriority: fetchpriority,
+            full_width: true,
+            loading: loading,
+            mobile_aspect_ratio: mobile_image_aspect_ratio,
+            mobile_display_type: mobile_image_display_type,
+            mobile_full_width: true,
+            mobile_image: mobile_image,
+            mobile_overlay_style: overlay_style,
+            overlay_style: overlay_style,
+            sizes: sizes
+          -%}
+        {%- else -%}
+          {%-
+            render 'placeholder',
+            type: 'lifestyle',
+            aspect_ratio: image_aspect_ratio,
+            display_type: image_display_type,
+            full_width: true,
+            mobile_aspect_ratio: mobile_image_aspect_ratio,
+            mobile_display_type: mobile_image_display_type,
+            mobile_full_width: true,
+            mobile_overlay_style: overlay_style,
+            overlay_text_color: text_color,
+            overlay_style: overlay_style,
+            placeholder_index: placeholder_1_index
+          -%}
+        {%- endif -%}
+      {%- elsif media_type_1 == 'video' -%}
+        {%-
+          render 'video',
+          aspect_ratio: image_aspect_ratio,
+          display_type: image_display_type,
+          full_width: true,
+          id: block.id,
+          loading: loading,
+          mobile_aspect_ratio: mobile_image_aspect_ratio,
+          mobile_display_type: mobile_image_display_type,
+          mobile_full_width: true,
+          overlay_style: overlay_style,
+          video_upload: block.settings.video-upload-1,
+          video_url: block.settings.video-url-1
+        -%}
+      {%- endif -%}
+    </div>
+
+    {%- unless media_type_2 == 'none' -%}
+      <div
+        class="slideshow-block--media"
+        data-mq="medium-large"
+        {% if transition_type == 'wipe' %}
+          data-transition-item="viewport"
+          data-transition-type="image"
+        {% endif %}
+      >
+        {%- if media_type_2 == 'image' -%}
+          {%- if block.settings.media-2 -%}
+            {%-
+              render 'image',
+              image: block.settings.media-2,
+              aspect_ratio: image_aspect_ratio,
+              display_type: image_display_type,
+              fetchpriority: fetchpriority,
+              full_width: true,
+              loading: loading,
+              mobile_aspect_ratio: mobile_image_aspect_ratio,
+              mobile_display_type: mobile_image_display_type,
+              mobile_full_width: true,
+              mobile_overlay_style: overlay_style,
+              overlay_style: overlay_style,
+              sizes: sizes
+            -%}
+          {%- else -%}
+            {%-
+              render 'placeholder',
+              type: 'lifestyle',
+              aspect_ratio: image_aspect_ratio,
+              display_type: image_display_type,
+              full_width: true,
+              mobile_aspect_ratio: mobile_image_aspect_ratio,
+              mobile_display_type: mobile_image_display_type,
+              mobile_full_width: true,
+              mobile_overlay_style: overlay_style,
+              overlay_text_color: text_color,
+              overlay_style: overlay_style,
+              placeholder_index: placeholder_2_index
+            -%}
+          {%- endif -%}
+
+        {%- elsif media_type_2 == 'video' -%}
+          {%- assign id_2 = block.id | append: '-2' -%}
+          {%-
+            render 'video',
+            aspect_ratio: image_aspect_ratio,
+            display_type: image_display_type,
+            full_width: true,
+            id: id_2,
+            loading: loading,
+            mobile_aspect_ratio: mobile_image_aspect_ratio,
+            mobile_display_type: mobile_image_display_type,
+            mobile_full_width: true,
+            overlay_style: overlay_style,
+            video_upload: block.settings.media-upload-2,
+            video_url: block.settings.media-url-2
+          -%}
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+
+    {%-
+      render 'stacked-text',
+      bg_color: text_bg_color,
+      button_link_1: button_link_1,
+      button_link_2: button_link_2,
+      button_style_1: button_style_1,
+      button_style_2: button_style_2,
+      button_text_1: button_text_1,
+      button_text_2: button_text_2,
+      color: text_color,
+      description: description,
+      description_type: 'featured-paragraph',
+      heading_type: heading_type,
+      highlight_color: highlight_color,
+      highlight_text: highlight_text,
+      highlight_type: highlight_type,
+      id: block.id,
+      mobile_color: mobile_text_color,
+      mobile_hide_description: mobile_hide_description,
+      mobile_x_alignment: mobile_text_x_alignment,
+      mobile_y_alignment: mobile_text_y_alignment,
+      overline: overline,
+      style: text_style,
+      title: title,
+      width: text_width,
+      x_alignment: text_x_alignment,
+      y_alignment: text_y_alignment
+    -%}
+  </div>{%- unless forloop.last -%}<span class="divider"></span>{%- endunless -%}
+{%- endfor -%}
+
+{% stylesheet %}
+  .slideshow-block--root {
+    position: relative;
+    width: 100%;
+    display: grid;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(var(--columns), 1fr);
+    }
+
+    @media (max-width: 767px) {
+      padding: 0;
+    }
+
+    @media (min-width: 768px) {
+      height: 100%;
+    }
+
+    .stacked-text--root {
+      position: absolute;
+    }
+  }
+{% endstylesheet %}

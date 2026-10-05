@@ -1,0 +1,241 @@
+<!-- snippets/collection-promo.liquid -->
+
+{%- doc -%}
+  Renders a promotional collection card.
+  @param {block} block - Promo block settings.
+  @param {string} [loading] - Media loading mode.
+  @param {boolean} [full_width] - Full-width media toggle.
+  @param {string} [promo_width] - Layout width token.
+  @param {string} [section_id] - Transition scope id.
+  @param {string} [sizes] - Media `sizes` attribute.
+{%- enddoc -%}
+
+{%- liquid
+  assign bg_color = block.settings.background-color
+  assign border_type = block.settings.border-type
+  assign button_text = block.settings.button-text
+  assign button_link = block.settings.button-link
+  assign description = block.settings.description
+  assign heading_type = block.settings.heading-type
+  assign highlight_type = block.settings.highlight-type
+  assign highlight_color = block.settings.highlight-color
+  assign highlight_text = block.settings.highlight-text
+  assign image = block.settings.image
+  assign mobile_image = block.settings.mobile-image
+  assign mobile_hide_description = block.settings.mobile-hide-description
+  assign mobile_hide_border = block.settings.mobile-hide-border
+  assign mobile_display_type = block.settings.mobile-image-display-type | default: 'fill-available'
+  assign mobile_aspect_ratio = 100.0 | divided_by: block.settings.mobile-aspect-ratio
+  assign mobile_text_x_alignment = block.settings.mobile-text-horizontal-alignment
+  assign mobile_text_y_alignment = block.settings.mobile-text-vertical-alignment
+  assign overline = block.settings.overline
+  assign overlay_style = block.settings.overlay-style
+  assign parallax_enabled = block.settings.parallax-enabled
+  assign text_style = block.settings.text-style
+  assign text_bg_color = block.settings.text-background-color
+  assign text_color = block.settings.text-color
+  assign text_x_alignment = block.settings.text-horizontal-alignment
+  assign text_y_alignment = block.settings.text-vertical-alignment
+  assign text_width = block.settings.text-width
+  assign title = block.settings.title
+
+  assign description_has_link = false
+  if description contains '<a'
+    assign description_has_link = true
+  endif
+
+  assign cover_link = false
+  if button_link != blank and description_has_link == false
+    assign cover_link = true
+  endif
+
+  assign description_type = 'paragraph'
+  if image
+    assign description_type = 'featured-paragraph'
+  endif
+
+  assign full_width = full_width | default: false
+
+  assign onboarding = false
+  if bg_color == 'none' and image == blank
+    assign onboarding = true
+  endif
+
+  assign tag = 'div'
+  if cover_link
+    assign tag = 'a'
+  endif
+-%}
+
+<{{ tag }}
+  {% if cover_link %}
+    href="{{ button_link }}"
+    {% unless title == blank %}
+      aria-label="{{ title }}"
+    {% else %}
+      aria-label="{{ image.alt }}"
+    {% endunless %}
+  {% endif %}
+  class="collection-promo--root"
+  data-full-width="{{ full_width }}"
+  data-promo-width="{{ promo_width }}"
+  data-background-color="{{ bg_color }}"
+  data-border-type="{{ border_type }}"
+  data-mobile-hide-border="{{ mobile_hide_border }}"
+  {% unless settings.transitions--other %}
+    data-transition-item="{{ section_id }}"
+  {% endunless %}
+  {{ block.shopify_attributes }}
+>
+  {%- if image -%}
+    {%-
+      render 'image',
+      image: image,
+      display_type: 'fill-available',
+      full_width: full_width,
+      loading: loading,
+      mobile_aspect_ratio: mobile_aspect_ratio,
+      mobile_image: mobile_image,
+      mobile_display_type: mobile_display_type,
+      overlay_style: overlay_style,
+      parallax: parallax_enabled,
+      sizes: sizes
+    -%}
+  {%- elsif onboarding -%}
+    {%-
+      render 'placeholder',
+      type: 'collection',
+      display_type: 'fill-available',
+      full_width: full_width
+      overlay_text_color: text_color,
+      overlay_style: overlay_style,
+      parallax: parallax_enabled,
+      mobile_aspect_ratio: mobile_aspect_ratio,
+      mobile_image: mobile_image,
+      mobile_display_type: mobile_display_type,
+      placeholder_index: 1
+    -%}
+  {%- endif -%}
+
+  {%-
+    render 'stacked-text',
+    bg_color: text_bg_color,
+    button_link_1: button_link,
+    button_style_1: 'block-link',
+    button_text_1: button_text,
+    color: text_color,
+    cover_link: cover_link,
+    description: description,
+    description_type: description_type,
+    heading_type: heading_type,
+    highlight_color: highlight_color,
+    highlight_text: highlight_text,
+    highlight_type: highlight_type,
+    id: block.id,
+    mobile_hide_description: mobile_hide_description,
+    mobile_x_alignment: mobile_text_x_alignment,
+    mobile_y_alignment: mobile_text_y_alignment,
+    overline: overline,
+    style: text_style,
+    title: title,
+    width: text_width,
+    x_alignment: text_x_alignment,
+    y_alignment: text_y_alignment
+  -%}
+</{{ tag }}>
+
+{% stylesheet %}
+  .collection-promo--root {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    align-self: stretch;
+    min-height: 200px;
+
+    &[data-full-width='false'] {
+      border-radius: var(--image--radius);
+    }
+
+    &[data-border-type='thin'] :is(.image--root, .placeholder--root):before {
+      border: 1px solid var(--color--body);
+    }
+
+    &[data-border-type='thick'] :is(.image--root, .placeholder--root):before {
+      border: 2px solid var(--color--body);
+    }
+
+    &:not([data-border-type='none']) :is(.image--root, .placeholder--root):before {
+      content: '';
+      margin: var(--spacing--item);
+      transition: all 250ms ease-out 25ms;
+      border-radius: max(0px, calc(var(--image--radius) - var(--spacing--item)));
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 1;
+
+      @media (max-width: 767px) {
+        border-radius: max(0px, calc(var(--image--radius) - var(--spacing--1)));
+      }
+    }
+
+    > * {
+      grid-area: 1 / -1;
+    }
+
+    &:not([data-border-type='none']):has(.stacked-text--root[data-text-color='white'])
+      :is(.image--root, .placeholder--root):before {
+      border-color: white;
+    }
+
+    @media (hover: hover) {
+      &:not([data-border-type='none']):hover :is(.image--root, .placeholder--root):before {
+        opacity: 0;
+        margin: 0;
+        border-radius: var(--image--radius);
+      }
+    }
+
+    @media (min-width: 768px) {
+      &[data-promo-width='1'] {
+        grid-column: span 1;
+      }
+
+      &[data-promo-width='2'] {
+        grid-column: span 2;
+      }
+
+      &[data-promo-width='3'] {
+        grid-column: span 3;
+      }
+
+      &[data-promo-width='4'] {
+        grid-column: span 4;
+      }
+
+      .stacked-text--root .stacked-text--wrapper:not([data-background-color='transparent']) {
+        --text-padding-y: var(--spacing--block);
+        --text-padding-x: var(--spacing--item);
+      }
+
+      .stacked-text--root .stacked-text--wrapper[data-background-color='transparent'] {
+        --text-padding-y: var(--spacing--block);
+        --text-padding-x: var(--spacing--block);
+      }
+    }
+
+    @media (max-width: 767px) {
+      [data-mobile-columns='2'] &:not([data-promo-width='1']) {
+        grid-column: span 2;
+      }
+
+      &[data-mobile-hide-border='true'] :is(.image--root, .placeholder--root):before {
+        display: none;
+      }
+
+      &[data-mobile-hide-border='false']:not([data-border-type='none']) .stacked-text--wrapper {
+        margin: var(--spacing--item);
+      }
+    }
+  }
+{% endstylesheet %}

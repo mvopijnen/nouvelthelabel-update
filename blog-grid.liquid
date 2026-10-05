@@ -1,0 +1,118 @@
+<!-- snippets/blog-grid.liquid -->
+
+{%- doc -%}
+  Renders a blog article list as a grid or carousel.
+  @param {blog} blog - Source blog.
+  @param {string} [alignment] - Desktop alignment.
+  @param [container_width] - Width token for image sizing. Defaults to `5`.
+  @param {string} [grid_direction] - Layout direction. Defaults to `horizontal`.
+  @param {string} [heading_type] - Heading type. Defaults to `block-heading`.
+  @param {string} [loading] - Image loading mode.
+  @param {string} [mobile_alignment] - Mobile alignment.
+  @param {string} [mobile_media_layout] - Mobile layout mode.
+  @param {section} [section] - Section context for carousels.
+  @param {string} [selected_tag] - Tag filter handle.
+  @param {boolean} [show_cta] - Pass through to show CTA links.
+  @param {boolean} [show_date] - Pass through to show dates.
+  @param {boolean} [show_excerpt] - Pass through to show excerpts.
+  @param {string} [transition_id] - Transition group id.
+{%- enddoc -%}
+
+{%- liquid
+  assign articles_printed_count = 0
+  assign grid_direction = grid_direction | default: 'horizontal'
+  assign heading_type = heading_type | default: 'block-heading'
+  assign tag_found = false
+
+  assign columns = 3
+  if grid_direction == 'vertical'
+    assign columns = 1
+  endif
+
+  unless container_width
+    assign container_width = '5'
+  endunless
+
+  capture sizes
+    render 'sizes-grid', container_width: container_width, columns: columns, mobile_columns: 1
+  endcapture
+
+  capture article_items
+    if blog.articles.size > 0
+      for article in blog.articles
+        for tag in article.tags
+          assign escaped_tag = tag | downcase | escape
+
+          if escaped_tag == selected_tag
+            assign tag_found = true
+
+            render 'article-card', featured_article: article, heading_type: heading_type, show_cta: show_cta, show_date: show_date, show_excerpt: show_excerpt, transition_id: transition_id, sizes: sizes, loading: loading
+
+            echo '<span class="divider"></span>'
+            assign articles_printed_count = articles_printed_count | plus: 1
+            break
+          endif
+        endfor
+
+        if articles_printed_count == 3
+          break
+        endif
+      endfor
+
+      unless tag_found
+        for article in blog.articles limit: 3
+          render 'article-card', featured_article: article, heading_type: heading_type, show_cta: show_cta, show_date: show_date, show_excerpt: show_excerpt, transition_id: transition_id, sizes: sizes, loading: loading
+
+          echo '<span class="divider"></span>'
+        endfor
+      endunless
+
+    else
+      for i in (1..3)
+        render 'article-card', heading_type: heading_type, show_cta: show_cta, show_date: show_date, show_excerpt: show_excerpt, placeholder: true, transition_id: transition_id
+
+        echo '<span class="divider"></span>'
+      endfor
+    endif
+  endcapture
+
+  assign article_items_arr = article_items | split: '<span class="divider"></span>'
+-%}
+
+<div
+  class="blog-grid--root"
+  {% if mobile_media_layout == 'grid' %}
+    data-container="panel"
+    data-fixed-columns="true"
+    data-mobile-columns="1"
+    data-columns="{{ columns }}"
+  {% endif %}
+  data-x-alignment="{{ alignment }}"
+  data-mobile-x-alignment="{{ mobile_alignment }}"
+  {% unless settings.transitions--other %}
+    data-transition-container="{{ section.id }}"
+    data-transition-type="fade-in"
+    data-transition-cascade-interval="200"
+    data-transition-cascade="{{ grid_direction }}"
+  {% endunless %}
+>
+  {%- if mobile_media_layout == 'grid' -%}
+    {%- liquid
+      for article_item in article_items_arr
+        echo article_item
+      endfor
+    -%}
+  {%- else -%}
+    {%-
+      render 'card-carousel',
+      section: section,
+      blocks: article_items_arr,
+      blocks_per_slide: 3,
+      blocks_per_slide_mobile: 1,
+      mobile_only: true,
+      spacing_around_blocks: true,
+      total_blocks: article_items_arr.size,
+      total_slides: article_items_arr.size
+    -%}
+  {%- endif -%}
+</div>

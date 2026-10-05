@@ -1,0 +1,92 @@
+<!-- snippets/image.liquid -->
+
+{%- doc -%}
+  Renders an image with optional view transition.
+  @param {image} image - Desktop image.
+  @param {string} [aspect_ratio] - Aspect ratio of the image.
+  @param {boolean} [background] - Whether to use a background image. Defaults to `false`.
+  @param {string} [class] - Class to apply to the image.
+  @param {string} [display_type] - Display type of the image. Defaults to `original`.
+  @param {boolean} [draggable] - Whether to allow dragging the image. Defaults to `false`.
+  @param {string} [fetchpriority] - Fetch priority hint.
+  @param {boolean} [full_width] - Full-width toggle.
+  @param {string} [loading] - Loading strategy.
+  @param {string} [mobile_aspect_ratio] - Mobile aspect ratio of the image.
+  @param {string} [mobile_display_type] - Display type of the mobile image. Defaults to `display_type`.
+  @param {boolean} [mobile_full_width] - Mobile full-width toggle.
+  @param {image} [mobile_image] - Mobile-specific image.
+  @param {string} [mobile_overlay_style] - Mobile overlay style. Defaults to `overlay_style`.
+  @param {string} [overlay_style] - Overlay style of the image.
+  @param {boolean} [parallax] - Enables parallax wrapper.
+  @param {string} [sizes] - `sizes` attribute for responsive images. Defaults to `100vw`.
+  @param {string} [view_transition] - View transition name.
+  @param {string} [widths] - `widths` attribute for responsive images.
+{%- enddoc -%}
+
+{%- liquid
+  assign display_type = display_type | default: 'original'
+  assign background = background | default: false
+  assign draggable = draggable | default: false
+  assign mobile_display_type = mobile_display_type | default: display_type
+  assign mobile_overlay_style = mobile_overlay_style | default: overlay_style
+  assign mobile_widths = '200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600'
+  assign sizes = sizes | default: '100vw'
+  assign widths = widths | default: '200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2500, 2800, 3000'
+  assign view_transition = view_transition | default: blank
+
+  if aspect_ratio == blank or display_type == 'original'
+    assign aspect_ratio = image.aspect_ratio | round: 4
+  else
+    assign aspect_ratio = aspect_ratio | round: 4
+  endif
+
+  if mobile_aspect_ratio == blank or mobile_display_type == 'original'
+    assign mobile_aspect_ratio = image.aspect_ratio | round: 4
+    if mobile_image
+      assign mobile_aspect_ratio = mobile_image.aspect_ratio | round: 4
+    endif
+  else
+    assign mobile_aspect_ratio = mobile_aspect_ratio | round: 4
+  endif
+-%}
+
+{%- if parallax -%}
+  <scroll-progress class="image--scroll-progress">
+{%- endif -%}
+
+<picture
+  class="image--root{% if class %} {{ class }}{% endif %}"
+  data-background="{{ background }}"
+  data-display-type="{{ display_type }}"
+  data-full-width="{{ full_width }}"
+  data-mobile-display-type="{{ mobile_display_type }}"
+  data-mobile-full-width="{{ mobile_full_width }}"
+  data-mobile-overlay-style="{{ mobile_overlay_style }}"
+  data-parallax="{{ parallax }}"
+  data-overlay-style="{{ overlay_style }}"
+  style="--aspect-ratio:{{ aspect_ratio }};--mobile-aspect-ratio:{{ mobile_aspect_ratio }};{% if view_transition != blank %}view-transition-name:{{ view_transition | escape }};{% endif %}"
+>
+  {%- if mobile_image -%}
+    {{-
+      mobile_image |
+      image_url: width: mobile_image.width |
+      image_tag: sizes: sizes, widths: mobile_widths |
+      replace: '<img', '<source media="(max-width: 767px)"' |
+      replace: 'src=', 'data-src='
+    -}}
+  {%- endif -%}
+
+  {%- if image -%}
+    {{-
+      image |
+      image_url: width: image.width |
+      image_tag: widths: widths, sizes: sizes, loading: loading, fetchpriority: fetchpriority, draggable: draggable
+    -}}
+  {% else %}
+    <img sizes="{{ sizes }}">
+  {% endif %}
+</picture>
+
+{%- if parallax -%}
+  </scroll-progress>
+{%- endif -%}

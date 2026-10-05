@@ -1,0 +1,72 @@
+<!-- snippets/newsletter-popup.liquid -->
+
+{%- doc -%}
+  Renders the newsletter popup block.
+  @param {block} block - Popup block context.
+{%- enddoc -%}
+
+{%- liquid
+  assign email_t = 'general.mailing_list.email' | t
+  assign shopify_disclaimer_t = 'shopify.online_store.spam_detection.disclaimer_html' | t
+
+  assign bg_color = block.settings.background-color
+  assign days_range = block.settings.days-range
+  assign delay = block.settings.delay
+  assign description = block.settings.description
+  assign heading = block.settings.heading
+  assign page_enabled = block.settings.page-enabled
+  assign page_url = block.settings.page-url
+  assign position = block.settings.position
+  assign referrer_enabled = block.settings.referrer-enabled
+  assign referrer_url = block.settings.referrer-url
+  assign show_at_bottom = block.settings.show-at-bottom
+  assign social_enabled = block.settings.social-enabled
+  assign social_title = block.settings.social-title | escape
+  assign text_alignment = block.settings.text-alignment
+  assign text_color = block.settings.text-color
+  assign translucent = block.settings.translucent
+-%}
+
+{%- unless page_enabled and page_url != request.path -%}
+  <popup-block
+    class="popup--block--root"
+    data-block-id="{{ block.id | camelize }}"
+    data-background-color="{{ bg_color }}"
+    data-delay="{{ delay }}"
+    data-show-again-after="{{ days_range }}"
+    data-show-at-bottom="{{ show_at_bottom }}"
+    data-text-color="{{ text_color }}"
+    data-position="{{ position }}"
+    data-referrer-enabled="{{ referrer_enabled }}"
+    data-referrer-url="{{ referrer_url }}"
+    data-translucent="{{ translucent }}"
+    data-type="newsletter"
+    data-x-alignment="{{ text_alignment }}"
+    aria-hidden="true"
+    {{ block.shopify_attributes }}
+  >
+    <div class="popup--block--container">
+      {%- unless heading == blank -%}
+        <h3 class="popup--block--heading" data-item="block-heading">
+          {{- heading -}}
+        </h3>
+      {%- endunless -%}
+
+      {%- unless description == blank -%}
+        <div class="popup--block--description" data-item="rte-content">
+          {{- description -}}
+        </div>
+      {%- endunless -%}
+
+      {%- render 'subscribe-form', id: block.id -%}
+
+      {%- liquid
+        if social_enabled
+          render 'social-media', type: 'follow', heading: social_title, alignment: text_alignment, mobile_alignment: 'center'
+        endif
+      -%}
+    </div>
+
+    <button class="layout--close" aria-label="{{ 'general.a11y.close' | t }}"></button>
+  </popup-block>
+{%- endunless -%}

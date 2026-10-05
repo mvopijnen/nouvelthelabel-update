@@ -1,0 +1,32 @@
+<!-- snippets/layout--navigation.liquid -->
+
+{%- doc -%}
+  Outputs on-page modal navigation controls.
+{%- enddoc -%}
+
+<div class="layout--navigation">
+  <button
+    class="layout--close"
+    data-text-color="white"
+    aria-label="{{ 'general.a11y.close' | t }}"
+    aria-hidden="true"
+  ></button>
+
+  <button
+    class="layout--previous"
+    aria-hidden="true"
+    data-modal-button="previous"
+  >
+    {%- render 'nav-arrow', direction: 'left' -%}
+  </button>
+
+  <button
+    class="layout--next"
+    aria-hidden="true"
+    data-modal-button="next"
+  >
+    {%- render 'nav-arrow', direction: 'right' -%}
+  </button>
+
+  <div class="layout--bottom"></div>
+</div>

@@ -1,0 +1,61 @@
+<!-- snippets/icon-block.liquid -->
+
+{%- doc -%}
+  Renders an icon with optional image and caption.
+  @param {object} settings - Icon and text settings.
+  @param {block} [block] - Optional section block context.
+{%- enddoc -%}
+
+{%- liquid
+  assign icon = settings.icon
+  assign icon_image = settings.icon-image
+  assign icon_width = settings.icon-width
+  assign text = settings.text
+-%}
+
+<div class="icon-block--root">
+  {%- if icon_image or icon != 'none' -%}
+    <div class="icon-block" style="--width:{{ icon_width }}px;">
+      {%- liquid
+        if icon_image
+          assign icon_image_width = icon_width | times: 2
+          echo icon_image | image_url: width: icon_image_width | image_tag
+        else
+          render 'icons', icon: icon
+        endif
+      -%}
+    </div>
+
+    {%- unless text == blank -%}
+      <p data-item="paragraph">
+        {{- text -}}
+      </p>
+    {%- endunless -%}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .icon-block--root {
+    display: inline-flex;
+    gap: var(--spacing--2);
+    align-items: center;
+    justify-content: var(--x-alignment, flex-start);
+
+    @media (min-width: 768px) {
+      [data-x-alignment='right'] & .icon-block {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 767px) {
+      [data-mobile-x-alignment='right'] & .icon-block {
+        order: 1;
+      }
+    }
+  }
+
+  .icon-block > :is(svg, img) {
+    height: var(--width);
+    width: auto;
+  }
+{% endstylesheet %}

@@ -1,0 +1,126 @@
+<!-- snippets/css-variables.liquid -->
+
+{%- doc -%}
+  Outputs theme color and spacing CSS variables.
+{%- enddoc -%}
+
+{%- liquid
+  assign accent_1_translucent = settings.color--accent-1 | color_to_rgb | color_modify: 'alpha', 0.85
+  assign accent_2_translucent = settings.color--accent-2 | color_to_rgb | color_modify: 'alpha', 0.85
+  assign accent_3_translucent = settings.color--accent-3 | color_to_rgb | color_modify: 'alpha', 0.85
+  assign light_translucent = settings.bg-color--light | color_to_rgb | color_modify: 'alpha', 0.85
+  assign body_translucent = settings.bg-color--body | color_to_rgb | color_modify: 'alpha', 0.85
+  assign dark_translucent = settings.bg-color--dark | color_to_rgb | color_modify: 'alpha', 0.85 | color_darken: 10
+  assign border_opacity = settings.border--opacity | divided_by: 100.0
+-%}
+
+<style>
+  :root {
+    --color--accent-1: {{ settings.color--accent-1 }};
+    --color--accent-1-translucent: {{ accent_1_translucent }};
+    --color--accent-2: {{ settings.color--accent-2 }};
+    --color--accent-2-translucent: {{ accent_2_translucent }};
+    --color--accent-3: {{ settings.color--accent-3 }};
+    --color--accent-3-translucent: {{ accent_3_translucent }};
+    --color--body: {{ settings.color--body }};
+    --color--white: #fff;
+    --color--body--light: {{ settings.color--body | color_lighten: 19 }};
+    --color--success: #4caf50;
+    --color--gray: #808080;
+    --color--alert: {{ settings.color--alert }};
+
+    --bg-color--white: white;
+    --bg-color--transparent: transparent;
+    --bg-color--light: {{ settings.bg-color--light }};
+    --bg-color--light-translucent: {{ light_translucent }};
+    --bg-color--dark: {{ settings.bg-color--dark }};
+    --bg-color--dark-translucent: {{ dark_translucent }};
+    --bg-color--accent-1: var(--color--accent-1);
+    --bg-color--accent-2: var(--color--accent-2);
+    --bg-color--accent-3: var(--color--accent-3);
+    --bg-color--body: {{ settings.bg-color--body }};
+    --bg-color--body-translucent: {{ body_translucent }};
+
+    --border--thickness: 1px;
+    --border--color-dark: {{ settings.color--body | color_to_rgb | color_modify: 'alpha', border_opacity }};
+    --border--color-light: rgba(255, 255, 255, {{ border_opacity }});
+    --border--dark: var(--border--thickness) solid var(--border--color-dark);
+    --border--light: var(--border--thickness) solid var(--border--color-light);
+
+    --box-shadow--center: 0px 0px 10px rgba(0, 0, 0, 0.08);
+    --box-shadow--top: 0 -10px 10px -10px rgba(0, 0, 0, 0.2);
+    --box-shadow--left: -2px 0 10px -2px rgba(0, 0, 0, 0.2);
+    --box-shadow--right: 2px 0 10px -2px rgba(0, 0, 0, 0.2);
+    --box-shadow--bottom: 0 10px 10px -10px rgba(0, 0, 0, 0.2);
+
+    --content--shadow-opacity: {{ settings.content--shadow-opacity | divided_by: 100.0 }};
+    --content--image-opacity: {{ settings.content--image-opacity | divided_by: 100.0 | round: 3 }};
+
+    --button--height: 45px;
+    --button--border-width: 1px;
+    --button--radius: {{ settings.button--radius }}px;
+    --button--padding: 0 var(--spacing--{% if settings.button--radius >= 18 %}4{% else %}3{% endif %});
+    --button--bg-color-1: {{ settings.button--bg-color-1 }};
+    --button--color-1: {{ settings.button--color-1 }};
+    --button--border-color-1: {{ settings.button--border-1 }};
+    --button--bg-color--hover-1: {{ settings.button--bg-color--hover-1 }};
+    --button--color--hover-1: {{ settings.button--color--hover-1 }};
+    --button--bg-color-2: {{ settings.button--bg-color-2 }};
+    --button--color-2: {{ settings.button--color-2 }};
+    --button--border-color-2: {{ settings.button--border-2 }};
+    --button--bg-color--hover-2: {{ settings.button--bg-color--hover-2 }};
+    --button--color--hover-2: {{ settings.button--color--hover-2 }};
+    --button--bg-color-3: {{ settings.button--bg-color-3 }};
+    --button--color-3: {{ settings.button--color-3 }};
+    --button--border-color-3: {{ settings.button--border-3 }};
+    --button--bg-color--hover-3: {{ settings.button--bg-color--hover-3 }};
+    --button--color--hover-3: {{ settings.button--color--hover-3 }};
+    --button--bg-color-4: {{ settings.button--bg-color-4 }};
+    --button--color-4: {{ settings.button--color-4 }};
+    --button--border-color-4: {{ settings.button--border-4 }};
+    --button--bg-color--hover-4: {{ settings.button--bg-color--hover-4 }};
+    --button--color--hover-4: {{ settings.button--color--hover-4 }};
+
+    --input--height: 45px;
+    --input--radius: {{ settings.inputs--radius }}px;
+    --input--padding: var(--spacing--1) var(--spacing--3);
+    --input--bg-color: {{ settings.inputs--bg-color }};
+    --input--color: {{ settings.inputs--color }};
+    --image--radius: {{ settings.image--radius }}px;
+    --image--radius-enabled: {% if settings.image--radius > 0 %}1{% else %}0{% endif %};
+
+    --layout--spacing-small: 16px;
+    --layout--spacing-medium: 32px;
+    --layout--spacing-large: 72px;
+    --layout--spacing-x-large: 144px;
+    --layout--mobile-spacing-small: 12px;
+    --layout--mobile-spacing-medium: 24px;
+    --layout--mobile-spacing-large: 48px;
+    --layout--mobile-spacing-x-large: 96px;
+
+    --progress-bar: linear-gradient(
+                      90deg,
+                      {{ settings.color--body | color_to_rgb | color_modify: 'alpha', 0.3 }} 0%,
+                      {{ settings.color--body | color_to_rgb | color_modify: 'alpha', 1 }} 80%,
+                      {{ settings.color--body | color_to_rgb | color_modify: 'alpha', 0.8 }}
+                    );
+
+    /* shop pay */
+    --payment-terms-background-color: {{ settings.bg-color--body }};
+
+    /* js helpers */
+    --announcement--sticky: 0;
+    --announcement--height: 0px;
+    --header--sticky: 0;
+    --header--height: 0px;
+    --split-announcement--height: 0px;
+
+    --sticky-offset: calc(var(--announcement--sticky, 0) * var(--announcement--height, 0px) + var(--header--sticky, 0) * var(--header--height, 0px));
+  }
+
+  shopify-accelerated-checkout, shopify-accelerated-checkout-cart {
+    --shopify-accelerated-checkout-button-block-size: var(--button--height);
+    --shopify-accelerated-checkout-button-border-radius: var(--button--radius);
+    --shopify-accelerated-checkout-button-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+</style>

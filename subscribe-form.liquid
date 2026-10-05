@@ -1,0 +1,165 @@
+<!-- snippets/subscribe-form.liquid -->
+
+{%- doc -%}
+  Renders the newsletter subscribe form.
+  @param {string} alignment - Desktop alignment token.
+  @param {string} [button_style] - Button style token. Defaults to `button-1`.
+  @param {string} id - Unique form id.
+  @param {string} [mobile_alignment] - Mobile alignment token. Defaults to `alignment`.
+  @param {string} [transition_id] - Transition identifier.
+{%- enddoc -%}
+
+{%- liquid
+  assign email_t = 'general.mailing_list.email' | t
+  assign submit_t = 'general.mailing_list.submit' | t
+  assign shopify_disclaimer_t = 'shopify.online_store.spam_detection.disclaimer_html' | t
+
+  assign button_style = button_style | default: 'button-1'
+  assign mobile_alignment = mobile_alignment | default: alignment
+-%}
+
+<subscribe-form
+  class="subscribe-form--root"
+  data-x-alignment="{{ alignment }}"
+  data-mobile-x-alignment="{{ mobile_alignment }}"
+  {% if transition_id and settings.transitions--text == false %}
+    data-transition-item="{{ transition_id }}"
+    data-transition-type="fade-in"
+  {% endif %}
+>
+  {%- form 'customer', id: id, class: 'subscribe-form', aria-busy: 'false' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter" />
+    <input
+      type="hidden"
+      name="contact[first_name]"
+      value="Newsletter"
+    />
+    <input
+      type="hidden"
+      name="contact[last_name]"
+      value="Subscriber"
+    />
+    <label for="{{ id }}_subscribe-form_email" data-item="hidden-text">
+      {{ email_t }}
+    </label>
+    <input
+      class="subscribe-form--input"
+      id="{{ id }}_subscribe-form_email"
+      type="email"
+      autocomplete="email"
+      placeholder="{{ email_t }}"
+      name="contact[email]"
+      data-item="nav-text"
+    />
+
+    <button
+      class="subscribe-form--submit"
+      type="submit"
+      data-item="inline-{{ button_style }}"
+    >
+      <span class="subscribe-form--submit-text">
+        {{- submit_t -}}
+      </span>
+      {%- render 'icons', icon: 'spinner' -%}
+    </button>
+
+    {%- if form.posted_successfully? -%}
+      <script>window.location.hash = '#feedback-bar--newsletter';</script>
+    {%- endif -%}
+
+    <div data-item="hidden-text">
+      {%- comment -%} remove the below line to display reCAPTCHA badge {%- endcomment -%}
+      {{- shopify_disclaimer_t -}}
+    </div>
+  {%- endform -%}
+</subscribe-form>
+
+{% stylesheet %}
+  .subscribe-form--root {
+    width: 100%;
+    min-width: 200px;
+    max-width: 400px;
+    display: block;
+    margin: 0 auto;
+
+    @media (min-width: 768px) {
+      min-width: 200px;
+
+      &[data-x-alignment='left'] {
+        margin: 0 auto 0 0;
+      }
+
+      &[data-x-alignment='right'] {
+        margin: 0 0 0 auto;
+      }
+    }
+
+    @media (min-width: 768px) {
+      min-width: 150px;
+    }
+
+    @media (max-width: 767px) {
+      &[data-mobile-x-alignment='left'] {
+        margin: 0 auto 0 0;
+      }
+
+      &[data-mobile-x-alignment='right'] {
+        margin: 0 0 0 auto;
+      }
+    }
+  }
+
+  .subscribe-form {
+    --border: 1px solid var(--color--body);
+
+    width: 100%;
+    display: flex;
+    gap: var(--spacing--1);
+    align-items: end;
+
+    &[aria-busy='true'] .subscribe-form--submit-text,
+    &[aria-busy='false'] .icon--spinner {
+      opacity: 0;
+    }
+  }
+
+  .subscribe-form--input {
+    --input--color: var(--color--body);
+    --input--radius: 0;
+    --input--height: 32px;
+    --input--bg-color: transparent;
+
+    margin: 0;
+    border: 0;
+    padding: 0;
+    border-bottom: var(--border);
+
+    &:focus-visible {
+      border: 0;
+      border-bottom: var(--border);
+    }
+
+    [data-text-color='white'] & {
+      --input--color: white;
+      --border: 1px solid white;
+      border: 0;
+      border-bottom: var(--border);
+    }
+
+    [data-text-color='white'] [data-text-color='body'] & {
+      --border: 1px solid var(--color--body);
+      --input--color: var(--color--body);
+    }
+
+    &:-webkit-autofill {
+      -webkit-background-clip: text;
+    }
+  }
+
+  .subscribe-form--submit {
+    .icon--spinner {
+      height: var(--button--height);
+      width: var(--button--height);
+    }
+  }
+{% endstylesheet %}

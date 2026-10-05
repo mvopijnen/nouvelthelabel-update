@@ -1,0 +1,340 @@
+<!-- snippets/filter.liquid -->
+
+{%- doc -%}
+  Renders the filter drawer UI.
+  @param {object[]} [filters] - Shopify filter data.
+  @param {boolean} [show_search_link] - Show search shortcut.
+  @param {string} [default_view] - Accordion default state: "all-open", "all-closed", or "first-open".
+  @param {string} [tag_bg_color] - Tag background color token.
+  @param {string} [tag_color] - Tag text color token.
+  @param {string} [tag_shape] - Tag shape: "round" or "square".
+{%- enddoc -%}
+
+{%- liquid
+  assign apply_t = 'general.filter.apply' | t
+  assign no_filters_t = 'general.filter.no_filters' | t
+  assign reset_t = 'general.filter.reset' | t
+  assign search_text_t = 'general.filter.search_by_name' | t
+
+  assign swatches = settings.swatches--type
+  assign swatch_size = settings.swatches--form-size
+-%}
+
+<div class="filter--root" data-drawer-scroll-container>
+  <div class="filter--wrapper">
+    <form class="filter--form">
+      {%- if filters.size > 0 -%}
+        {%- for filter in filters -%}
+          <animated-details>
+            <details
+              class="filter--category"
+              id="{{ filter.label | handle | downcase }}-filter"
+              {% if default_view == 'all-open' or default_view == 'first-open' and forloop.first %}open{% endif %}
+            >
+              <summary class="filter--toggle" data-item="nav-text">
+                {{- filter.label }}
+                <div class="layout--expand"></div>
+              </summary>
+
+              {%- case filter.type -%}
+                {%- when 'price_range' -%}
+                  <div class="filter--content">
+                    <div class="filter--content-inner">
+                      <div class="filter--menu" data-item="nav-text">
+                        <div class="filter--price--container">
+                          {%- render 'price-range', filter: filter -%}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {%- when 'boolean' or 'list' -%}
+                  {%- liquid
+                    assign is_swatches = false
+                    if filter.presentation == 'swatch' and swatches != 'none'
+                      assign is_swatches = true
+                      assign swatch_inset = swatch_size | divided_by: 10 | plus: 1 | at_least: 2 | at_most: 4
+                    endif
+                  -%}
+
+                  <div class="filter--content">
+                    <div class="filter--content-inner">
+                      <ul
+                        class="filter--menu"
+                        {% if is_swatches and swatch_size %}
+                          style="--swatch-size:{{ swatch_size }}px;--swatch-inset:{{ swatch_inset }}px;"
+                        {% endif %}
+                      >
+                        {%- for filter_value in filter.values -%}
+                          {%- liquid
+                            assign swatch_value = nil
+                            if filter_value.swatch.image
+                              assign image_url = filter_value.swatch.image | image_url: width: 60
+                              assign swatch_value = 'url(' | append: image_url | append: ')'
+                            elsif filter_value.swatch.color
+                              assign swatch_value = 'rgb(' | append: filter_value.swatch.color.rgb | append: ')'
+                            endif
+                          -%}
+
+                          <li class="filter--link">
+                            <input
+                              id="{{ filter.label | handle | downcase }}-{{ filter_value.label | handle | downcase }}-filter"
+                              class="filter--input"
+                              type="checkbox"
+                              name="{{ filter_value.param_name }}"
+                              value="{{ filter_value.value }}"
+                              data-label="{% if filter.type == 'boolean' %}{{ filter.label }}: {% endif %}{{ filter_value.label }}"
+                              {% if filter_value.active %}
+                                checked
+                              {% endif %}
+                            >
+                            <label
+                              class="filter--label"
+                              for="{{ filter.label | handle | downcase }}-{{ filter_value.label | handle | downcase }}-filter"
+                              {% if is_swatches %}
+                                data-shape="{{ swatches }}"
+                                data-item="swatch"
+                                style="--swatch-background:{{ swatch_value }};"
+                              {% else %}
+                                data-item="tag"
+                                data-tag-shape="{{ tag_shape }}"
+                                style="--tag--bg-color:var(--bg-color--{{ tag_bg_color }});--tag--color:var(--color--{{ tag_color }});"
+                              {% endif %}
+                            >
+                              {%- unless is_swatches -%}
+                                <span>{{- filter_value.label | capitalize -}}</span>
+                                {%- render 'icons', icon: 'cross' -%}
+                              {%- endunless -%}
+                            </label>
+                            {%- if is_swatches -%}
+                              <label
+                                for="{{ filter.label | handle | downcase }}-{{ filter_value.label | handle | downcase }}-filter"
+                                data-item="tag"
+                                data-tag-shape="{{ tag_shape }}"
+                                style="--tag--bg-color:var(--bg-color--{{ tag_bg_color }});--tag--color:var(--color--{{ tag_color }});"
+                              >
+                                <span>{{- filter_value.label | capitalize -}}</span>
+                                {%- render 'icons', icon: 'cross' -%}
+                              </label>
+                            {%- endif -%}
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+
+              {%- endcase -%}
+            </details>
+          </animated-details>
+        {%- endfor -%}
+
+      {%- else -%}
+        <div class="filter--no-filters" data-item="caption">
+          {{- no_filters_t -}}
+        </div>
+
+      {%- endif -%}
+    </form>
+
+    {%- if show_search_link -%}
+      <button
+        class="filter--search"
+        data-item="nav-text"
+        data-drawer-open="top"
+        data-drawer-view="search"
+        aria-label="{{ search_text_t }}"
+        aria-haspopup="true"
+      >
+        {{- search_text_t -}}
+        {%- render 'icons', icon: 'search' -%}
+      </button>
+    {%- endif -%}
+  </div>
+
+  <div class="filter--button-container">
+    <button
+      class="filter--button"
+      type="button"
+      data-type="apply"
+      data-item="button-1"
+      data-text="{{- apply_t -}}"
+      data-drawer-close
+    >
+      <span>{{ apply_t }}</span>
+    </button>
+    <button
+      class="filter--button"
+      data-type="reset"
+      data-item="button-3"
+      data-text="{{ reset_t }}"
+      onclick="window.trigger('theme:filter:clearAll')"
+    >
+      <span>{{ reset_t }}</span>
+    </button>
+  </div>
+</div>
+
+{% stylesheet %}
+  .filter--root {
+    position: relative;
+    overflow: auto;
+    height: 100vh;
+    height: 100dvh;
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .filter--wrapper {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    /* offsets fixed apply/clear buttons at bottom */
+    padding-bottom: calc(var(--spacing--block) + var(--button--height));
+  }
+
+  .filter--form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--item);
+    padding: calc(var(--spacing--block) - var(--spacing--1)) 0;
+    position: relative;
+
+    &:not(:only-child) {
+      border-bottom: var(--border--dark);
+    }
+  }
+
+  .filter--toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing--1) var(--spacing--item);
+    user-select: none;
+    transition: 0.25s background-color ease-in;
+
+    > * {
+      pointer-events: none;
+    }
+
+    .layout--expand {
+      --cross-size: calc(var(--font--size) - 4px);
+    }
+  }
+
+  .filter--menu {
+    display: flex;
+
+    [data-item='tag'] {
+      max-width: 100%;
+      min-width: 0;
+
+      > span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    &:not(:has([data-item='swatch'])) {
+      flex-direction: column;
+      gap: 2px;
+      padding: var(--spacing--1) var(--spacing--item) 0 var(--spacing--item);
+    }
+
+    &:has([data-item='swatch']) {
+      flex-wrap: wrap;
+      column-gap: var(--spacing--1);
+      row-gap: calc(var(--swatch-inset, 2px) * 3);
+      padding: var(--spacing--1) var(--spacing--item) var(--spacing--item) 28px;
+    }
+  }
+
+  .filter--price--container {
+    padding: var(--spacing--1) var(--spacing--2) 0 var(--spacing--2);
+  }
+
+  .filter--link {
+    display: flex;
+
+    &:has([data-item='swatch']) {
+      align-items: center;
+      gap: var(--spacing--1);
+
+      @media (min-width: 768px) {
+        width: calc(50% - var(--spacing--1) / 2);
+      }
+
+      @media (max-width: 767px) {
+        width: 100%;
+      }
+    }
+  }
+
+  .filter--input:is([type='radio'], [type='checkbox']) {
+    width: 1px;
+    height: 1px;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+    margin: -1px;
+    padding: 0;
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .filter--no-filters {
+    padding: 0 var(--spacing--item);
+  }
+
+  .filter--search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing--item);
+    width: 100%;
+    padding: var(--spacing--block) var(--spacing--item);
+    color: var(--color--body);
+
+    svg {
+      height: calc(var(--font--size) + 4px);
+      width: calc(var(--font--size) + 4px);
+    }
+  }
+
+  .filter--button-container {
+    width: 100%;
+    display: flex;
+    gap: var(--spacing--1);
+    justify-content: space-between;
+    padding: var(--spacing--item) var(--spacing--item) var(--spacing--block);
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: var(--spacing--item);
+    background-color: var(--bg-color--body-translucent);
+    backdrop-filter: blur(3px);
+    z-index: 2;
+
+    .layout--viewport[data-drop-shadows='true'] & {
+      box-shadow: var(--box-shadow--top);
+    }
+
+    .layout--viewport[data-drop-shadows='false'] & {
+      border-top: var(--border--dark);
+    }
+  }
+
+  .filter--button {
+    width: calc(50% - var(--spacing--1));
+    text-align: center;
+
+    & span {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}

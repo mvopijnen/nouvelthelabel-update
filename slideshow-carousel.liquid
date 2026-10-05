@@ -1,0 +1,236 @@
+<!-- snippets/slideshow-carousel.liquid -->
+
+{%- doc -%}
+  Renders a slideshow carousel element with optional arrows, navigation dots, and pause button.
+  @param {string[]} blocks - Pre-rendered slide HTML array. Each block must be wrapped in a div with a unique `data-id` and `{{ block.shopify_attributes }}`.
+  @param {boolean} [arrows_enabled] - Show prev/next arrows. Defaults to false.
+  @param {string} [aspect_ratio] - Aspect ratio data attribute.
+  @param {boolean} [auto_rotate] - Enable auto-rotation. Defaults to false.
+  @param {string} [mobile_aspect_ratio] - Mobile aspect ratio.
+  @param {string} [display_type] - Display type.
+  @param {string} [mobile_display_type] - Mobile display type.
+  @param {boolean} [pagination_enabled] - Show navigation dots. Defaults to true.
+  @param {boolean} [pause_enabled] - Show pause button for auto-rotate. Defaults to false.
+  @param {number} [rotate_frequency] - Rotation frequency in seconds.
+  @param {string} [transition_type] - Transition type. Defaults to 'slide'.
+{%- enddoc -%}
+
+{%- liquid
+  assign pagination_enabled = pagination_enabled | default: false
+  assign total_blocks = blocks.size
+  assign transition_type = transition_type | default: 'slide'
+
+  if total_blocks == 1
+    assign arrows_enabled = false
+  endif
+
+  capture css_vars
+    echo '--total-slides:' | append: total_blocks | append: ';'
+
+    if auto_rotate and rotate_frequency
+      echo '--rotate-frequency:' | append: rotate_frequency | append: 's;'
+    endif
+  endcapture
+-%}
+
+<slideshow-carousel
+  class="slideshow-carousel--root"
+  data-auto-rotate="{{ auto_rotate }}"
+  data-columns="1"
+  data-last-slide="false"
+  data-mobile-columns="1"
+  data-transition-type="{{ transition_type }}"
+  style="{{ css_vars }}"
+>
+  <div class="slideshow-carousel--wrapper">
+    {%- if arrows_enabled -%}
+      <button
+        class="slideshow-carousel--prev"
+        aria-label="{{ 'general.a11y.previous' | t }}"
+        aria-disabled="true"
+        data-mq="medium-large"
+      >
+        {%- render 'nav-arrow', direction: 'left' -%}
+      </button>
+    {%- endif -%}
+
+    <div class="slideshow-carousel--container">
+      {%- liquid
+        for block in blocks
+         echo block
+        endfor
+      -%}
+    </div>
+
+    {%- if pagination_enabled -%}
+      {%-
+        render 'slideshow-pagination',
+        auto_rotate: auto_rotate,
+        max_dots: total_blocks,
+        total_slides: total_blocks,
+        total_slides_mobile: total_blocks
+      -%}
+    {%- endif -%}
+
+    {%- if pause_enabled and auto_rotate -%}
+      {%- unless total_blocks == 1 -%}
+        <button
+          class="slideshow-carousel--pause"
+          aria-pressed="false"
+          aria-label="{{ 'general.a11y.pause_play' | t }}"
+        ></button>
+      {%- endunless -%}
+    {%- endif -%}
+
+    {%- if arrows_enabled -%}
+      <button
+        class="slideshow-carousel--next"
+        aria-label="{{ 'general.a11y.next' | t }}"
+        aria-disabled="true"
+        data-mq="medium-large"
+      >
+        {%- render 'nav-arrow', direction: 'right' -%}
+      </button>
+    {%- endif -%}
+  </div>
+</slideshow-carousel>
+
+{% stylesheet %}
+  .slideshow-carousel--root {
+    --dot-pos: 0px; /* for slideshow-pagination.liquid */
+    --slide-pos: 0px;
+    --animation-play-state: running;
+
+    user-select: none;
+    container-type: inline-size;
+    display: block;
+    overflow: hidden;
+
+    &:has(.slideshow-pagination) {
+      :is(.video--header, .stacked-text--wrapper, .section-blocks--wrapper) {
+        margin-bottom: var(--spacing--block);
+
+        &:not([data-background-color='transparent']) {
+          margin-bottom: calc(var(--spacing--item) + var(--spacing--block));
+        }
+      }
+    }
+  }
+
+  .slideshow-carousel--wrapper {
+    overflow: hidden;
+    position: relative;
+    transition: opacity 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slideshow-carousel--container {
+    &[data-transition-state='forwards'] {
+      transition: transform 1s var(--transition--ease-out), height 0.4s var(--transition--ease-out);
+    }
+
+    &[data-transition-state='backwards'] {
+      transition: transform 0.4s var(--transition--snap-back), height 0.4s var(--transition--ease-out);
+    }
+
+    * {
+      -webkit-user-drag: none;
+    }
+
+    .slideshow-carousel--root[data-transition-type='slide'] & {
+      will-change: transform;
+      width: calc(100% * var(--total-slides));
+
+      > * {
+        width: calc(100% / var(--total-slides));
+      }
+    }
+
+    .slideshow-carousel--root[data-transition-type='fade'] & {
+      width: 100%;
+      display: grid;
+      grid-auto-rows: 1fr;
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    @media (min-width: 768px) {
+      .slideshow-carousel--root[data-transition-type='slide'] & {
+        display: flex;
+        align-items: flex-start;
+        overflow: hidden;
+        position: relative;
+        transform: translateX(var(--slide-pos));
+      }
+
+      .slideshow-carousel--root &:hover {
+        cursor: grab;
+      }
+
+      .slideshow-carousel--root[data-dragging='true'] &:hover {
+        cursor: grabbing;
+      }
+    }
+
+    @media (max-width: 767px) {
+      height: var(--slide-height);
+
+      .slideshow-carousel--root[data-transition-type='slide'] & {
+        display: flex;
+        align-items: flex-start;
+        overflow: hidden;
+        position: relative;
+        transform: translateX(var(--slide-pos));
+      }
+    }
+
+    > * {
+      height: fit-content;
+
+      .slideshow-carousel--root[data-transition-type='fade'] & {
+        transition: opacity 4s var(--transition--ease-out);
+        opacity: 0;
+        z-index: 0;
+        grid-row: 1 / -1;
+        grid-column: 1;
+      }
+
+      &[data-background-color] {
+        height: 100%;
+      }
+
+
+      &[data-active='true'] {
+        .slideshow-carousel--root[data-transition-type='fade'] & {
+          z-index: 1;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+
+  .slideshow-carousel--prev {
+    top: calc((var(--left-image-height, 100%) / 2) - var(--spacing--item));
+    left: var(--spacing--1);
+  }
+
+  .slideshow-carousel--next {
+    top: calc((var(--right-image-height, 100%) / 2) - var(--spacing--item));
+    right: var(--spacing--1);
+  }
+
+  .slideshow-carousel--prev,
+  .slideshow-carousel--next {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    opacity: 1;
+
+    &[aria-disabled='true'] {
+      opacity: 0;
+      cursor: default;
+    }
+  }
+{% endstylesheet %}

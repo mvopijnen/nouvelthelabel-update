@@ -1,0 +1,65 @@
+<!-- snippets/logo.liquid -->
+
+{%- doc -%}
+  Renders the header logo link.
+  @param {string} [fetchpriority] - Fetch priority. Defaults to `high`.
+  @param {number} [height] - Desktop logo height.
+  @param {string} [loading] - Loading strategy. Defaults to `eager`.
+  @param {image} [logo] - Logo image.
+  @param {number} [mobile_height] - Mobile logo height.
+{%- enddoc -%}
+
+{%- liquid
+  assign fetchpriority = fetchpriority | default: 'high'
+  assign loading = loading | default: 'eager'
+-%}
+
+<a
+  class="small-logo--root"
+  href="{{ routes.root_url }}"
+  title="{{ shop.name }}"
+  itemscope
+  itemprop="url"
+  itemtype="https://schema.org/Organization"
+>
+  {%- if logo -%}
+    {%- liquid
+      assign width = height | times: logo.aspect_ratio | round
+      assign twice_width = width | times: 2
+      assign mobile_width = mobile_height | times: logo.aspect_ratio | round
+
+      capture logo_vars
+        echo '--width:' | append: width | append: 'px;'
+        echo '--mobile-width:' | append: mobile_width | append: 'px;'
+      endcapture
+    -%}
+
+    {{-
+      logo |
+      image_url: width: twice_width |
+      image_tag:
+        itemprop: "logo",
+        style: logo_vars,
+        fetchpriority: fetchpriority,
+        loading: loading
+    -}}
+
+  {%- else -%}
+    <div data-item="section-heading">
+      {{- shop.name -}}
+    </div>
+
+  {%- endif -%}
+</a>
+
+{% stylesheet %}
+  .small-logo--root img {
+    --image--radius: 0;
+    height: auto;
+    width: var(--width);
+
+    @media (max-width: 767px) {
+      width: var(--mobile-width);
+    }
+  }
+{% endstylesheet %}

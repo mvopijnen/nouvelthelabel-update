@@ -1,0 +1,146 @@
+<!-- snippets/pagination.liquid -->
+
+{%- doc -%}
+  Renders pagination controls for a paginated collection.
+  @param {paginate} paginate - Pagination object.
+  @param {string} [hash] - Hash appended to pagination URLs.
+{%- enddoc -%}
+
+{%- liquid
+  assign previous_t = 'general.pagination.previous' | t
+  assign next_t = 'general.pagination.next' | t
+  assign first_t = 'general.pagination.first' | t
+  assign last_t = 'general.pagination.last' | t
+  assign of_t = 'general.pagination.of' | t
+
+  unless hash == nil
+    assign hash = '#' | append: hash
+  endunless
+
+  assign previous_tag = 'div'
+  if paginate.previous
+    assign previous_tag = 'a'
+  endif
+
+  assign next_tag = 'div'
+  if paginate.next
+    assign next_tag = 'a'
+  endif
+-%}
+
+<div class="pagination--root" data-item="nav-text">
+  <{{ previous_tag }}
+    class="pagination--link"
+    {% if paginate.previous %}
+      href="{{ paginate.parts.first.url }}{{ hash }}"
+      role="button"
+      aria-label="{{ first_t }}"
+    {% else %}
+      aria-hidden="true"
+    {% endif %}
+  >
+    {%- render 'icons', icon: 'chevron-far-left' -%}
+  </{{ previous_tag }}>
+
+  <{{ previous_tag }}
+    class="pagination--link"
+    {% if paginate.previous %}
+      href="{{ paginate.previous.url }}{{ hash }}"
+      role="button"
+      aria-label="{{ previous_t }}"
+    {% else %}
+      aria-hidden="true"
+    {% endif %}
+  >
+    {%- render 'icons', icon: 'chevron-left' -%}
+  </{{ previous_tag }}>
+
+  <div class="pagination--of">
+    {{- paginate.current_page }} {{ of_t }} {{ paginate.pages -}}
+  </div>
+
+  <{{ next_tag }}
+    class="pagination--link"
+    {% if paginate.next %}
+      href="{{ paginate.next.url }}{{ hash }}"
+      role="button"
+      aria-label="{{ next_t }}"
+    {% else %}
+      aria-hidden="true"
+    {% endif %}
+  >
+    {%- render 'icons', icon: 'chevron-right' -%}
+  </{{ next_tag }}>
+
+  <{{ next_tag }}
+    class="pagination--link"
+    {% if paginate.next %}
+      href="{{ paginate.parts.last.url }}{{ hash }}"
+      role="button"
+      aria-label="{{ last_t }}"
+    {% else %}
+      aria-hidden="true"
+    {% endif %}
+  >
+    {%-  render 'icons', icon: 'chevron-far-right' -%}
+  </{{ next_tag }}>
+</div>
+
+{% stylesheet %}
+  .pagination--root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      gap: var(--spacing--2);
+    }
+  }
+
+  .pagination--of {
+    @media (max-width: 767px) {
+      padding: 0 var(--spacing--1);
+    }
+  }
+
+  .pagination--link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--spacing--block);
+    height: var(--spacing--block);
+
+    @media (min-width: 768px) {
+      border: var(--border--dark);
+      border-radius: 50%;
+      transition: transform 0.4s var(--transition--ease-out);
+
+      &[role='button']:hover {
+        opacity: 1;
+        transform: scale(1.06);
+
+        .layout--viewport[data-drop-shadows='true'] & {
+          box-shadow: var(--box-shadow--center);
+        }
+      }
+
+      &[role='button']:active {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 767px) {
+      svg {
+        height: 13px;
+      }
+    }
+
+    &[aria-hidden='true'] {
+      opacity: 0.4;
+    }
+
+    svg {
+      height: 10px;
+    }
+  }
+{% endstylesheet %}

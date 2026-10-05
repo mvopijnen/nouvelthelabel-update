@@ -1,0 +1,89 @@
+<!-- snippets/radios.liquid -->
+
+{%- doc -%}
+  Renders a set of radio buttons for a product option. Place inside loop of 'option' objects.
+  @param {string} id - Unique base id.
+  @param {product_option} option - Product option with values.
+{%- enddoc -%}
+
+{%- liquid
+  capture radios_name
+    assign option_name = option.name | downcase | remove: ' '
+    echo id | append: '-' | append: option_name
+  endcapture
+-%}
+
+<label
+  class="radios--header"
+  id="{{ radios_name }}"
+  data-item="nav-text"
+>
+  <span>{{ option.name | escape }}</span>
+</label>
+
+<div
+  class="radios--container"
+  role="radiogroup"
+  aria-labelledby="{{ radios_name }}"
+>
+  {%- for value in option.values -%}
+    <label
+      for="{{ radios_name }}-{{ value.id }}"
+      data-item="radio-input"
+      class="radios--value-button"
+      {% unless value.available %}
+        data-unavailable="true"
+      {% endunless %}
+      {% if value.id %}
+        data-option-value-id="{{ value.id }}"
+        data-option-name="{{ option.name | strip | downcase }}"
+        data-product-url="{{ value.product_url }}"
+      {% endif %}
+    >
+      <div>{{ value | escape }}</div>
+
+      <input
+        class="radios--input"
+        type="radio"
+        id="{{ radios_name }}-{{ value.id }}"
+        name="{{ radios_name }}"
+        value="{{ value | escape }}"
+        {% if value.id %}
+          data-option-value-id="{{ value.id }}"
+          data-option-name="{{ option.name | strip | downcase }}"
+          data-product-url="{{ value.product_url }}"
+        {% endif %}
+        data-item="radio"
+        {% if value == option.selected_value %}
+          checked
+        {% endif %}
+      />
+    </label>
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  .radios--header {
+    display: flex;
+    gap: var(--spacing--1);
+    padding-bottom: var(--spacing--1);
+
+    &:not(:has(> *:only-child)) {
+      justify-content: space-between;
+    }
+  }
+
+  .radios--container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing--1);
+  }
+
+  .radios--input[data-item='radio'] {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    position: absolute;
+  }
+{% endstylesheet %}

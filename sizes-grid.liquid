@@ -1,0 +1,73 @@
+{%- doc -%}
+  Calculates responsive `sizes` attributes for grid media.
+  Used when images are displayed in column-based layouts.
+  @param {number} [additional_padding] - Additional desktop padding.
+  @param {number} [columns] - Desktop column count. Defaults to `1`.
+  @param {number} [column_spacing] - Desktop spacing between columns. Defaults to `32`.
+  @param {string} [container_width] - Theme container width token. Defaults to `5`.
+  @param {number} [mobile_column_spacing] - Mobile spacing between columns. Defaults to `16`.
+  @param {number} [mobile_columns] - Mobile column count. Defaults to `1`.
+  @param {boolean} [mobile_full_width] - Whether mobile content is full width.
+{%- enddoc -%}
+
+{%- liquid
+  # Mobile calculation
+  assign mobile_columns = mobile_columns | default: 1
+  assign mobile_column_spacing = mobile_column_spacing | default: 16
+  assign mobile_size = 100 | divided_by: mobile_columns
+  assign mobile_padding = mobile_columns | minus: 1 | times: mobile_column_spacing
+  unless mobile_full_width
+    assign mobile_padding = mobile_padding | plus: 32
+  endunless
+  assign mobile_padding = mobile_padding | divided_by: mobile_columns | round: 2
+
+  if mobile_padding > 0
+    assign mobile_sizes = 'calc([size]vw - [padding]px)' | replace: '[size]', mobile_size | replace: '[padding]', mobile_padding
+  else
+    assign mobile_sizes = '[size]vw' | replace: '[size]', mobile_size
+  endif
+
+  assign mobile_sizes = '(max-width: 767px) ' | append: mobile_sizes
+
+  # Desktop calculation
+  assign container_width = container_width | default: '5'
+  assign columns = columns | default: 1
+  assign column_spacing = column_spacing | default: 32
+
+  if container_width == '6' or container_width == '5'
+    assign desktop_unit = 'vw'
+    assign desktop_size = 100.0
+  else
+    assign desktop_unit = 'px'
+
+    case container_width
+      when '4'
+        assign desktop_size = 1200.0
+      when '3'
+        assign desktop_size = 1000.0
+      when '2'
+        assign desktop_size = 800.0
+      when '1'
+        assign desktop_size = 650.0
+    endcase
+  endif
+
+  assign desktop_size = desktop_size | divided_by: columns | round: 2
+
+  assign desktop_padding = columns | minus: 1 | times: column_spacing
+  if additional_padding
+    assign desktop_padding = desktop_padding | plus: additional_padding
+  endif
+  if container_width == '5'
+    assign desktop_padding = desktop_padding | plus: 96
+  endif
+  assign desktop_padding = desktop_padding | divided_by: columns | round: 2
+
+  if desktop_padding > 0
+    assign desktop_sizes = 'calc([size][unit] - [padding]px)' | replace: '[size]', desktop_size | replace: '[unit]', desktop_unit | replace: '[padding]', desktop_padding
+  else
+    assign desktop_sizes = '[size][unit]' | replace: '[size]', desktop_size | replace: '[unit]', desktop_unit
+  endif
+-%}
+
+{{- mobile_sizes }}, {{ desktop_sizes -}}

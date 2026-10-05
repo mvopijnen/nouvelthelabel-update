@@ -1,0 +1,256 @@
+{%- doc -%}
+  Renders menu blocks for x-menu and y-menu.
+  @param {object[]} blocks - Array of menu blocks.
+  @param {string} location - Menu location (x-menu or y-menu).
+  @param {string} menu_item - Menu item handle.
+{%- enddoc -%}
+
+{%- for block in blocks -%}
+  {%- assign block_menu_item = block.settings.menu-item | handleize | downcase -%}
+  {%- if block_menu_item == menu_item -%}
+    {%- assign transition_id = location | append: '_' | append: block_menu_item -%}
+
+    {%- if block.type == 'image' -%}
+      {%- liquid
+        assign aspect_ratio = 100.0 | divided_by: block.settings.aspect-ratio
+        assign description = block.settings.description
+        assign display_type = block.settings.image-display-type
+        assign mobile_aspect_ratio = 100.0 | divided_by: block.settings.mobile-aspect-ratio
+        assign mobile_display_type = block.settings.mobile-image-display-type
+        assign link_url = block.settings.link-url
+      -%}
+
+      <div
+        class="menu-block--image-wrapper"
+        data-block-id="{{ block.id }}"
+        {% unless settings.transitions--other %}
+          data-transition-item="{{ transition_id }}"
+        {% endunless %}
+      >
+        {%- unless link_url == blank -%}
+          <a href="{{ link_url }}">
+        {%- endunless -%}
+
+        <div
+          class="menu-block--image"
+          {% unless settings.transitions--image %}
+            data-transition-item
+            data-transition-type="zoom-in"
+            data-transition-trigger="hover"
+          {% endunless %}
+        >
+          {%- if block.settings.image == blank -%}
+            {%-
+              render 'placeholder',
+              type: 'collection',
+              placeholder_index: 1,
+              display_type: display_type,
+              aspect_ratio: aspect_ratio,
+              mobile_display_type: mobile_display_type,
+              mobile_aspect_ratio: mobile_aspect_ratio
+            -%}
+          {%- else -%}
+            {%-
+              render 'image',
+              image: block.settings.image,
+              aspect_ratio: aspect_ratio,
+              display_type: display_type,
+              loading: 'lazy',
+              mobile_aspect_ratio: mobile_aspect_ratio,
+              mobile_display_type: mobile_display_type,
+              mobile_image: block.settings.mobile-image
+            -%}
+          {%- endif -%}
+        </div>
+
+        {%- unless description == blank -%}
+          <div class="menu-block--description" data-item="sub-nav-text">
+            {{ description }}
+          </div>
+        {%- endunless -%}
+
+        {%- unless link_url == blank -%}
+          </a>
+        {%- endunless -%}
+      </div>
+
+    {%- elsif block.type == 'blog' -%}
+      {%- liquid
+        assign blog = blogs[block.settings.blog]
+        assign image_size = block.settings.image-size
+        assign selected_tag = block.settings.tag-select | downcase | escape
+        assign show_cta = block.settings.show-cta
+        assign show_date = block.settings.show-date
+        assign show_excerpt = block.settings.show-excerpt
+
+        assign grid_direction = 'horizontal'
+        assign heading_type = 'block-heading'
+        if location contains 'y-menu'
+          assign grid_direction = 'vertical'
+          assign heading_type = 'paragraph'
+        endif
+      -%}
+
+      <div
+        class="menu-block--blog"
+        data-block-id="{{ block.id }}"
+        data-aspect-ratio="{{ image_size }}"
+      >
+        {%-
+          render 'blog-grid',
+          section: block,
+          alignment: 'center',
+          blog: blog,
+          grid_direction: grid_direction,
+          heading_type: heading_type,
+          mobile_media_layout: 'grid',
+          loading: 'lazy',
+          selected_tag: selected_tag,
+          show_cta: show_cta,
+          show_date: show_date,
+          show_excerpt: show_excerpt,
+          transition_id: transition_id
+        -%}
+      </div>
+
+    {%- elsif block.type == 'full-width-promo' -%}
+      {%- liquid
+        assign aspect_ratio = 100.0 | divided_by: block.settings.aspect-ratio
+        assign display_type = block.settings.image-display-type
+        assign mobile_display_type = block.settings.mobile-image-display-type
+        assign mobile_aspect_ratio = 100.0 | divided_by: block.settings.mobile-aspect-ratio
+        assign overlay_style = block.settings.overlay-style
+        assign text_color = block.settings.text-color
+      -%}
+
+      <div
+        class="menu-block--featured"
+        data-block-id="{{ block.id }}"
+      >
+        <div
+          class="menu-block--image"
+          {% unless settings.transitions--image %}
+            data-transition-item="viewport"
+            data-transition-type="image"
+          {% endunless %}
+        >
+          {%- if block.settings.image -%}
+            {%-
+              render 'image',
+              image: block.settings.image,
+              aspect_ratio: aspect_ratio,
+              display_type: display_type,
+              full_width: false,
+              loading: 'lazy',
+              mobile_aspect_ratio: mobile_aspect_ratio,
+              mobile_display_type: mobile_display_type,
+              mobile_full_width: false,
+              mobile_image: block.settings.mobile-image,
+              mobile_overlay_style: overlay_style,
+              overlay_style: overlay_style,
+              sizes: '(max-width: 768px) 80vw, calc(100vw - 96px)'
+            -%}
+          {%- else -%}
+            {%-
+              render 'placeholder',
+              type: 'lifestyle',
+              aspect_ratio: aspect_ratio,
+              display_type: display_type,
+              full_width: false,
+              mobile_aspect_ratio: mobile_aspect_ratio,
+              mobile_display_type: mobile_display_type,
+              mobile_full_width: false,
+              mobile_overlay_style: overlay_style,
+              overlay_text_color: text_color,
+              overlay_style: overlay_style,
+              parallax: parallax_enabled,
+              placeholder_index: 1
+            -%}
+          {%- endif -%}
+        </div>
+
+        {%-
+          render 'stacked-text',
+          bg_color: block.settings.text-background-color,
+          button_link_1: block.settings.button-link-1,
+          button_link_2: block.settings.button-link-2,
+          button_style_1: block.settings.button-style-1,
+          button_style_2: block.settings.button-style-2,
+          button_text_1: block.settings.button-text-1,
+          button_text_2: block.settings.button-text-2,
+          color: text_color,
+          description: block.settings.description,
+          description_type: 'featured-paragraph',
+          heading_type: block.settings.heading-type,
+          highlight_color: block.settings.highlight-color,
+          highlight_text: block.settings.highlight-text,
+          highlight_type: block.settings.highlight-type,
+          id: transition_id,
+          mobile_hide_description: block.settings.mobile-hide-description,
+          mobile_x_alignment: block.settings.mobile-text-horizontal-alignment,
+          mobile_y_alignment: block.settings.mobile-text-vertical-alignment,
+          overline: block.settings.overline,
+          style: block.settings.text-style,
+          title: block.settings.title,
+          width: block.settings.text-width,
+          x_alignment: block.settings.text-horizontal-alignment,
+          y_alignment: block.settings.text-vertical-alignment
+        -%}
+      </div>
+
+    {%- elsif block.type == 'product-list' -%}
+      {%- liquid
+        assign product_list = block.settings.product-list
+        assign columns = 4
+        unless product_list == blank
+          assign columns = product_list.count
+        endunless
+
+        capture sizes
+          render 'sizes-grid', container_width: '5', columns: columns, mobile_columns: 1
+        endcapture
+      -%}
+
+      <div
+        class="menu-block--products"
+        data-block-id="{{ block.id }}"
+        data-container="panel"
+        data-columns="{{ columns }}"
+        data-mobile-columns="1"
+        style="--columns:{{ columns }};"
+        {% unless settings.transitions--other %}
+          data-transition-container="{{ transition_id }}"
+          data-transition-type="fade-in"
+          {% unless location contains 'y-menu' %}
+            data-transition-cascade="horizontal"
+            data-transition-cascade-interval="200"
+          {% endunless %}
+        {% endunless %}
+      >
+        {%- liquid
+          if product_list == blank
+            for i in (1..4)
+              render 'product-card', onboarding: true, placeholder_index: i, transition_id: transition_id
+            endfor
+          else
+            for product in product_list
+              render 'product-card', product_item: product, transition_id: transition_id, sizes: sizes, loading: 'lazy'
+            endfor
+          endif
+        -%}
+      </div>
+
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{% stylesheet %}
+  .menu-block--featured {
+    display: grid;
+    position: relative;
+
+    .stacked-text--root {
+      position: absolute;
+    }
+  }
+{% endstylesheet %}

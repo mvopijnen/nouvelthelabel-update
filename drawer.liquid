@@ -1,0 +1,68 @@
+<!-- snippets/drawer.liquid -->
+
+{%- doc -%}
+  Renders the drawer containers for search, cart, filters, quick add, and navigation.
+{%- enddoc -%}
+
+<drawer-element class="drawer--root">
+  <div class="drawer--overlay" aria-hidden="true"></div>
+
+  <div class="drawer--focus-trigger" tabindex="0"></div>
+  <div class="drawer--focus-start" tabindex="0"></div>
+
+  <div
+    class="drawer--side"
+    data-side="top"
+    data-focus-id="search_input"
+    aria-expanded="false"
+  >
+    <div
+      class="drawer--container"
+      data-section-id="drawer-top-search"
+      data-view="search"
+      data-container-width="5"
+      data-mobile-spacing-above="medium"
+      data-mobile-spacing-below="medium"
+      data-spacing-above="large"
+      data-spacing-below="large"
+    >
+      {%- render 'main-search' -%}
+    </div>
+  </div>
+
+  <div
+    class="drawer--side"
+    data-side="right"
+    aria-expanded="false"
+  >
+    {%- if request.page_type == 'product' -%}
+      <div class="drawer--container" data-view="pickup"></div>
+    {%- endif -%}
+
+    {%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+      <div class="drawer--container" data-view="filter"></div>
+    {%- endif -%}
+
+    {%- if settings.quick-add--enabled -%}
+      <div class="drawer--container" data-view="product-form"></div>
+    {%- endif -%}
+
+    {%- if settings.cart--type == 'drawer' or settings.quick-add--enabled -%}
+      <div class="drawer--container" data-view="cart-drawer">
+        {%- render 'cart', view: 'drawer' -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div
+    class="drawer--side"
+    data-side="left"
+    aria-expanded="false"
+  >
+    <div class="drawer--container" data-view="y-menu">
+      {%- render 'mobile-nav' -%}
+    </div>
+  </div>
+
+  <div class="drawer--focus-trigger" tabindex="0"></div>
+</drawer-element>

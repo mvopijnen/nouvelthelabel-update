@@ -1,0 +1,46 @@
+<!-- snippets/video-play-button.liquid -->
+
+{%- doc -%}
+  Renders a play button for video blocks. Displays a solid or outline icon
+  and dispatches a play event on click.
+
+  @param {string} id - Unique identifier used to target the video.
+  @param {string} [style] - Play button style.
+{%- enddoc -%}
+
+<button
+  class="video-play-button"
+  onclick="window.trigger('theme:{{ id }}:play');"
+>
+  {%- liquid
+    if style == 'solid'
+      render 'icons', icon: 'play-solid'
+    else
+      render 'icons', icon: 'play-outline'
+    endif
+  -%}
+</button>
+
+{% stylesheet %}
+  .video-play-button {
+    background: transparent;
+    padding: 0;
+    transform: scale(1);
+    transition: transform 0.1s linear;
+
+    &:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
+    }
+
+    &:active {
+      transform: scale(0.99);
+      opacity: 0.75;
+      transition: transform 50ms linear;
+    }
+
+    [data-text-style='text-shadow'] & > * {
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+    }
+  }
+{% endstylesheet %}

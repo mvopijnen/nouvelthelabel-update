@@ -1,0 +1,338 @@
+{%- doc -%}
+  Calculates responsive `sizes` attributes for height-constrained media.
+  Used when images are displayed with object-fit: cover in containers with fixed heights.
+  @param {number} [aspect_ratio] - Desktop container aspect ratio for aspect-ratio display type.
+  @param {number} [columns] - Desktop column count. Defaults to `1`.
+  @param {string} [container_width] - Theme container width token. Defaults to `5`.
+  @param [display_type] - Desktop display type (fit-screen, x-large, large, medium, aspect-ratio) or pixel height.
+  @param {number} [mobile_aspect_ratio] - Mobile container aspect ratio for aspect-ratio display type.
+  @param [mobile_display_type] - Mobile display type (fit-screen, x-large, large, medium, aspect-ratio) or pixel height. Defaults to `display_type`.
+  @param {number} [mobile_original_aspect_ratio] - Mobile image aspect ratio. Defaults to `original_aspect_ratio`.
+  @param {boolean} [mobile_full_width] - Whether mobile content is full width. Defaults to `false`. When `false`, caps width from 100vw to calc(100vw - 32px).
+  @param {number} [original_aspect_ratio] - Desktop image aspect ratio for calculating required width.
+{%- enddoc -%}
+
+{%- liquid
+  # Desktop calculation - height × aspect_ratio = required width
+  assign horizontal_spacing = 96
+  assign min_desktop_width = 768
+  assign columns = columns | default: 1
+  assign container_width = container_width | default: '5'
+
+  # Map container width tokens to numeric values (for fixed-width containers)
+  case container_width
+    when '4'
+      assign container_width_numeric = 1200
+    when '3'
+      assign container_width_numeric = 1000
+    when '2'
+      assign container_width_numeric = 800
+    when '1'
+      assign container_width_numeric = 650
+  endcase
+
+  # Step 1: Calculate desktop height from display_type
+  case display_type
+    when 'fit-screen'
+      # Height is 100vw * 9/16 for fit-screen
+      assign desktop_cover_height = 100
+      assign desktop_cover_unit = 'vw-fit-screen'
+    when 'x-large'
+      assign desktop_cover_height = 750
+      assign desktop_cover_unit = 'px'
+    when 'large'
+      assign desktop_cover_height = 650
+      assign desktop_cover_unit = 'px'
+    when 'medium'
+      assign desktop_cover_height = 550
+      assign desktop_cover_unit = 'px'
+    when 'small'
+      assign desktop_cover_height = 450
+      assign desktop_cover_unit = 'px'
+    when 'x-small'
+      assign desktop_cover_height = 350
+      assign desktop_cover_unit = 'px'
+    when 'original'
+      # For original, use container width (image isn't cropped, so no calculation needed)
+      # Handle different container widths, accounting for columns
+      if columns > 1
+        # Multi-column: use per-column width
+        if container_width == '6'
+          assign column_vw = 100.0 | divided_by: columns | round: 2
+          assign desktop_sizes = column_vw | append: 'vw'
+        elsif container_width == '5'
+          assign column_vw = 100.0 | divided_by: columns | round: 2
+          assign desktop_sizes = column_vw | append: 'vw'
+        elsif container_width_numeric
+          # Fixed-width: container_width_numeric / columns
+          assign container_width_per_column = container_width_numeric | divided_by: columns | round: 0
+          assign desktop_sizes = container_width_per_column | append: 'px'
+        endif
+      else
+        # Single column: use full container width
+        if container_width == '6'
+          assign desktop_sizes = '100vw'
+        elsif container_width == '5'
+          assign desktop_sizes = 'calc(100vw - 96px)'
+        elsif container_width_numeric
+          # Fixed-width containers (1-4): use container width directly
+          assign desktop_sizes = container_width_numeric | append: 'px'
+        endif
+      endif
+      # Skip container logic for original (already handled above)
+      assign skip_container_logic = true
+    when 'aspect-ratio'
+      # For aspect-ratio, calculate based on container width
+      if aspect_ratio and original_aspect_ratio > aspect_ratio
+        assign aspect_ratio_multiplier = original_aspect_ratio | divided_by: aspect_ratio
+        assign aspect_vw = aspect_ratio_multiplier | times: 100 | round: 0
+
+        # Handle different container widths
+        if container_width == '6'
+          # Container 6: 100vw
+          assign desktop_sizes = aspect_vw | append: 'vw'
+        elsif container_width == '5'
+          # Container 5: calc(100vw - 96px)
+          # Calculate proportional pixel adjustment: aspect_vw% of 96px
+          assign aspect_px_adjustment = aspect_vw | times: 96 | divided_by: 100 | round: 0
+          assign desktop_sizes = 'calc(' | append: aspect_vw | append: 'vw - ' | append: aspect_px_adjustment | append: 'px)'
+        elsif container_width_numeric
+          # Fixed-width containers (1-4): container_width_numeric × multiplier
+          assign aspect_calculated_width = container_width_numeric | times: aspect_ratio_multiplier | round: 0
+          assign desktop_sizes = aspect_calculated_width | append: 'px'
+        endif
+      else
+        # original_aspect_ratio <= aspect_ratio, use full container width
+        if container_width == '6'
+          assign desktop_sizes = '100vw'
+        elsif container_width == '5'
+          assign desktop_sizes = 'calc(100vw - 96px)'
+        elsif container_width_numeric
+          # Fixed-width containers (1-4): use container width directly
+          assign desktop_sizes = container_width_numeric | append: 'px'
+        endif
+      endif
+      # Skip container logic for aspect-ratio (already handled above)
+      assign skip_container_logic = true
+  endcase
+
+  # Handle numeric display_type as direct pixel height
+  if desktop_cover_height == nil and display_type > 0
+    assign desktop_cover_height = display_type
+    assign desktop_cover_unit = 'px'
+  endif
+
+  # Step 2: Calculate minimum required width (height × aspect_ratio)
+  if desktop_cover_height and original_aspect_ratio
+    if desktop_cover_unit == 'vw-fit-screen'
+      # Calculate width as: (100vw * 9/16) * original_aspect_ratio = 100vw * 9/16 * original_aspect_ratio
+      assign desktop_calculated_width = desktop_cover_height | times: 9 | divided_by: 16 | times: original_aspect_ratio | round: 2
+      assign desktop_sizes = desktop_calculated_width | append: 'vw'
+      # Skip container logic for vw-fit-screen (already using vw units)
+      assign skip_container_logic = true
+    else
+      assign desktop_calculated_width = desktop_cover_height | times: original_aspect_ratio | round: 0
+    endif
+  endif
+
+  # Step 3: Determine container width per column and final size
+  if desktop_calculated_width and skip_container_logic != true
+    # Calculate container width per column (critical: compare calculated_width to this, not overall width)
+    if columns > 1
+      # Multi-column: divide container width by columns
+      if container_width == '6'
+        # 100vw / columns
+        assign column_vw = 100.0 | divided_by: columns | round: 2
+        assign container_width_per_column_vw = column_vw
+      elsif container_width == '5'
+        # calc(100vw - 96px) / columns = calc((100vw - 96px) / columns)
+        assign column_vw = 100.0 | divided_by: columns | round: 2
+        assign container_width_per_column_vw = column_vw
+      else
+        # Fixed-width: container_width_numeric / columns
+        assign container_width_per_column = container_width_numeric | divided_by: columns | round: 0
+      endif
+      assign vw_breakpoint = desktop_calculated_width | times: columns
+    else
+      # Single column: use full container width
+      if container_width == '6' or container_width == '5'
+        assign container_width_per_column_vw = 100.0
+      else
+        assign container_width_per_column = container_width_numeric
+      endif
+    endif
+
+    # Step 4: Generate sizes attribute based on container type and columns
+    if container_width == '6' or container_width == '5'
+      # Viewport-relative containers (5 & 6)
+      if columns > 1
+        # Multi-column: use calculated width until vw_breakpoint, then switch to column vw
+        # vw_breakpoint = calculated_width × columns (e.g., 900px × 2 = 1800px)
+        # Below breakpoint: use calculated_width (e.g., 900px)
+        # At/above breakpoint: use column_vw (e.g., 50vw for 2 columns)
+        # Example: (max-width: 1800px) 900px, 50vw
+        assign desktop_sizes = '(max-width: ' | append: vw_breakpoint | append: 'px) ' | append: desktop_calculated_width | append: 'px, ' | append: column_vw | append: 'vw'
+      else
+        # Single column
+        if desktop_calculated_width < min_desktop_width
+          # Too small, use container width directly
+          if container_width == '6'
+            assign desktop_sizes = '100vw'
+          else
+            assign desktop_sizes = 'calc(100vw - 96px)'
+          endif
+        else
+          # Single column with media query
+          if container_width == '6'
+            assign desktop_sizes = '(max-width: ' | append: desktop_calculated_width | append: 'px) ' | append: desktop_calculated_width | append: 'px, 100vw'
+          else
+            # Container 5: breakpoint is calculated_width + 96
+            assign breakpoint = desktop_calculated_width | plus: horizontal_spacing
+            assign desktop_sizes = '(max-width: ' | append: breakpoint | append: 'px) ' | append: desktop_calculated_width | append: 'px, calc(100vw - 96px)'
+          endif
+        endif
+      endif
+    else
+      # Fixed-width containers (1-4)
+      if columns == 1
+        # Single column: compare to full container width
+        if desktop_calculated_width < container_width_numeric
+          # Scale up to container width (enforce minimum)
+          # Only create media query if breakpoint is >= 768px (above mobile breakpoint)
+          if desktop_calculated_width >= min_desktop_width
+            # Media query: (max-width: calculated_width) calculated_width - 96, container_width_numeric
+            assign smaller_width = desktop_calculated_width | minus: horizontal_spacing
+            assign desktop_sizes = '(max-width: ' | append: desktop_calculated_width | append: 'px) ' | append: smaller_width | append: 'px, ' | append: container_width_numeric | append: 'px'
+          else
+            # Breakpoint would be < 768px, just use container width directly (no media query)
+            assign desktop_sizes = container_width_numeric | append: 'px'
+          endif
+        else
+          # Calculated width is sufficient, use directly (no media query)
+          assign desktop_sizes = desktop_calculated_width | append: 'px'
+        endif
+      else
+        # Multi-column fixed-width: compare to per-column width
+        if desktop_calculated_width >= container_width_per_column
+          # Calculated width is already larger than per-column width, use directly (no media query)
+          # Example: 1200px container, 800px calculated, 2 columns → per-column = 600px, 800px > 600px, so use 800px
+          assign desktop_sizes = desktop_calculated_width | append: 'px'
+        else
+          # Calculated width is smaller than per-column width, scale up to per-column width
+          # Only create media query if breakpoint is >= 768px (above mobile breakpoint)
+          if vw_breakpoint >= min_desktop_width
+            # Generate media query with vw breakpoint: (max-width: vw_breakpoint) calculated_width - 96, container_width_per_column
+            assign smaller_width = desktop_calculated_width | minus: horizontal_spacing
+            assign desktop_sizes = '(max-width: ' | append: vw_breakpoint | append: 'px) ' | append: smaller_width | append: 'px, ' | append: container_width_per_column | append: 'px'
+          else
+            # Breakpoint would be < 768px, just use container width per column directly (no media query)
+            assign desktop_sizes = container_width_per_column | append: 'px'
+          endif
+        endif
+      endif
+    endif
+  endif
+
+  # Default fallback
+  assign desktop_sizes = desktop_sizes | default: '100vw'
+
+  # Mobile calculation - height × aspect_ratio = required width
+  assign mobile_original_aspect_ratio = mobile_original_aspect_ratio | default: original_aspect_ratio
+  assign mobile_full_width = mobile_full_width | default: false
+  assign mobile_horizontal_spacing = 32
+
+  case mobile_display_type
+    when 'fit-screen'
+      # Treat fit-screen as 100vw * 9/16 for height calculation
+      assign mobile_cover_height = 100
+      assign mobile_cover_unit = 'vw-fit-screen'
+    when 'x-large'
+      assign mobile_cover_height = 600
+      assign mobile_cover_unit = 'px'
+    when 'large'
+      assign mobile_cover_height = 520
+      assign mobile_cover_unit = 'px'
+    when 'medium'
+      assign mobile_cover_height = 440
+      assign mobile_cover_unit = 'px'
+    when 'small'
+      assign mobile_cover_height = 360
+      assign mobile_cover_unit = 'px'
+    when 'x-small'
+      assign mobile_cover_height = 280
+      assign mobile_cover_unit = 'px'
+    when 'original'
+      # For original, use full viewport width (image isn't cropped)
+      if mobile_full_width
+        assign mobile_sizes = '100vw'
+      else
+        assign mobile_sizes = 'calc(100vw - 32px)'
+      endif
+    when 'aspect-ratio'
+      if mobile_aspect_ratio and mobile_original_aspect_ratio > mobile_aspect_ratio
+        assign mobile_sizes = mobile_original_aspect_ratio | divided_by: mobile_aspect_ratio | times: 100 | round: 0 | append: 'vw'
+      else
+        if mobile_full_width
+        assign mobile_sizes = '100vw'
+        else
+          assign mobile_sizes = 'calc(100vw - 32px)'
+        endif
+      endif
+  endcase
+
+  # Handle numeric display_type as direct pixel height
+  if mobile_cover_height == nil and mobile_display_type > 0
+    assign mobile_cover_height = mobile_display_type
+    assign mobile_cover_unit = 'px'
+  endif
+
+  if mobile_cover_height and mobile_original_aspect_ratio
+    if mobile_cover_unit == 'vw-fit-screen'
+      # Calculate width as: (100vw * 9/16) * original_aspect_ratio = 100vw * 9/16 * original_aspect_ratio
+      assign mobile_calculated_width = mobile_cover_height | times: 9 | divided_by: 16 | times: mobile_original_aspect_ratio | round: 2
+      assign mobile_sizes = mobile_calculated_width | append: 'vw'
+    else
+      assign mobile_calculated_width = mobile_cover_height | times: mobile_original_aspect_ratio | round: 0
+
+      if mobile_cover_unit == 'px'
+        # Ensure mobile width is at least 375px (minimum mobile viewport)
+        if mobile_calculated_width < 375
+          assign mobile_sizes = '375px'
+        else
+          assign mobile_sizes = mobile_calculated_width | append: mobile_cover_unit
+        endif
+      else
+        assign mobile_sizes = mobile_calculated_width | append: mobile_cover_unit
+      endif
+    endif
+  endif
+
+  # Build mobile sizes with desktop-style breakpoints
+  # Pattern: (max-width: calculated_width) calculated_width, (max-width: 767px) container_width, desktop_sizes
+  assign mobile_breakpoint = 767
+  assign mobile_container_width = '100vw'
+  unless mobile_full_width
+    assign mobile_container_width = 'calc(100vw - 32px)'
+  endunless
+
+  # Determine mobile sizes based on calculated width
+  if mobile_calculated_width
+    # We have a calculated pixel width
+    if mobile_calculated_width < mobile_breakpoint
+      # Create breakpoint pattern: (max-width: calculated_width) calculated_width, (max-width: 767px) container_width
+      assign mobile_sizes = '(max-width: ' | append: mobile_calculated_width | append: 'px) ' | append: mobile_calculated_width | append: 'px, (max-width: ' | append: mobile_breakpoint | append: 'px) ' | append: mobile_container_width
+    else
+      # Calculated width >= 767px, use calculated width at mobile breakpoint
+      assign mobile_sizes = '(max-width: ' | append: mobile_breakpoint | append: 'px) ' | append: mobile_calculated_width | append: 'px'
+    endif
+  elsif mobile_sizes == blank
+    # No calculated width, use container width as fallback
+    assign mobile_sizes = '(max-width: ' | append: mobile_breakpoint | append: 'px) ' | append: mobile_container_width
+  else
+    # mobile_sizes was set directly (original, aspect-ratio with multiplier, vw-fit-screen, etc.)
+    # Just prepend mobile breakpoint
+    assign mobile_sizes = '(max-width: ' | append: mobile_breakpoint | append: 'px) ' | append: mobile_sizes
+  endif
+-%}
+
+{{- mobile_sizes }}, {{ desktop_sizes -}}

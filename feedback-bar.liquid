@@ -1,0 +1,80 @@
+<!-- snippets/feedback-bar.liquid -->
+
+{%- doc -%}
+  Renders the feedback bar and its localized messages.
+{%- enddoc -%}
+
+{%- liquid
+  assign comment_moderated_t = 'blog.comment.moderated_feedback' | t
+  assign comment_success_t = 'blog.comment.success_feedback' | t
+  assign copied_t = 'general.social.copied' | t
+  assign n_items_left_t = 'products.n_items_left' | t
+  assign no_items_left_t = 'products.no_items_left' | t
+  assign one_item_left_t = 'products.one_item_left' | t
+  assign product_form_t = 'products.sold_out.signed_up_html' | t
+  assign email_invalid_t = 'products.sold_out.email_invalid' | t
+  assign success_feedback_t = 'sections.contact.success_feedback_html' | t
+  assign success_t = 'general.mailing_list.success_message' | t
+-%}
+
+<feedback-bar-element
+  class="feedback-bar--root"
+  data-transition-item="viewport"
+  data-transition-type="slide-in"
+  data-transition-trigger="custom"
+  aria-hidden="true"
+>
+  <div
+    id="feedback"
+    class="feedback-bar--message"
+    data-background-color="dark"
+    data-translucent="true"
+    data-text-color="white"
+    data-item="nav-text"
+  ></div>
+  <script type="application/json">
+    {
+      "copied": "{{- copied_t -}}",
+      "comment": "{{- comment_success_t -}}",
+      "comment--moderated": "{{- comment_moderated_t -}}",
+      "contact-form": "{{- success_feedback_t -}}",
+      "email-invalid": "{{- email_invalid_t -}}",
+      "newsletter": "{{- success_t -}}",
+      "product-form": "{{- product_form_t -}}",
+      "product--no-items": "{{- no_items_left_t -}}",
+      "product--one-item": "{{- one_item_left_t -}}",
+      "product--n-items": "{{- n_items_left_t -}}"
+    }
+  </script>
+</feedback-bar-element>
+
+{% stylesheet %}
+  .feedback-bar--root {
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    bottom: var(--spacing--item);
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+
+    @media (max-width: 767px) {
+      padding: var(--spacing--3);
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    &[aria-hidden='false'] {
+      display: block;
+    }
+  }
+
+  .feedback-bar--message {
+    padding: var(--spacing--2);
+    border: var(--border--dark);
+    border-radius: 4px;
+    display: inline-block;
+  }
+{% endstylesheet %}

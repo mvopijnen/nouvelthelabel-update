@@ -1,0 +1,354 @@
+<!-- snippets/navigation.liquid -->
+
+{%- doc -%}
+  Renders the collection/search navigation bar with filter controls.
+  @param {section} section - Section context.
+  @param {string} [mobile_spacing_above] - Mobile spacing above.
+  @param {string} [mobile_spacing_below] - Mobile spacing below.
+  @param {string} [results_string] - Human-readable results summary.
+  @param {boolean} [filter_enabled] - Show filter trigger.
+  @param {boolean} [layout_enabled] - Show layout toggles.
+  @param {boolean} [sort_enabled] - Show sort trigger.
+  @param {string} [sort_by] - Active sort value.
+  @param {object[]} [sort_options] - Available sort options.
+  @param {string} [spacing_above] - Desktop spacing above.
+  @param {string} [spacing_below] - Desktop spacing below.
+  @param {string} [tag_bg_color] - Tag background color token.
+  @param {string} [tag_color] - Tag text color token.
+  @param {string} [tag_shape] - Tag shape: "round" or "square".
+{%- enddoc -%}
+
+{%- liquid
+  assign clear_all_t = 'sections.navigation.clear_all' | t
+  assign filter_t = 'sections.navigation.filter' | t
+  assign large_layout_t = 'sections.navigation.large_layout' | t
+  assign small_layout_t = 'sections.navigation.small_layout' | t
+  assign sort_by_t = 'sections.navigation.sort_by' | t
+  assign sort_option_names = sort_options | map: 'name'
+  assign sort_option_values = sort_options | map: 'value'
+  assign swatches = settings.swatches--type
+-%}
+
+<navigation-element
+  class="navigation--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="none"
+  data-container-width="5"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+>
+  <div class="navigation--wrapper">
+    {%- if filter_enabled or sort_enabled or layout_enabled -%}
+      <div class="navigation--container">
+        {%- if filter_enabled or sort_enabled -%}
+          <div class="navigation--buttons">
+            {%- if sort_enabled -%}
+              {%-
+                render 'disclosure',
+                id: 'sort-by',
+                label_name: sort_by_t,
+                option_names: sort_option_names,
+                option_values: sort_option_values,
+                current_value: sort_by,
+                input_name: 'sort_by',
+                display_label: false,
+                type: 'sort-by'
+              -%}
+            {%- endif -%}
+
+            {%- if filter_enabled -%}
+              <button
+                class="navigation--filter"
+                data-item="nav-text"
+                data-drawer-open="right"
+                data-drawer-view="filter"
+                aria-haspopup="menu"
+              >
+                <div>{{- filter_t -}}</div>
+                {%- render 'icons', icon: 'filter' -%}
+              </button>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if results_string -%}
+          <div
+            class="navigation--results"
+            data-item="caption"
+            data-mq="medium-large"
+          >
+            {{- results_string -}}
+          </div>
+        {%- endif -%}
+
+        {%- if layout_enabled -%}
+          <div class="navigation--layout" data-mq="medium-large">
+            <button
+              class="navigation--layout-button"
+              tabindex="0"
+              data-active="false"
+              data-column-size="2"
+              role="button"
+              aria-label="{{ large_layout_t }}"
+            >
+              {%- render 'icons', icon: 'grid-large' -%}
+            </button>
+
+            <button
+              class="navigation--layout-button"
+              tabindex="0"
+              data-active="false"
+              data-column-size
+              role="button"
+              aria-label="{{ small_layout_t }}"
+            >
+              {%- render 'icons', icon: 'grid-small' -%}
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if filter_enabled -%}
+      <div class="navigation--tags-wrapper">
+        <div class="navigation--tags" data-item="nav-text">
+          <button
+            class="navigation--clear-button"
+            onclick="window.trigger('theme:filter:clearAll')"
+            data-item="tag"
+            data-tag-shape="{{ tag_shape }}"
+          >
+            <span>{{- clear_all_t -}}</span>
+          </button>
+        </div>
+      </div>
+
+      <template class="navigation--tag-template">
+        <button
+          class="navigation--tag"
+          data-item="tag"
+          data-tag-shape="{{ tag_shape }}"
+          data-state="opened"
+          style="--tag--bg-color:var(--bg-color--{{ tag_bg_color }});--tag--color:var(--color--{{ tag_color }});"
+        >
+          {%- unless swatches == 'none' -%}
+            <div
+              class="navigation--tag--swatch"
+              data-shape="{{ swatches }}"
+              aria-hidden="true"
+            ></div>
+          {%- endunless -%}
+
+          <span></span>
+          {%- render 'icons', icon: 'cross' -%}
+        </button>
+      </template>
+    {%- endif -%}
+  </div>
+</navigation-element>
+
+{% stylesheet %}
+  .navigation--root {
+    --navigation--height: 40px;
+
+    @media (min-width: 768px) {
+      .disclosure--root:first-child:not(:only-child) {
+        border-right: var(--border--dark);
+      }
+    }
+  }
+
+  .navigation--container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .navigation--layout {
+    display: flex;
+    margin-left: auto;
+
+    @media (max-width: 767px) {
+      .layout--viewport[data-header-layout='sidebar'] & {
+        display: none;
+      }
+    }
+  }
+
+  .navigation--layout-button {
+    color: var(--color--body);
+    transition: 0.25s color ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--navigation--height);
+    width: var(--navigation--height);
+    border: var(--border--dark);
+
+    &:first-child {
+      border-right: 0;
+    }
+
+    &[aria-pressed='false']:not(:hover) svg {
+      opacity: 0.3;
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    &:active svg {
+      scale: 0.95;
+      opacity: 0.8;
+    }
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  .navigation--buttons {
+    display: flex;
+    align-items: center;
+    flex-basis: initial;
+
+    @media (min-width: 768px) {
+      border: var(--border--dark);
+    }
+
+    @media (max-width: 767px) {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .icon--filter {
+      width: 12px;
+      height: auto;
+    }
+
+    .icon--chevron-down {
+      width: 10px;
+      height: auto;
+    }
+  }
+
+  .navigation--root .disclosure--toggle,
+  .navigation--filter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing--1);
+    color: var(--color--body);
+    transition: transform 0.1s var(--transition--standard);
+    line-height: 1;
+
+    &:active {
+      scale: 0.95;
+      opacity: 0.8;
+    }
+
+    @media (min-width: 768px) {
+      padding: 0 var(--spacing--2);
+      height: var(--navigation--height);
+    }
+
+    @media (max-width: 767px) {
+      border: var(--border--dark);
+      padding: var(--spacing--1);
+    }
+  }
+
+  .navigation--results {
+    display: flex;
+    align-items: center;
+    padding-left: var(--spacing--item);
+  }
+
+  .navigation--tags-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.2s var(--transition--standard);
+
+    &:has(.navigation--tags > :only-child) {
+      grid-template-rows: 0fr;
+    }
+  }
+
+  .navigation--tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: min(0.5em, var(--spacing--1));
+    overflow: hidden;
+    min-height: 0;
+    padding-top: var(--spacing--item);
+    transition: padding-top 0.2s var(--transition--standard);
+
+    &:has(> :only-child) {
+      padding-top: 0;
+    }
+  }
+
+  .navigation--tag {
+    overflow: hidden;
+    white-space: nowrap;
+    width: var(--tag-width);
+    transform: translate3d(0, 0, 0);
+
+    &[data-state='opened'] {
+      transition:
+        opacity 0.8s var(--transition--ease-out),
+        transform 0.8s var(--transition--ease-out);
+    }
+
+    &[data-state='opening'] {
+      will-change: transform, opacity;
+      opacity: 0;
+      transform: translate3d(var(--spacing--neg-block), 0, 0);
+    }
+
+    &[data-state='closing'] {
+      padding: 0;
+      opacity: 0;
+      width: 0;
+      transition:
+        width 0.2s var(--transition--standard),
+        padding 0.2s var(--transition--standard),
+        opacity 0.2s var(--transition--standard);
+    }
+  }
+
+  .navigation--tag--swatch {
+    margin: 0 var(--spacing--0) 0 var(--spacing--neg-0);
+    background: content-box var(--swatch-background) no-repeat center / cover;
+    height: var(--font--size);
+    width: var(--font--size);
+    min-width: var(--font--size);
+    border: 1px solid var(--color--gray);
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    &[data-shape='circle'] {
+      border-radius: 50%;
+    }
+  }
+
+  .navigation--clear-button {
+    --tag--color: var(--color--body);
+    --tag--bg-color: transparent;
+    opacity: 1;
+    margin: 1px 0px;
+    transition: opacity 0.2s var(--transition--standard);
+
+    &:only-child {
+      opacity: 0;
+    }
+
+    &:before {
+      border: 1px solid var(--border--color-dark);
+    }
+  }
+
+{% endstylesheet %}

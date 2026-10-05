@@ -1,0 +1,466 @@
+<!-- snippets/x-menu.liquid -->
+
+{%- doc -%}
+  Renders the desktop horizontal mega menu.
+  @param {string} handle - Navigation menu handle.
+  @param {string} [bg_color] - Mega menu background color token.
+  @param {object[]} [blocks] - Associated menu blocks.
+  @param {string} [highlight_color] - Highlight color token.
+  @param {string} [highlight_item] - Menu item handle to highlight.
+  @param {string} [modal_item] - Menu item handle that opens a modal.
+  @param {string} [text_color] - Mega menu text color token.
+{%- enddoc -%}
+
+<x-menu-element
+  class="x-menu"
+  aria-hidden="false"
+  data-mq="medium-large"
+  style="--highlight-color:{{ highlight_color }};"
+>
+  <ul class="x-menu--level-1--container">
+    {%- comment -%} Level 1 {%- endcomment -%}
+    {%- assign list_lvl_1 = handle -%}
+    {%- for link_1 in linklists[list_lvl_1].links -%}
+      {%- liquid
+        assign current_menu_item = link_1.handle | handleize | downcase
+        assign menu_id = 'x-menu_' | append: current_menu_item
+
+        capture menu_blocks
+          render 'menu-blocks', blocks: blocks, menu_item: current_menu_item, location: 'x-menu'
+        endcapture
+
+        assign megamenu = false
+        if link_1.levels > 1 or menu_blocks != blank
+          assign megamenu = true
+        endif
+
+        assign has_menu = false
+        if link_1.links != blank or menu_blocks != blank
+          assign has_menu = true
+        endif
+
+        capture link_text
+          echo '<span class="x-menu--level-1--text">'
+            echo link_1.title
+            if has_menu
+              render 'icons', icon: 'chevron-down'
+            endif
+          echo '</span>'
+        endcapture
+      -%}
+
+      <li
+        class="x-menu--level-1--link"
+        data-depth="{{ link_1.levels | plus: 1 }}"
+        data-megamenu="{{ megamenu }}"
+        {% if highlight_item == current_menu_item %}
+          data-highlight="true"
+        {% endif %}
+      >
+        {%- if modal_item == current_menu_item -%}
+          <modal-trigger
+            data-id="header-modal"
+            data-item="nav-text"
+            tabindex="0"
+            aria-haspopup="true"
+          >
+            {{- link_text -}}
+          </modal-trigger>
+        {%- else -%}
+          <a
+            href="{{ link_1.url }}"
+            data-item="nav-text"
+            {% if has_menu %}
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="{{ menu_id }}"
+            {% endif %}
+          >
+            {{- link_text -}}
+          </a>
+        {%- endif -%}
+
+        {%- comment -%} Level 2 {%- endcomment -%}
+        {%- if has_menu -%}
+          {%- liquid
+            assign add_transition = false
+            if megamenu
+              unless settings.transitions--other
+                assign add_transition = true
+              endunless
+            endif
+          -%}
+
+          <div
+            class="x-menu--level-2--container"
+            id="{{ menu_id }}"
+            aria-hidden="true"
+            data-background-color="{{ bg_color }}"
+            data-megamenu="{{ megamenu }}"
+            data-text-color="{{ text_color }}"
+            {% if add_transition %}
+              data-transition-container="{{ menu_id }}"
+              data-transition-type="fade-in"
+              data-transition-cascade="horizontal"
+              data-transition-cascade-interval="200"
+            {% endif %}
+          >
+            {%- unless link_1.levels == 0 -%}
+              {%- liquid
+                assign list_lvl_2 = link_1.handle
+                assign single_parents = blank
+                assign multi_parents = blank
+              -%}
+
+              {%- for link_2 in linklists[list_lvl_2].links -%}
+                {%- capture multi_parents -%}
+                  {%- liquid
+                    unless multi_parents == blank
+                      echo multi_parents
+                    endunless
+                  -%}
+
+                  {%- unless link_2.links == blank -%}
+                    <li class="x-menu--level-2--link">
+                      <a href="{{ link_2.url }}" data-item="nav-text">
+                        {{- link_2.title -}}
+                      </a>
+
+                      {%- comment -%} Level 3 {%- endcomment -%}
+
+                      {%- if link_2.links != blank -%}
+                        <ul class="x-menu--level-3--container">
+                          {%- assign list_lvl_3 = link_2.handle -%}
+                          {%- for link_3 in linklists[list_lvl_3].links -%}
+                            <li class="x-menu--level-3--link">
+                              <a href="{{ link_3.url }}" data-item="sub-nav-text">
+                                {{- link_3.title -}}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                      {%- comment -%} End Level 3 {%- endcomment -%}
+                    </li>
+                  {%- endunless -%}
+                {%- endcapture -%}
+
+                {%- capture single_parents -%}
+                  {%- liquid
+                    unless single_parents == blank
+                      echo single_parents
+                    endunless
+                  -%}
+
+                  {%- if link_2.links == blank -%}
+                    <li class="x-menu--level-2--link">
+                      <a
+                        href="{{ link_2.url }}"
+                        data-item="{% unless megamenu %}sub-{% endunless %}nav-text"
+                      >
+                        {{- link_2.title -}}
+                      </a>
+                    </li>
+                  {%- endif -%}
+                {%- endcapture -%}
+              {%- endfor -%}
+
+              {%- unless single_parents == blank and multi_parents == blank -%}
+                <div class="x-menu--level-2--wrapper">
+                  {%- unless single_parents == blank -%}
+                    <ul
+                      class="x-menu--level-2--list"
+                      data-single-parents="true"
+                      {% if add_transition %}
+                        data-transition-item="{{ menu_id }}"
+                      {% endif %}
+                    >
+                      {{- single_parents -}}
+                    </ul>
+                  {%- endunless -%}
+
+                  {%- unless multi_parents == blank -%}
+                    <ul
+                      class="x-menu--level-2--list"
+                      {% if add_transition %}
+                        data-transition-item="{{ menu_id }}"
+                      {% endif %}
+                    >
+                      {{- multi_parents -}}
+                    </ul>
+                  {%- endunless -%}
+                </div>
+              {%- endunless -%}
+            {%- endunless -%}
+
+            {{- menu_blocks -}}
+          </div>
+        {%- endif -%}
+        {%- comment -%} End Level 2 {%- endcomment -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</x-menu-element>
+
+{% stylesheet %}
+  .x-menu {
+    --natural-height: auto;
+
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .x-menu--level-1--container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing--item);
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .x-menu--level-1--link {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
+
+    &[data-megamenu='false'] {
+      position: relative;
+    }
+
+    &[data-megamenu='true'] {
+      .menu-block--image-wrapper {
+        max-width: 320px;
+        flex-basis: 185px;
+        flex-grow: 1;
+        width: 100%;
+        padding: var(--spacing--block) var(--spacing--item);
+      }
+
+      .menu-block--image {
+        border-radius: var(--image--radius);
+      }
+
+      .menu-block--description {
+        padding-top: var(--spacing--1);
+        text-align: center;
+      }
+
+      .menu-block--products {
+        order: 1;
+        padding: var(--spacing--block) var(--spacing--item);
+        white-space: initial;
+        width: 100%;
+        max-width: calc(var(--columns) * 320px);
+      }
+
+      .menu-block--blog {
+        width: 100%;
+        max-width: var(--max-width--medium);
+        padding: var(--spacing--block) var(--spacing--item);
+        white-space: initial;
+        order: 1;
+
+        &:only-child {
+          margin: 0 auto;
+        }
+      }
+
+      .menu-block--featured {
+        width: 100%;
+        order: 1;
+        padding: var(--spacing--block) var(--spacing--item);
+        white-space: initial;
+
+        &:only-child {
+          margin: 0 auto;
+        }
+      }
+    }
+
+    & > :is(a, modal-trigger) {
+      display: inline-flex;
+      box-sizing: content-box;
+      height: 100%;
+      min-height: 100%;
+      white-space: nowrap;
+
+      .icon--chevron-down {
+        transform: scaleY(1);
+        transition: transform 0.2s var(--transition--standard);
+      }
+
+      &[aria-expanded='true'] {
+        .icon--chevron-down {
+          transform: scaleY(-1);
+        }
+      }
+
+      &:is([aria-expanded='true']:not(:focus), :hover) {
+        /* this creates a safe zone for cursor to hover over */
+        &:before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: transparent;
+        }
+
+        .header--root[data-reduce-height='true'] & {
+          padding: var(--spacing--item) var(--spacing--block);
+          margin: var(--spacing--neg-item) var(--spacing--neg-block);
+
+          &:before {
+            height: var(--spacing--item);
+          }
+        }
+
+        .header--root[data-reduce-height='false'] & {
+          padding: var(--spacing--block);
+          margin: var(--spacing--neg-block);
+
+          &:before {
+            height: var(--spacing--block);
+          }
+        }
+      }
+    }
+
+    &[data-highlight='true'] > :is(a, modal-trigger)[data-item] {
+      --color: var(--highlight-color);
+
+      .x-menu--level-1--text:after,
+      .x-menu--level-1--text:before {
+        --header--color: var(--highlight-color);
+      }
+    }
+  }
+
+  .x-menu--level-1--text {
+    gap: var(--spacing--1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    pointer-events: none;
+  }
+
+  .x-menu--level-2--container {
+    --height: auto;
+
+    position: absolute;
+    white-space: nowrap;
+    min-width: 150px;
+    left: 0;
+    height: var(--height);
+    overflow: hidden;
+    transition: height 0.3s var(--transition--ease-out);
+
+    .x-menu--level-1--link[data-megamenu='false'] & {
+      left: var(--spacing--neg-3);
+
+      .layout--viewport[data-drop-shadows='true'] & {
+        box-shadow: var(--box-shadow--bottom);
+      }
+
+      .layout--viewport[data-drop-shadows='false'] & {
+        border: var(--border--dark);
+        border-top: none;
+      }
+    }
+
+    .x-menu--level-1--link[data-megamenu='true'] & {
+      max-width: 100%;
+      width: 100%;
+      padding-left: calc(var(--spacing--section--x) - var(--spacing--item));
+      padding-right: calc(var(--spacing--section--x) - var(--spacing--item));
+      inset-block-start: 100%;
+
+      .layout--viewport[data-drop-shadows='true'] & {
+        box-shadow: var(--box-shadow--bottom);
+      }
+
+      .layout--viewport[data-drop-shadows='false'] & {
+        border-bottom: var(--border--dark);
+      }
+    }
+
+    .header--root[data-reduce-height='true'] .x-menu--level-1--link[data-megamenu='false'] & {
+      inset-block-start: calc(100% + var(--spacing--item));
+    }
+
+    .header--root[data-reduce-height='false'] .x-menu--level-1--link[data-megamenu='false'] & {
+      inset-block-start: calc(100% + var(--spacing--block));
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    &[aria-hidden='false'] {
+      display: flex;
+    }
+  }
+
+  .x-menu--level-2--wrapper {
+    display: flex;
+  }
+
+  .x-menu--level-2--list {
+    padding: calc(var(--spacing--item) + var(--spacing--1)) 0;
+
+    .x-menu--level-1--link[data-megamenu='true'] & {
+      display: flex;
+
+      &[data-single-parents='true'] {
+        flex-direction: column;
+      }
+
+      &:first-child {
+        margin-left: var(
+          --spacing--neg-item
+        ); /* this offsets link padding to align with section spacing */
+      }
+    }
+  }
+
+  .x-menu--level-2--link a {
+    display: inline-flex;
+    padding: var(--spacing--1) var(--spacing--5);
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  ul.x-menu--level-3--container {
+    padding: 0 0 20px;
+  }
+
+  .x-menu--level-3--link a {
+    padding: var(--spacing--1) var(--spacing--5);
+    line-height: 1;
+  }
+
+  .header--root[data-hover-disabled='false'] {
+    :is([aria-expanded='true'], :hover, :focus-visible) > .x-menu--level-1--text:before {
+      position: absolute;
+      top: calc(50% + var(--font--size));
+      border-bottom: 1px solid var(--header--color);
+      content: '';
+      display: block;
+      width: 100%;
+    }
+
+    &[data-reduce-height='true'] .x-menu--level-1--text:after {
+      bottom: var(--spacing--neg-item);
+    }
+
+    &[data-reduce-height='false'] .x-menu--level-1--text:after {
+      bottom: var(--spacing--neg-block);
+    }
+  }
+{% endstylesheet %}

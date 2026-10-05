@@ -1,0 +1,137 @@
+<!-- snippets/css-typography.liquid -->
+
+{%- doc -%}
+  Outputs font-face declarations and typography variables.
+{%- enddoc -%}
+
+<style>
+  {%- liquid
+    assign font--heading = settings.typography--heading
+    assign font--nav = settings.typography--nav
+    assign font--nav--bold = font--nav | font_modify: 'weight', 'bolder'
+    assign font--paragraph = settings.typography--paragraph
+    assign font--paragraph--bold = font--paragraph | font_modify: 'weight', 'bolder'
+    assign font--paragraph--italic = font--paragraph | font_modify: 'style', 'italic'
+    assign font--paragraph--bold-italic = font--paragraph--bold | font_modify: 'style', 'italic'
+
+    echo font--heading | font_face: font_display: 'swap'
+
+    echo font--nav | font_face: font_display: 'swap'
+    if font--nav--bold
+      echo font--nav--bold | font_face: font_display: 'swap'
+    endif
+
+    echo font--paragraph | font_face: font_display: 'swap'
+    if font--paragraph--bold
+      echo font--paragraph--bold | font_face: font_display: 'swap'
+    endif
+
+    if font--paragraph--italic
+      echo font--paragraph--italic | font_face: font_display: 'swap'
+    endif
+
+    if font--paragraph--bold-italic
+      echo font--paragraph--bold-italic | font_face: font_display: 'swap'
+    endif
+  -%}
+
+  :root {
+    {%- if settings.typography--heading--uppercase -%}
+      --font--heading--uppercase: uppercase;
+    {%- else -%}
+      --font--heading--uppercase: none;
+    {%- endif -%}
+
+    {%- if settings.typography--nav--uppercase -%}
+      --font--nav--uppercase: uppercase;
+    {%- else -%}
+      --font--nav--uppercase: none;
+    {%- endif -%}
+
+    {%- if settings.typography--sub-nav--uppercase -%}
+      --font--sub-nav--uppercase: uppercase;
+    {%- else -%}
+      --font--sub-nav--uppercase: none;
+    {%- endif -%}
+
+    {%- if settings.typography--button--uppercase -%}
+      --font--button--uppercase: uppercase;
+    {%- else -%}
+      --font--button--uppercase: none;
+    {%- endif -%}
+
+    {%- if settings.typography--overline--uppercase -%}
+      --font--overline--uppercase: uppercase;
+    {%- else -%}
+      --font--overline--uppercase: none;
+    {%- endif -%}
+
+    {%- if settings.typography--paragraph--uppercase -%}
+      --font--paragraph--uppercase: uppercase;
+    {%- else -%}
+      --font--paragraph--uppercase: none;
+    {%- endif -%}
+
+    --font--banner--size: {{ settings.typography--banner--size }}px;
+    --font--banner--mobile-size: {{ settings.typography--banner--mobile-size }}px;
+
+    --font--featured--size: {{ settings.typography--featured--size }}px;
+    --font--featured--mobile-size: {{ settings.typography--featured--mobile-size }}px;
+
+    --font--section--size: {{ settings.typography--section--size }}px;
+    --font--section--mobile-size: {{ settings.typography--section--mobile-size }}px;
+
+    --font--block--size: {{ settings.typography--block--size }}px;
+    --font--block--mobile-size: {{ settings.typography--block--mobile-size }}px;
+
+    --font--paragraph--size: {{ settings.typography--paragraph--size }}px;
+    {%- if settings.typography--paragraph--size > 16 -%}
+      --font--paragraph--mobile-size: 16px;
+    {%- else -%}
+      --font--paragraph--mobile-size: {{ settings.typography--paragraph--size }}px;
+    {%- endif -%}
+
+    --font--featured-paragraph--size: {{ settings.typography--featured-paragraph--size }}px;
+    {%- if settings.typography--featured-paragraph--size > 18 -%}
+      --font--featured-paragraph--mobile-size: 18px;
+    {%- else -%}
+      --font--featured-paragraph--mobile-size: {{ settings.typography--featured-paragraph--size | minus: 2 }}px;
+    {%- endif -%}
+
+    --font--nav--size: {{ settings.typography--nav--size }}px;
+    {%- if settings.typography--nav--size > 14 -%}
+      --font--nav--mobile-size: 14px;
+    {%- elsif settings.typography--nav--size < 12 -%}
+      --font--nav--mobile-size: 12px;
+    {%- else -%}
+      --font--nav--mobile-size: {{ settings.typography--nav--size }}px;
+    {%- endif -%}
+
+    --font--sub-nav--size: {{ settings.typography--sub-nav--size }}px;
+    {%- if settings.typography--sub-nav--size > 14 -%}
+      --font--sub-nav--mobile-size: 14px;
+    {%- else -%}
+      --font--sub-nav--mobile-size: {{ settings.typography--sub-nav--size }}px;
+    {%- endif -%}
+
+    --font--overline--size: {{ settings.typography--overline--size }}px;
+    --font--button--size: {{ settings.typography--button--size }}px;
+    --font--button--spacing: {{ settings.typography--button--spacing }}px;
+
+    --font--heading--family: {{ font--heading.family }}, {{ font--heading.fallback_families }};
+    --font--heading--weight: {{ font--heading.weight | default: 400 }};
+    --font--heading--style: {{ font--heading.style }};
+    --font--heading--spacing: {{ settings.typography--heading--spacing }}px;
+
+    --font--nav--family: {{ font--nav.family }}, {{ font--nav.fallback_families }};
+    --font--nav--weight: {{ font--nav.weight | default: 400 }};
+    --font--nav--style: {{ font--nav.style }};
+
+    --font--paragraph--family: {{ font--paragraph.family }}, {{ font--paragraph.fallback_families }};
+    --font--paragraph--weight: {{ font--paragraph.weight | default: 400 }};
+    --font--paragraph--style: {{ font--paragraph.style }};
+    --font--paragraph--spacing: {{ settings.typography--paragraph--spacing }}px;
+
+    --font--line-height: 1.2;
+  }
+</style>

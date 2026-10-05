@@ -1,0 +1,132 @@
+<!-- snippets/collapsible-row.liquid -->
+
+{%- doc -%}
+  Renders an expandable disclosure row.
+  @param {string} heading - Row heading text.
+  @param {string} id - Content container id.
+  @param {boolean} [default_open] - Start expanded.
+  @param {string} [description] - Inline HTML fallback.
+  @param {string} [description_type] - Content style token. Defaults to `rte-content`.
+  @param {string} [page_content] - Page handle for content.
+  @param {string} [text_color] - Heading color token.
+  @param {string} [view] - Icon view type. Defaults to `small`.
+{%- enddoc -%}
+
+{%- liquid
+  assign description_type = description_type | default: 'rte-content'
+  assign view = view | default: 'small'
+  assign has_content = false
+  if page_content != blank or description != blank
+    assign has_content = true
+  endif
+-%}
+
+{%- unless heading == blank -%}
+  <animated-details>
+    <details
+      class="collapsible-row--root"
+      {% if default_open %}open{% endif %}
+      data-border="both"
+      data-view="{{ view }}"
+      data-text-color="{{ text_color | default: 'body' }}"
+    >
+      <summary class="collapsible-row--toggle">
+        <div class="collapsible-row--heading" data-item="nav-text">
+          {{- heading -}}
+        </div>
+
+        {%- if has_content -%}
+          <div class="layout--expand"></div>
+        {%- endif -%}
+      </summary>
+
+      {%- if has_content -%}
+        <div class="collapsible-row--wrapper">
+          <div class="collapsible-row--content">
+            <div
+              id="{{ id }}"
+              class="collapsible-row--inner"
+              data-item="{{ description_type }}"
+            >
+              {%- liquid
+                if page_content != blank
+                  echo pages[page_content].content
+                elsif description != blank
+                  echo description
+                endif
+              -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </details>
+  </animated-details>
+{% endunless %}
+
+{% stylesheet %}
+  /* makes adjacent row blocks fit together */
+  [class*='block'][data-fit-together='true'] + [class*='block'][data-fit-together='true'] {
+    margin-top: 0;
+  }
+
+  .collapsible-row--root {
+    --padding-horizontal: var(--spacing--item);
+    --padding-vertical: var(--spacing--item);
+    background-color: var(--bg-color);
+
+    &:after {
+      z-index: 0; /* override border framework */
+    }
+
+    &[data-text-color='white'] {
+      &:before,
+      &:after {
+        background-color: var(--border--color-light);
+      }
+    }
+
+    &[data-view='small'] {
+      --padding-vertical: var(--spacing--1);
+    }
+
+    .layout--expand {
+      --cross-size: calc(var(--font--nav--size) * var(--cross-scale, 1));
+      --cross-color: var(--color);
+    }
+
+    &[data-view='small'] .layout--expand {
+      --cross-scale: 1;
+    }
+
+    &[data-view='large'] .layout--expand {
+      --cross-scale: 2;
+    }
+  }
+
+  .collapsible-row--toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing--item);
+    user-select: none;
+    padding: 0;
+    color: var(--color);
+    width: 100%;
+    height: fit-content;
+    background-color: transparent;
+    text-align: left; /* required when text is two rows */
+    padding: var(--padding-vertical) var(--padding-horizontal);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .collapsible-row--heading {
+    padding: 0;
+    line-height: var(--spacing--4);
+    pointer-events: none;
+  }
+
+  .collapsible-row--inner {
+    padding: 0 var(--padding-horizontal) var(--padding-vertical);
+  }
+{% endstylesheet %}

@@ -1,0 +1,75 @@
+<!-- snippets/video.liquid -->
+
+{%- doc -%}
+  Renders a minimal autoplay video card with no text overlay or controls.
+  @param {string} [aspect_ratio] - Desktop aspect ratio.
+  @param {string} [display_type] - Desktop media display type.
+  @param {boolean} [full_width] - Enable full-width layout. Defaults to `false`.
+  @param {string} [id] - Unique block identifier.
+  @param {string} [mobile_aspect_ratio] - Mobile aspect ratio. Defaults to `aspect_ratio`.
+  @param {string} [mobile_display_type] - Mobile media display type. Defaults to `display_type`.
+  @param {boolean} [mobile_full_width] - Enable mobile full-width layout. Defaults to `false`.
+  @param {string} [loading] - Loading strategy (`lazy` or `eager`). Defaults to `lazy`.
+  @param {string} [overlay_style] - Overlay style token.
+  @param {object} [video_url] - External video object with `type` and `id`.
+  @param {media} [video_upload] - Uploaded video file.
+{%- enddoc -%}
+
+{%- liquid
+  assign video_id = '_9VUPq3SxOc'
+  assign video_type = 'youtube'
+  if video_upload != blank
+    assign video_type = 'plyr'
+    assign video_id = false
+  elsif video_url
+    assign video_type = video_url.type
+    assign video_id = video_url.id
+  endif
+
+  assign natural_aspect_ratio = 'calc(16 / 9)'
+  if video_upload
+    assign natural_aspect_ratio = video_upload.aspect_ratio
+  endif
+
+  assign aspect_ratio = aspect_ratio | default: natural_aspect_ratio
+  assign display_type = display_type | default: 'aspect-ratio'
+  assign full_width = full_width | default: false
+  assign mobile_aspect_ratio = mobile_aspect_ratio | default: aspect_ratio
+  assign mobile_display_type = mobile_display_type | default: display_type
+  assign loading = loading | default: 'lazy'
+  assign mobile_full_width = mobile_full_width | default: false
+
+  capture css_vars
+    echo '--video-aspect-ratio:' | append: aspect_ratio | append: ';'
+    echo '--video-mobile-aspect-ratio:' | append: mobile_aspect_ratio | append: ';'
+    echo '--natural-aspect-ratio:' | append: natural_aspect_ratio | append: ';'
+  endcapture
+-%}
+
+<video-element
+  class="video--root"
+  data-api="{{ video_type }}"
+  data-autoplay="true"
+  data-overlay-style="{{ overlay_style }}"
+  data-display-type="{{ display_type }}"
+  data-full-width="{{ full_width }}"
+  data-id="{{ id }}"
+  data-mobile-display-type="{{ mobile_display_type }}"
+  data-mobile-full-width="{{ mobile_full_width }}"
+  data-video-id="{{ video_id }}"
+  style="{{ css_vars }}"
+>
+  <div class="video--wrapper">
+    <div class="video--container" tabindex="-1">
+      {%- if video_upload -%}
+        {%- liquid
+          assign video = video_upload | video_tag: autoplay: true, muted: true, loop: true, loading: loading
+          assign video = video | replace: '<img', '<img loading="' | append: loading | append: '"'
+          echo video
+        -%}
+      {%- else -%}
+        <div id="{{ id }}-player"></div>
+      {%- endif -%}
+    </div>
+  </div>
+</video-element>

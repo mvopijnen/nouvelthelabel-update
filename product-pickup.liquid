@@ -1,0 +1,159 @@
+<!-- snippets/product-pickup.liquid -->
+
+{%- doc -%}
+  Renders the product pickup availability container.
+  @param {string} id - Unique element id.
+  @param {product} product - Product to check pickup availability.
+{%- enddoc -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign first_variant_has_pickup = false
+  for store_availability in current_variant.store_availabilities
+    if store_availability.pick_up_enabled and current_variant.available
+      assign first_variant_has_pickup = true
+      break
+    endif
+  endfor
+-%}
+
+<product-pickup-element
+  class="product-pickup--root"
+  data-first-variant-id="{{ current_variant.id }}"
+  data-load-first-variant="{{ first_variant_has_pickup }}"
+  data-loading="false"
+  data-id="{{ id }}"
+  data-is-only-variant="{{ product.has_only_default_variant }}"
+  data-title="{{ product.title }}"
+>
+  {% comment %} section/pickup.liquid is brought in async here {% endcomment %}
+  {%- if first_variant_has_pickup -%}
+    <div class="product-pickup--spinner">
+      {%- render 'icons', icon: 'spinner' -%}
+    </div>
+  {%- endif -%}
+</product-pickup-element>
+
+{% stylesheet %}
+  /* Form view */
+
+  .product-pickup--root {
+    display: block;
+  }
+
+  .pickup--form {
+    &:empty {
+      display: none;
+    }
+
+    &[data-loading='true'] {
+      opacity: 0.5;
+    }
+  }
+
+  .product-pickup--spinner {
+    width: fit-content;
+    margin: 0 auto;
+    padding: var(--spacing--block) 0;
+  }
+
+  .pickup--form--container {
+    display: flex;
+    gap: var(--spacing--1);
+    justify-content: var(--x-alignment);
+
+    .product-pickup--root[aria-busy='true'] & {
+      opacity: 0.4;
+    }
+
+    .icon--root {
+      height: 1em;
+      flex-shrink: 0;
+      margin-top: var(--spacing--0);
+    }
+
+    .icon--checkmark--small {
+      color: var(--color--success);
+    }
+
+    .icon--cross--small {
+      color: var(--color--alert);
+    }
+  }
+
+  .pickup--form--info {
+    text-align: left;
+  }
+
+  .pickup--form--stores {
+    padding-top: calc(var(--spacing--item) / 2);
+  }
+
+  /* Drawer view */
+
+  .pickup--drawer--container {
+    padding: var(--spacing--section--mobile);
+
+    .icon--root {
+      height: 1.75em;
+      flex-shrink: 0;
+    }
+
+    .icon--checkmark--small {
+      color: var(--color--success);
+    }
+
+    .icon--cross--small {
+      color: var(--color--alert);
+    }
+  }
+
+  .pickup--drawer--header {
+    padding-bottom: var(--spacing--item);
+  }
+
+  .pickup--drawer--product-title {
+    padding-bottom: var(--spacing--1);
+  }
+
+  .pickup--drawer--list-item {
+    padding: var(--spacing--item) 0;
+    border-top: var(--border--dark);
+
+    &:last-child {
+      border-bottom: var(--border--dark);
+    }
+
+    > * {
+      width: fit-content;
+    }
+  }
+
+  .pickup--drawer--list-location-container {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing--1);
+    align-items: center;
+    width: 100%;
+    padding-bottom: var(--spacing--1);
+  }
+
+  .pickup--drawer--list-stock {
+    padding-bottom: var(--spacing--1);
+    display: flex;
+    align-items: center;
+  }
+
+  .pickup--drawer--list-text {
+    padding-left: var(--spacing--1);
+  }
+
+  .pickup--drawer--list-phone {
+    padding-top: var(--spacing--1);
+  }
+
+  .pickup--drawer--return {
+    padding-top: var(--spacing--item);
+    cursor: pointer;
+  }
+{% endstylesheet %}

@@ -1,0 +1,108 @@
+<!-- snippets/product-carousel.liquid -->
+
+{%- doc -%}
+  Renders the main product media carousel.
+  @param {product} product - Product with media to display.
+  @param {string} product_id - Unique carousel id.
+  @param {section} section - Section context for ids.
+  @param {boolean} [async] - Marks asynchronous render.
+  @param {boolean} [video_looping_enabled] - Enables looping videos.
+{%- enddoc -%}
+
+{%- liquid
+  assign total_slides = 4
+  assign image_height = '200px'
+  if product.media.size > 0
+    assign total_slides = product.media.size
+    assign image_height = 'calc(100% / ' | append: product.featured_media.aspect_ratio | append: ')'
+  endif
+
+  capture css_vars
+    echo '--total-slides:' | append: total_slides | append: ';'
+    echo '--total-slides-mobile:' | append: total_slides | append: ';'
+    echo '--total-spaces:' | append: total_slides | append: ';'
+    echo '--total-spaces-mobile:' | append: total_slides | append: ';'
+    echo '--slide-height:' | append: image_height | append: ';'
+  endcapture
+-%}
+
+<product-carousel
+  class="card-carousel--root"
+  data-id="{{ product_id }}"
+  data-auto-rotate="false"
+  data-columns="1"
+  data-mobile-columns="1"
+  data-mobile-next-visible="true"
+  data-mobile-spacing-around-blocks="true"
+  data-next-visible="false"
+  data-last-slide="false"
+  data-spacing-around-blocks="false"
+  style="{{ css_vars }}"
+>
+  <div class="card-carousel--wrapper">
+    <div class="card-carousel--container">
+      {%- if product.media.size == 0 -%}
+        {%- for i in (1..total_slides) -%}
+          <div
+            class="card-carousel--block"
+            data-id="{{ section.id | append: '--block-' | append: forloop.index }}"
+          >
+            {%- render 'placeholder', type: 'product', placeholder_index: i -%}
+          </div>
+        {%- endfor -%}
+
+      {%- else -%}
+        {%- liquid
+          assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+          if product.has_only_default_variant
+            assign featured_media = product.media[0]
+          endif
+
+          capture sizes
+            echo '(max-width: 767px) calc(100vw - 32px), 50vw'
+          endcapture
+        -%}
+
+        {%- for block in product.media limit: total_slides -%}
+          <div
+            class="card-carousel--block"
+            data-id="{{ section.id | append: '--block-' | append: forloop.index }}"
+          >
+            {%- liquid
+              assign media_active = false
+              if block.id == featured_media.id
+                assign media_active = true
+              endif
+
+              assign loading = 'lazy'
+              if forloop.first and section.index < 3
+                assign loading = 'eager'
+              elsif forloop.first and async
+                assign loading = 'eager'
+              endif
+
+              assign fetchpriority = 'auto'
+              if forloop.first and section.index == 1
+                assign fetchpriority = 'high'
+              elsif forloop.first and async
+                assign fetchpriority = 'high'
+              endif
+            -%}
+
+            {%-
+              render 'product-media',
+              product: product,
+              product_media: block,
+              fetchpriority: fetchpriority,
+              media_active: media_active,
+              media_size: 'mobile',
+              loading: loading,
+              sizes: sizes,
+              video_looping_enabled: video_looping_enabled
+            -%}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</product-carousel>

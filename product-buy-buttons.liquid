@@ -1,0 +1,341 @@
+<!-- snippets/product-buy-buttons.liquid -->
+
+{%- doc -%}
+  Renders product add-to-cart and buy-now buttons.
+  @param {form} form - Product form tag.
+  @param {string} id - Unique element id.
+  @param {product} product - Product context.
+  @param {boolean} [onboarding] - Render onboarding state.
+  @param {string} [primary_button_style] - Primary button style token.
+  @param {string} [secondary_button_style] - Secondary button style token.
+  @param {boolean} [smart_payment_enabled] - Allow dynamic checkout buttons.
+  @param {boolean} [sticky_cart_enabled] - Show sticky drawer buttons.
+  @param {string} [translations] - JSON string with button translations.
+{%- enddoc -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+
+  assign add_to_cart_t = 'products.add_to_cart' | t
+  assign change_t = 'products.change' | t
+  assign buy_it_now_t = 'products.buy_it_now' | t
+  assign button_text = 'products.out_of_stock' | t
+  if current_variant.available
+    assign button_text = 'products.add_to_cart' | t
+  endif
+
+  unless onboarding
+    if product.selling_plan_groups != empty or product.available == false
+      assign smart_payment_enabled = false
+    endif
+  endunless
+%}
+
+{%- unless request.page_type == "password" -%}
+  {%- if onboarding -%}
+    <div class="product-buy-buttons--root" data-container="block">
+      <div
+        class="product-buy-buttons--primary"
+        {% if smart_payment_enabled %}
+          data-item="{{ secondary_button_style }}"
+        {% else %}
+          data-item="{{ primary_button_style }}"
+        {% endif %}
+        data-text="{{ add_to_cart_t }}"
+      >
+        <span>{{ add_to_cart_t }}</span>
+      </div>
+
+      {%- if smart_payment_enabled -%}
+        <div
+          class="product-buy-buttons--buy-now"
+          data-item="{{ primary_button_style }}"
+          data-text="{{ buy_it_now_t }}"
+        >
+          <span>{{ buy_it_now_t }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+  {%- else -%}
+    <product-buy-buttons-element
+      class="product-buy-buttons--root"
+      data-id="{{ id }}"
+      data-cart-type="{{ settings.cart--type }}"
+      data-translations="{{ translations | escape }}"
+      data-container="block"
+    >
+      {{- form | payment_terms -}}
+
+      <button
+        class="product-buy-buttons--primary"
+        type="submit"
+        aria-busy="false"
+        data-text="{{ button_text }}"
+        {% if smart_payment_enabled %}
+          data-item="{{ secondary_button_style }}"
+        {% else %}
+          data-item="{{ primary_button_style }}"
+        {% endif %}
+        {%- unless current_variant.available -%}
+          disabled
+        {%- endunless -%}
+      >
+        <span class="product-buy-buttons--cta-text">
+          {{- button_text -}}
+        </span>
+        <span class="product-buy-buttons--spinner">
+          {%- render 'icons', icon: 'spinner' -%}
+        </span>
+      </button>
+
+      {%- if smart_payment_enabled -%}
+        {%- assign smart_payment_button = form | payment_button -%}
+        {%- unless smart_payment_button == blank -%}
+          <div
+            class="product-buy-buttons--smart"
+            data-style="{{ primary_button_style }}"
+            {% if current_variant.available and request.design_mode == false %}
+              aria-hidden="false"
+            {% else %}
+              aria-hidden="true"
+            {% endif %}
+          >
+            {{- smart_payment_button -}}
+          </div>
+        {%- else -%}
+          <button
+            class="product-buy-buttons--buy-now"
+            data-item="{{ primary_button_style }}"
+            data-text="{{ buy_it_now_t }}"
+            type="button"
+            aria-busy="false"
+            {% if request.design_mode or current_variant.available == false %}
+              disabled
+            {% endif %}
+          >
+            <span class="product-buy-buttons--buy-now-text">
+              {{- buy_it_now_t -}}
+            </span>
+            <span class="product-buy-buttons--spinner">
+              {%- render 'icons', icon: 'spinner' -%}
+            </span>
+          </button>
+        {%- endunless -%}
+      {%- endif -%}
+
+      {%- if sticky_cart_enabled -%}
+        <div
+          class="product-buy-buttons--drawer"
+          data-background-color="none"
+          data-translucent="true"
+          data-mq="small"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          <div class="product-buy-buttons--drawer-info-container">
+            <div class="product-buy-buttons--drawer-info">
+              <div data-item="paragraph">
+                {{- product.title -}}
+              </div>
+
+              {%- unless product.has_only_default_variant -%}
+                <div class="product-buy-buttons--drawer-variant" data-item="nav-text">
+                  {{- current_variant.title -}}
+                </div>
+              {%- endunless -%}
+            </div>
+
+            {%- unless product.has_only_default_variant -%}
+              <button
+                class="product-buy-buttons--drawer-change"
+                type="button"
+                data-item="block-link"
+              >
+                <span>{{- change_t -}}</span>
+              </button>
+            {%- endunless -%}
+          </div>
+
+          <button
+            class="product-buy-buttons--primary"
+            type="submit"
+            aria-busy="false"
+            data-text="{{ button_text }}"
+            data-item="{{ primary_button_style }}"
+            {%- unless current_variant.available -%}
+              disabled
+            {%- endunless -%}
+          >
+            <span class="product-buy-buttons--cta-text">
+              {{- button_text -}}
+            </span>
+            <span class="product-buy-buttons--spinner">
+              {%- render 'icons', icon: 'spinner' -%}
+            </span>
+          </button>
+        </div>
+      {%- endif %}
+
+      <input
+        type="hidden"
+        class="product-buy-buttons--input"
+        name="id"
+        data-id="{{ current_variant.id }}"
+        data-sku="{{ current_variant.sku }}"
+        data-management="{{ current_variant.inventory_management }}"
+        data-policy="{{ current_variant.inventory_policy }}"
+        data-quantity="{{ current_variant.inventory_quantity | default: 0 }}"
+        value="{{ current_variant.id }}"
+      >
+
+      <script type="application/json">
+        {
+          "add_to_cart": "{{ "products.add_to_cart" | t }}",
+          "out_of_stock": "{{ "products.out_of_stock" | t }}",
+          "unavailable": "{{ "products.unavailable" | t }}"
+        }
+      </script>
+    </product-buy-buttons-element>
+  {%- endif -%}
+{%- endunless -%}
+
+{% stylesheet %}
+  .product-buy-buttons--root {
+    position: relative;
+  }
+
+  .product-buy-buttons--buy-now,
+  .product-buy-buttons--primary {
+    width: 100%;
+
+    &[aria-busy='true'] {
+      .product-buy-buttons--cta-text,
+      .product-buy-buttons--buy-now-text {
+        opacity: 0;
+      }
+    }
+
+    &[aria-busy='false'] {
+      .product-buy-buttons--spinner {
+        opacity: 0;
+      }
+    }
+  }
+
+  .product-buy-buttons--smart {
+    user-select: none;
+    width: 100%;
+
+    &[data-style='button-1'] {
+      --button--color: var(--button--color-1);
+      --button--bg-color: var(--button--bg-color-1);
+      --button--border-color: var(--button--border-color-1);
+    }
+
+    &[data-style='button-2'] {
+      --button--color: var(--button--color-2);
+      --button--bg-color: var(--button--bg-color-2);
+      --button--border-color: var(--button--border-color-2);
+    }
+
+    &[data-style='button-3'] {
+      --button--color: var(--button--color-3);
+      --button--bg-color: var(--button--bg-color-3);
+      --button--border-color: var(--button--border-color-3);
+    }
+
+    &[data-style='button-4'] {
+      --button--color: var(--button--color-4);
+      --button--bg-color: var(--button--bg-color-4);
+      --button--border-color: var(--button--border-color-4);
+    }
+
+    .shopify-payment-button__button--unbranded {
+      width: 100%;
+
+      &:hover:not([disabled]) {
+        background-color: var(--button--bg-color);
+      }
+    }
+
+    .shopify-payment-button__more-options {
+      margin: var(--spacing--item) 0 0 0;
+      text-decoration: underline;
+      color: var(--color--body);
+
+      &:is(:hover, :focus-visible) {
+        background-color: unset;
+        color: var(--color--body);
+      }
+    }
+
+    &[aria-hidden='true'] {
+      pointer-events: none;
+      opacity: 0.7;
+
+      .shopify-payment-button__button--unbranded {
+        pointer-events: none;
+      }
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .product-buy-buttons--drawer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--1);
+    position: fixed;
+    transform: translate3d(0, 50%, 0);
+    width: 100%;
+    bottom: 0;
+    padding: var(--spacing--item);
+    margin-left: var(--spacing--neg-item);
+    opacity: 0;
+    transition: all 300ms var(--transition--standard);
+    pointer-events: none;
+    z-index: -1;
+
+    &[aria-hidden='false'] {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 4;
+      transform: translate3d(0, 0, 0);
+
+      .layout--viewport[data-drop-shadows='true'] & {
+        box-shadow: var(--box-shadow--top);
+      }
+
+      .layout--viewport[data-drop-shadows='false'] & {
+        border-top: var(--border--dark);
+      }
+    }
+  }
+
+  .product-buy-buttons--drawer-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--1);
+    text-align: left;
+  }
+
+  .product-buy-buttons--drawer-info-container {
+    display: flex;
+    gap: var(--spacing--block);
+    align-items: flex-start;
+  }
+
+  .product-buy-buttons--drawer-variant {
+    display: flex;
+    gap: var(--spacing--1);
+  }
+
+  .product-buy-buttons--drawer-change {
+    padding: var(--spacing--0) 0;
+    color: var(--color--body);
+  }
+{% endstylesheet %}

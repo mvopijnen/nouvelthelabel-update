@@ -1,0 +1,75 @@
+<!-- snippets/card-carousel.liquid -->
+
+{%- doc -%}
+  Renders a carousel container around pre-built slides.
+  @param {string[]} blocks - Slide markup array.
+  @param {number} blocks_per_slide - Desktop items per slide.
+  @param {number} blocks_per_slide_mobile - Mobile items per slide.
+  @param {section} section - Section context.
+  @param {number} total_blocks - Total slides rendered.
+  @param {boolean} [auto_rotate] - Enable auto-rotation.
+  @param {boolean} [mobile_next_visible] - Show next-slide preview on mobile.
+  @param {boolean} [mobile_only] - Restrict carousel to mobile.
+  @param {boolean} [mobile_spacing_around_blocks] - Add spacing around blocks on mobile (defaults to spacing_around_blocks if not provided).
+  @param {boolean} [next_visible] - Show next-slide preview on desktop.
+  @param {number} [rotate_frequency] - Auto-rotation frequency in seconds.
+  @param {boolean} [spacing_around_blocks] - Add spacing around blocks on desktop.
+{%- enddoc -%}
+
+{% liquid
+  assign blocks_per_slide_mobile = blocks_per_slide_mobile | plus: 0
+  assign blocks_per_slide_float = blocks_per_slide | append: ".00"
+  assign blocks_per_slide_float_mobile = blocks_per_slide_mobile | append: ".00"
+  assign total_slides = total_blocks | divided_by: blocks_per_slide_float | ceil
+  assign total_slides_mobile = total_blocks | divided_by: blocks_per_slide_float_mobile | ceil
+  assign total_spaces = blocks_per_slide | times: total_slides
+  assign total_spaces_mobile = blocks_per_slide_mobile | times: total_slides_mobile
+
+  assign next_visible = next_visible | default: false
+  assign mobile_next_visible = mobile_next_visible | default: false
+
+  if mobile_spacing_around_blocks == blank
+    assign mobile_spacing_around_blocks = spacing_around_blocks
+  endif
+
+  capture css_vars
+    echo '--blocks-per-slide:' | append: blocks_per_slide | append: ';'
+    echo '--blocks-per-slide-mobile:' | append: blocks_per_slide_mobile | append: ';'
+    echo '--total-slides:' | append: total_slides | append: ';'
+    echo '--total-slides-mobile:' | append: total_slides_mobile | append: ';'
+    echo '--total-spaces:' | append: total_spaces | append: ';'
+    echo '--total-spaces-mobile:' | append: total_spaces_mobile | append: ';'
+
+    if auto_rotate and rotate_frequency
+      echo '--rotate-frequency:' | append: rotate_frequency | append: 's;'
+    endif
+  endcapture
+%}
+
+<card-carousel
+  class="card-carousel--root"
+  data-id="{{ section.id }}"
+  data-auto-rotate="{{ auto_rotate }}"
+  data-last-slide="false"
+  data-columns="{{ blocks_per_slide }}"
+  data-mobile-only="{{ mobile_only }}"
+  data-mobile-columns="{{ blocks_per_slide_mobile }}"
+  data-mobile-next-visible="{{ mobile_next_visible }}"
+  data-mobile-spacing-around-blocks="{{ mobile_spacing_around_blocks }}"
+  data-next-visible="{{ next_visible }}"
+  data-spacing-around-blocks="{{ spacing_around_blocks }}"
+  style="{{ css_vars }}"
+>
+  <div class="card-carousel--wrapper">
+    <div class="card-carousel--container">
+      {%- for block in blocks limit: total_blocks -%}
+        <div
+          class="card-carousel--block"
+          data-id="{{ section.id | append: '--block-' | append: forloop.index }}"
+        >
+          {{- block -}}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</card-carousel>

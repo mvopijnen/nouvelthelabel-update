@@ -1,0 +1,266 @@
+<!-- snippets/price-range.liquid -->
+
+{%- doc -%}
+  Renders the price range filter controls.
+  @param {filter} filter - Price range filter object.
+{%- enddoc -%}
+
+{%- liquid
+  assign from_t = 'general.filter.from' | t
+  assign to_t = 'general.filter.to' | t
+
+  assign min_value = filter.min_value.value | money_without_currency
+  assign max_value = filter.max_value.value | money_without_currency
+  assign range_max = filter.range_max | money_without_currency
+
+  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,UYU,VES,VND' | split: ','
+  assign uses_comma_decimals = false
+  if currencies_using_comma_decimals contains cart.currency.iso_code
+    assign uses_comma_decimals = true
+  endif
+
+  assign step = 0.1
+  if filter.range_max > 50000
+    assign step = 10
+  elsif filter.range_max > 10000
+    assign step = 5
+  elsif filter.range_max > 1000
+    assign step = 1
+  elsif filter.range_max > 500
+    assign step = 0.25
+  else
+  endif
+-%}
+
+<price-range-element class="price-range--root">
+  <div class="price-range--wrapper">
+    <button
+      type="button"
+      class="price-range--button"
+      data-min-price
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <div></div>
+    </button>
+    <div class="price-range--line">
+      <div></div>
+    </div>
+    <button
+      type="button"
+      class="price-range--button"
+      data-max-price
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <div></div>
+    </button>
+  </div>
+
+  <div class="price-range--fields">
+    <div class="price-range--field">
+      <span class="price-range--currency">
+        {{- cart.currency.symbol -}}
+      </span>
+      <input
+        class="price-range--input"
+        name="{{ filter.min_value.param_name }}"
+        id="price_range_min"
+        {% if filter.min_value.value and uses_comma_decimals %}
+          value="{{ min_value | replace: '.', '' | replace: ',', '.' }}"
+        {% elsif filter.min_value.value %}
+          value="{{ min_value | replace: ',', '' }}"
+        {% else %}
+          value="0"
+        {% endif %}
+        type="number"
+        step="{{ step }}"
+        min="0"
+        {% if uses_comma_decimals %}
+          max="{{ range_max | replace: '.', '' | replace: ',', '.' }}"
+        {% else %}
+          max="{{ range_max | replace: ',', '' }}"
+        {% endif %}
+        data-min-price
+      >
+      <label
+        class="price-range--label"
+        for="price_range_min"
+        data-item="hidden-text"
+      >
+        {{- from_t -}}
+      </label>
+    </div>
+    <div class="price-range--separator">
+      &mdash;
+    </div>
+    <div class="price-range--field">
+      <span class="price-range--currency">
+        {{- cart.currency.symbol -}}
+      </span>
+      <input
+        class="price-range--input"
+        name="{{ filter.max_value.param_name }}"
+        id="price_range_max"
+        {% if filter.max_value.value and uses_comma_decimals %}
+          value="{{ max_value | replace: '.', '' | replace: ',', '.' }}"
+        {% elsif filter.max_value.value %}
+          value="{{ max_value | replace: ',', '' }}"
+        {% elsif uses_comma_decimals %}
+          value="{{ range_max | replace: '.', '' | replace: ',', '.' }}"
+        {% else %}
+          value="{{ range_max | replace: ',', '' }}"
+        {% endif %}
+        type="number"
+        step="{{ step }}"
+        min="0"
+        {% if uses_comma_decimals %}
+          max="{{ range_max | replace: '.', '' | replace: ',', '.' }}"
+        {% else %}
+          max="{{ range_max | replace: ',', '' }}"
+        {% endif %}
+        data-max-price
+      >
+      <label
+        class="price-range--label"
+        for="price_range_max"
+        data-item="hidden-text"
+      >
+        {{- to_t -}}
+      </label>
+    </div>
+  </div>
+</price-range-element>
+
+{% stylesheet %}
+  .price-range--root {
+    --button-size: 14px;
+    --track-height: 3px;
+    --button-min-translate: 0;
+    --button-max-translate: 0;
+    --fill-translate: 0;
+    --fill-scale: 1;
+  }
+
+  .price-range--wrapper {
+    padding-bottom: var(--spacing--item);
+    position: relative;
+    display: flex;
+  }
+
+  .price-range--button {
+    position: absolute;
+    z-index: 1;
+    top: calc((var(--track-height) - var(--button-size)) / 2 - var(--spacing--2));
+    padding: var(--spacing--2);
+    user-select: none;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+
+    &:first-of-type {
+      left: calc(-1 * (var(--button-size) + 1px));
+    }
+
+    &:last-of-type {
+      right: calc(-1 * (var(--button-size) + 1px));
+    }
+
+    &:active {
+      > * {
+        scale: 0.9;
+      }
+
+      &:after {
+        opacity: 0.1;
+        scale: 1;
+      }
+    }
+
+    > * {
+      position: relative;
+      height: var(--button-size);
+      width: var(--button-size);
+      border: 1px solid var(--bg-color--body);
+      outline: 1px solid var(--color--body);
+      border-radius: 50%;
+      background-color: var(--color--body);
+      pointer-events: none;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color--body);
+      opacity: 0;
+      scale: 0;
+      margin: var(--spacing--0);
+      border-radius: 50%;
+      transition: opacity 150ms var(--transition--standard), scale 150ms var(--transition--standard);
+    }
+
+    &[data-min-price] {
+      transform: translate3d(var(--button-min-translate, 0px), 0, 0);
+    }
+
+    &[data-max-price] {
+      transform: translate3d(var(--button-max-translate, 0px), 0, 0);
+    }
+  }
+
+  .price-range--line {
+    position: relative;
+    border-radius: var(--track-height);
+    overflow: hidden;
+    height: var(--track-height);
+    width: 100%;
+
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--color--gray);
+      opacity: 0.4;
+    }
+
+    & > div {
+      background: var(--progress-bar);
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      transform-origin: left center;
+      transform: translate3d(var(--fill-translate, 0px), 0, 0) scaleX(var(--fill-scale, 1));
+      will-change: transform;
+    }
+  }
+
+  .price-range--fields {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .price-range--field {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+  }
+
+  .price-range--separator {
+    line-height: var(--input--height);
+  }
+
+  .price-range--currency {
+    color: var(--input--color);
+    line-height: var(--input--height);
+    padding-left: var(--spacing--1);
+    position: absolute;
+  }
+
+  .price-range--input {
+    margin: 0;
+    text-align: end;
+    padding-right: var(--spacing--1);
+  }
+{% endstylesheet %}

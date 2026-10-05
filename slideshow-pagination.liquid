@@ -1,0 +1,52 @@
+<!-- snippets/slideshow-pagination.liquid -->
+
+{%- doc -%}
+  Renders dot-style carousel pagination.
+  @param {number} max_dots - Max dots to render.
+  @param {number} total_slides - Desktop slide count.
+  @param {number} total_slides_mobile - Mobile slide count.
+  @param {boolean} [auto_rotate] - Carousel auto-rotate flag.
+{%- enddoc -%}
+
+{%- unless total_slides == 1 and total_slides_mobile == 1 -%}
+  {%- liquid
+    assign container_media_query = false
+    if total_slides == 1 and total_slides_mobile > 1
+      assign container_media_query = 'small'
+    elsif total_slides > 1 and total_slides_mobile == 1
+      assign container_media_query = 'medium-large'
+    endif
+  -%}
+
+  <div
+    class="slideshow-pagination"
+    {% unless container_media_query == blank %}
+      data-mq="{{ container_media_query }}"
+    {% endunless %}
+  >
+    <div class="slideshow-pagination--wrapper">
+      {%- for slide_index in (1..max_dots) -%}
+        {%- liquid
+          assign dot_media_query = false
+          if slide_index > total_slides and slide_index <= total_slides_mobile
+            assign dot_media_query = 'small'
+          elsif slide_index <= total_slides and slide_index > total_slides_mobile
+            assign dot_media_query = 'medium-large'
+          endif
+        -%}
+
+        <button
+          class="slideshow-pagination--index"
+          data-item="pagination-dot"
+          aria-label="{{ slide_index }}"
+          aria-current="{% if slide_index == 1 and auto_rotate == false %}true{% else %}false{% endif %}"
+          {% unless dot_media_query == blank %}
+            data-mq="{{ dot_media_query }}"
+          {% endunless %}
+        >
+          <div></div>
+        </button>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endunless -%}

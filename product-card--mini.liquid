@@ -1,0 +1,117 @@
+<!-- snippets/product-card--mini.liquid -->
+
+{%- doc -%}
+  Renders the compact product card with quick add.
+  @param {product} product_item - Product to display.
+  @param {boolean} [onboarding] - Render onboarding placeholders.
+  @param {number} [placeholder_index] - Placeholder variant index.
+  @param {boolean} [full_width] - Make the card full width. Defaults to `false`.
+{%- enddoc -%}
+
+{%- liquid
+  assign title = product_item.title
+  if onboarding
+    assign title = 'sections.onboarding.product_title' | t
+  endif
+
+  assign full_width = full_width | default: false
+  assign placeholder_index = placeholder_index | default: 1
+-%}
+
+<a
+  class="product-card--mini"
+  href="{{ product_item.url }}"
+  aria-label="{{ title }}"
+  data-background-color="none"
+  data-full-width="{{ full_width }}"
+  data-translucent="true"
+  draggable="false"
+>
+  <div class="product-card--mini--wrapper">
+    <div class="product-card--mini--image">
+      {%- if product_item.featured_media.preview_image -%}
+        {{-
+          product_item.featured_media.preview_image |
+          image_url: width: product_item.featured_media.preview_image.width |
+          image_tag: widths: '240', sizes: '120px', draggable: false
+        -}}
+      {%- else -%}
+        {%-
+          render 'placeholder',
+          type: 'product',
+          aspect_ratio: 1,
+          placeholder_index: placeholder_index
+        -%}
+      {%- endif -%}
+    </div>
+
+    <div class="product-card--mini--info" data-text-color="body">
+      <div data-item="paragraph">
+        {{- title -}}
+      </div>
+
+      {%-
+        render 'product-card--price',
+        product: product_item,
+        onboarding: onboarding
+      -%}
+    </div>
+
+    {%-
+      render 'product-quick-add',
+      product: product_item,
+      onboarding: onboarding,
+      hover: false
+    -%}
+  </div>
+</a>
+
+{% stylesheet %}
+  .product-card--mini {
+    display: block;
+
+    &[data-full-width='true'] {
+      width: 100%;
+    }
+
+    /* remove rte-content link styles when inside collapsible row */
+    [data-item='rte-content'] &[aria-label] {
+      text-decoration: none;
+    }
+  }
+
+  .product-card--mini--wrapper {
+    display: flex;
+    gap: var(--spacing--item);
+    position: relative;
+
+    .product-quick-add {
+      margin: -4px;
+    }
+  }
+
+  .product-card--mini--info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--1);
+    margin-right: var(--spacing--block);
+
+    @media (min-width: 768px) {
+      margin-bottom: var(--spacing--block);
+    }
+  }
+
+  .product-card--mini--image {
+    width: 60px;
+    min-width: 60px;
+    align-self: stretch;
+
+    & img {
+      height: 100%;
+    }
+
+    .placeholder--root {
+      width: 60px;
+    }
+  }
+{% endstylesheet %}

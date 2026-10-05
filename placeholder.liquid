@@ -1,0 +1,71 @@
+<!-- snippets/placeholder.liquid -->
+
+{%- doc -%}
+  Renders a placeholder with optional view transition.
+  @param {number} [aspect_ratio] - Aspect ratio of the placeholder. Defaults to `1.45`.
+  @param {string} [background] - Background color of the placeholder.
+  @param {string} [class] - Class to apply to the placeholder.
+  @param {string} [display_type] - Display type of the placeholder. Defaults to `aspect-ratio`.
+  @param {boolean} [full_width] - Full-width toggle.
+  @param {string} [mobile_aspect_ratio] - Mobile aspect ratio of the placeholder. Defaults to `aspect_ratio`.
+  @param {string} [mobile_display_type] - Display type of the mobile placeholder. Defaults to `display_type`.
+  @param {string} [mobile_full_width] - Mobile full-width toggle.
+  @param {string} [mobile_overlay_style] - Mobile overlay style. Defaults to `overlay_style`.
+  @param {string} [overlay_style] - Overlay style of the placeholder.
+  @param {string} [overlay_text_color] - Overlay text color token. Defaults to `body`.
+  @param {boolean} [parallax] - Enables parallax wrapper.
+  @param {number} [placeholder_index] - Placeholder variant index. Defaults to `1`.
+  @param {string} [type] - Type of the placeholder.
+  @param {string} [view_transition] - View transition name.
+{%- enddoc -%}
+
+{%- liquid
+  assign aspect_ratio = aspect_ratio | default: 1.45
+  assign display_type = display_type | default: 'aspect-ratio'
+  assign mobile_aspect_ratio = mobile_aspect_ratio | default: aspect_ratio | round: 2
+  assign mobile_overlay_style = mobile_overlay_style | default: overlay_style
+  assign mobile_display_type = mobile_display_type | default: display_type
+  assign overlay_text_color = overlay_text_color | default: 'body'
+  assign view_transition = view_transition | default: blank
+
+  if type == 'logo' or type == 'image'
+    assign placeholder = type
+  else
+    assign placeholder_index = placeholder_index | default: 1
+    assign placeholder = type | append: '-' | append: placeholder_index
+  endif
+
+  assign color = 'default'
+  if overlay_text_color == 'white'
+    assign color = 'dark'
+  endif
+-%}
+
+{%- if parallax -%}
+  <scroll-progress class="placeholder--scroll-progress">
+{%- endif -%}
+
+<placeholder-element
+  class="placeholder--root{% if class %} {{ class }}{% endif %}"
+  data-background="{{ background }}"
+  data-color="{{ color }}"
+  data-type="{{ type }}"
+  data-display-type="{{ display_type }}"
+  data-full-width="{{ full_width }}"
+  data-mobile-display-type="{{ mobile_display_type }}"
+  data-mobile-full-width="{{ mobile_full_width }}"
+  data-mobile-overlay-style="{{ mobile_overlay_style }}"
+  data-overlay-style="{{ overlay_style }}"
+  data-parallax="{{ parallax }}"
+  data-transition-item="placeholder"
+  data-transition-type="stroke"
+  style="--aspect-ratio:{{ aspect_ratio }};--mobile-aspect-ratio:{{ mobile_aspect_ratio }};{% if view_transition != blank %}view-transition-name:{{ view_transition | escape }};{% endif %}"
+>
+  <div class="placeholder--container">
+    {{- placeholder | placeholder_svg_tag -}}
+  </div>
+</placeholder-element>
+
+{%- if parallax -%}
+  </scroll-progress>
+{%- endif -%}

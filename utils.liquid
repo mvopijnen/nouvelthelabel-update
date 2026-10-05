@@ -1,0 +1,122 @@
+{%- doc -%}
+  Utility snippet providing helper renders selected via `name`.
+  @param {string} name - Utility identifier (`timesince`, `highlighted-text`).
+  @param {string} [created_at] - Required when `name` is `timesince`.
+  @param {string} [highlight_color] - Highlight color token.
+  @param {string} [highlight_text] - Highlight text color token.
+  @param {string} [highlight_type] - Highlight style token.
+  @param {string} [text] - Text to format when `name` is `highlighted-text`.
+{%- enddoc -%}
+
+{%- case name -%}
+  {%- when 'timesince' -%}
+    {%- comment -%} 'timesince' requires passing 'created_at' {%- endcomment -%}
+    {%- liquid
+      assign now_timestamp = 'now' | date: '%s'
+      assign date_start = created_at | date: '%s'
+      assign diff_seconds = now_timestamp | minus: date_start
+
+      if diff_seconds > 1382400
+        echo created_at | time_tag: format: 'date'
+      elsif diff_seconds > 86400
+        assign diff_days = diff_seconds | divided_by: 86400 | round
+        echo 'blog.article.time_since_posted.days' | t: count: diff_days
+      elsif diff_seconds > 3600
+        assign diff_hours = diff_seconds | divided_by: 3600 | round
+        echo 'blog.article.time_since_posted.hours' | t: count: diff_hours
+      elsif diff_seconds < 60
+        echo 'blog.article.time_since_posted.minutes' | t: count: 1
+      else
+        assign diff_minutes = diff_seconds | divided_by: 60 | round
+        echo 'blog.article.time_since_posted.minutes' | t: count: diff_minutes
+      endif
+    -%}
+
+  {%- when 'highlighted-text' -%}
+    {%- comment -%}
+      requires passing 'text', 'highlight_type', 'highlight_color', 'highlight_text'
+    {%- endcomment -%}
+    {%- liquid
+      assign scrolling_highlight = false
+      if highlight_type == 'underline-reveal' or highlight_type == 'opacity-fill'
+        assign scrolling_highlight = true
+      endif
+    -%}
+
+    {%- if text contains '[' -%}
+      {%- assign parts = text | split: '[' -%}
+
+      {%- for part in parts -%}
+        {%- if part contains ']' -%}
+          {%- assign subparts = part | split: ']' -%}
+
+          {%- if subparts[0] contains '|' -%}
+            <rotating-text data-text-highlight="rotating">
+              {%- assign rotating_parts = subparts[0] | split: '|' -%}
+              {%- for rotating_part in rotating_parts -%}
+                <span
+                  class="rotating-item"
+                  data-state="{% if forloop.first %}current{% else %}next{% endif %}"
+                >{{ rotating_part | strip }}</span>
+              {%- endfor -%}
+            </rotating-text><span>{{ subparts[1] | default: '' -}}</span>
+
+          {%- elsif scrolling_highlight -%}
+            <scroll-progress
+              data-text-highlight="{{ highlight_type }}"
+              data-progress-type="linear"
+              style="
+                {%- unless highlight_text == 'none' -%}
+                  --highlight-text:var(--bg-color--{{ highlight_text }});
+                {%- else -%}
+                  --highlight-text:currentColor;
+                {%- endunless -%}
+                {%- if highlight_type == 'underline-reveal' %}--letters:{{ subparts[0] | size }};{% endif -%}"
+            >
+              {%- if highlight_type == 'underline-reveal' -%}
+                {%- assign letters = subparts[0] | split: '' -%}
+                {%- for letter in letters -%}
+                  <span style="--index:{{ forloop.index }}">
+                    {%- liquid
+                      if letter == ' '
+                        echo '&nbsp;'
+                      else
+                        echo letter
+                      endif
+                    -%}
+                  </span>
+                {%- endfor -%}
+
+              {%- elsif highlight_type == 'opacity-fill' -%}
+                <span>{{ subparts[0] }}</span>
+                <div>{{ subparts[0] }}</div>
+
+              {%- endif -%}
+            </scroll-progress>{{ subparts[1] | default: '' -}}
+
+          {%- else -%}
+            <span
+              data-text-highlight="{{ highlight_type }}"
+              {% if highlight_type == 'glow' %}
+                data-text="{{ subparts[0] }}"
+              {% endif %}
+              style="--highlight-color:var(--bg-color--{{ highlight_color }});
+                {%- unless highlight_text == 'none' -%}
+                  --highlight-text:var(--bg-color--{{ highlight_text }});
+                {%- else -%}
+                  --highlight-text:currentColor;
+                {%- endunless -%}"
+            >{{ subparts[0] }}</span>
+            {%- if subparts[1] -%}<span>{{ subparts[1] | default: '' -}}</span>{%- endif -%}
+
+          {%- endif -%}
+
+        {%- elsif part != blank -%}
+          <span>{{- part -}}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {{- text -}}
+    {%- endif -%}
+
+{%- endcase -%}

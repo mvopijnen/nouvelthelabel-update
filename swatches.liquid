@@ -1,0 +1,224 @@
+<!-- snippets/swatches.liquid -->
+
+{%- doc -%}
+  Renders color/image swatches for a product option. Place inside loop of 'option' objects.
+  @param {string} id - Unique base id.
+  @param {product_option} option - Option containing swatch data.
+  @param {boolean} [grid_item] - Marks rendering within a grid card.
+{%- enddoc -%}
+
+{%- liquid
+  capture name
+    assign option_name = option.name | downcase | remove: ' '
+    echo id | append: '-' | append: option_name
+  endcapture
+
+  assign limit_swatches = false
+  if grid_item and option.values.size > 4 and settings.swatches--limit-grid
+    assign limit_swatches = true
+  endif
+-%}
+
+{% if grid_item %}
+  {%- assign size = settings.swatches--grid-size | default: 24 -%}
+{%- else -%}
+  {%- assign size = settings.swatches--form-size | default: 24 -%}
+
+  <label
+    class="swatches--header"
+    id="{{ name }}"
+    data-item="nav-text"
+  >
+    <span class="swatches--name">
+      <span>{{ option.name | escape }}</span>
+
+      <span class="swatches--option-current" data-text-color="gray">
+        {%- liquid
+          for value in option.values
+            if value == option.selected_value
+              echo value | escape
+              break
+            endif
+          endfor
+        -%}
+      </span>
+    </span>
+  </label>
+{%- endif -%}
+
+<div
+  class="swatches--container"
+  role="radiogroup"
+  aria-labelledby="{{ name }}"
+  {% if limit_swatches %}
+    aria-expanded="false"
+  {% endif %}
+  style="--swatch-size:{{ size }}px;--swatch-inset:{{ size | divided_by: 10 | plus: 1 | at_least: 2 | at_most: 4 }}px;"
+>
+  {%- for value in option.values -%}
+    {%- liquid
+      assign swatch_value = nil
+      assign first_variant_id = nil
+
+      if value.swatch.image
+        assign image_url = value.swatch.image | image_url: width: 60
+        assign swatch_value = 'url(' | append: image_url | append: ')'
+      elsif value.swatch.color
+        assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+      endif
+    -%}
+
+    <label
+      for="{{ name }}-{{ value | downcase | remove: ' ' }}"
+      class="swatch"
+      data-item="swatch"
+      data-shape="{{ settings.swatches--type }}"
+      aria-label="{{ value | escape }}"
+      {% if value.id and grid_item != true %}
+        data-product-url="{{ value.product_url }}"
+        data-option-value-id="{{ value.id }}"
+        data-option-name="{{ option.name | strip | downcase }}"
+      {% endif %}
+      {% unless value.available %}
+        data-unavailable="true"
+      {% endunless %}
+      style="--swatch-background:{{ swatch_value }};"
+    >
+      <input
+        class="swatch--input"
+        type="radio"
+        id="{{ name }}-{{ value | downcase | remove: ' ' }}"
+        name="{{ name }}"
+        value="{{ value | escape }}"
+        {% if value.id %}
+          data-option-value-id="{{ value.id }}"
+          data-option-name="{{ option.name | strip | downcase }}"
+          data-product-url="{{ value.product_url }}"
+        {% endif %}
+        data-item="radio"
+        {% if value == option.selected_value and grid_item == false %}
+          checked
+        {% endif %}
+      />
+    </label>
+  {%- endfor -%}
+
+  {%- if limit_swatches -%}
+    <button
+      class="swatches--expand"
+      type="button"
+      data-item="nav-text"
+      onclick="
+        this.parentElement.setAttribute('aria-expanded', true);
+        this.closest('.card-carousel--root')?.resetHeight();"
+    >
+      <span>+{{ option.values.size | minus: 3 -}}</span>
+    </button>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .swatches--header {
+    display: flex;
+    gap: var(--spacing--item);
+
+    &:not(:has(> *:only-child)) {
+      justify-content: space-between;
+    }
+  }
+
+  .swatches--name {
+    display: flex;
+    gap: var(--spacing--1);
+  }
+
+  .swatches--container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: calc(var(--swatch-inset, 2px) * 4);
+    row-gap: var(--spacing--2);
+    padding: var(--swatch-inset);
+  }
+
+  .swatches--expand {
+    margin-left: -6px;
+    display: flex;
+    align-items: center;
+    color: var(--color--body); /* iOS */
+
+    .swatches--container[aria-expanded='true'] & {
+      display: none;
+    }
+  }
+
+  [data-item='swatch'] {
+    position: relative;
+    display: inline-block;
+    height: var(--swatch-size);
+    width: var(--swatch-size);
+    min-width: var(--swatch-size);
+    border: 1px solid var(--color--gray);
+    padding-bottom: 0;
+    background: content-box var(--swatch-background) no-repeat center / cover;
+
+    &[data-shape='circle'] {
+      border-radius: 50%;
+    }
+
+    &:has(> input:focus-visible),
+    &:hover:not(:has(> input[disabled])) {
+      cursor: pointer;
+
+      &:after {
+        opacity: 1;
+        border-color: var(--color--body);
+      }
+    }
+
+    &[data-shape='circle']:after {
+      border-radius: 50%;
+    }
+
+    &:after {
+      content: '';
+      border: var(--border--thickness) solid var(--color--gray);
+      opacity: 0.4;
+      inset: calc(var(--swatch-inset) * -1);
+      position: absolute;
+      display: inline-block;
+      transition: opacity 0.1s var(--transition--standard);
+    }
+
+    &:has(> input:checked):after,
+    input:checked + &:after {
+      opacity: 1;
+      border-color: var(--color--body);
+    }
+
+    &[data-unavailable='true']:before {
+      content: '';
+      background: linear-gradient(to left top,transparent calc(50% - var(--border--thickness) / 2),var(--color--gray),transparent calc(50% + var(--border--thickness) / 2));
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    &[data-shape='circle'][data-unavailable='true']:before {
+      border-radius: 50%;
+    }
+
+    .swatches--container[aria-expanded='false'] > &:nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  .swatch--input[data-item='radio'] {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    position: absolute;
+  }
+{% endstylesheet %}

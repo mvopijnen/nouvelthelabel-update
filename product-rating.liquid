@@ -1,0 +1,83 @@
+<!-- snippets/product-rating.liquid -->
+
+{%- doc -%}
+  Renders aggregated product review stars and count.
+  @param {product} product - Product with review metafields.
+{%- enddoc -%}
+
+{%- liquid
+  assign reviews = product.metafields.reviews
+  assign rating_integer = reviews.rating.value.rating | floor
+  assign rating_decimal = reviews.rating.value.rating | modulo: 1 | round: 2
+  assign rating_max = reviews.rating.value.scale_max
+  assign rating_value = rating_integer | plus: rating_decimal
+
+  assign product_rating_t = 'products.star_reviews_info' | t: rating_value: rating_value, rating_max: rating_max
+  assign total_reviews_t = 'products.total_reviews' | t
+-%}
+
+{%- unless reviews.rating.value == blank or reviews.rating_count == 0 -%}
+  <div
+    class="product-rating--root"
+    role="img"
+    data-item="nav-text"
+    data-count="{{- reviews.rating_count -}}"
+    aria-label="{{ product_rating_t }}"
+    style="--rating:{{ rating_integer }};--rating-max:{{ rating_max }};--rating-decimal:{{ rating_decimal }};"
+  >
+    <div class="product-rating--stars"></div>
+  </div>
+{%- endunless -%}
+
+{% stylesheet %}
+  .product-rating--root {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing--0);
+
+    &:after {
+      content: '(' attr(data-count) ')';
+
+      @media (max-width: 767px) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .product-rating--stars {
+    letter-spacing: 4px;
+
+    /* based on 16px font size, 4px letter spacing */
+    --rating-percent: calc(
+      (
+          var(--rating) / var(--rating-max) + var(--rating-decimal) * 16 /
+            (var(--rating-max) * (16 + 4))
+        ) * 100%
+    );
+
+    &:before {
+      content: '★★★★★';
+      --star-color: var(--color--body);
+      --star-bg-opacity: 0.15;
+
+      background: linear-gradient(
+        90deg,
+        var(--star-color) var(--rating-percent),
+        rgba(0, 0, 0, var(--star-bg-opacity)) var(--rating-percent)
+      );
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      [data-text-color='white'] & {
+        --star-color: white;
+        --star-bg-opacity: 0.3;
+      }
+
+      [data-text-color='body'] & {
+        --star-color: var(--color--body);
+        --star-bg-opacity: 0.15;
+      }
+    }
+  }
+{% endstylesheet %}

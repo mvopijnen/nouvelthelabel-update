@@ -1,0 +1,427 @@
+<!-- snippets/product-media.liquid -->
+
+{%- doc -%}
+  Renders an individual product media item with optional zoom and modal support.
+  @param {product} product - Parent product.
+  @param {string} product_id - Gallery id used for modal triggers.
+  @param {media} product_media - Media item to render.
+  @param {string} [fetchpriority] - Image fetch priority.
+  @param {string} [loading] - Image loading mode.
+  @param {boolean} [media_active] - Whether the media is active.
+  @param {string} [media_size] - View token (desktop/mobile).
+  @param {boolean} [modal_enabled] - Enable modal trigger.
+  @param {number} [modal_index] - Index used for modal ordering.
+  @param {string} [sizes] - Image `sizes` attribute.
+  @param {boolean} [video_looping_enabled] - Loop videos. Defaults to `false`.
+  @param {boolean} [zoom_enabled] - Enable zoom wrapper. Defaults to `false`.
+{%- enddoc -%}
+
+{%- liquid
+  assign products_view_ar_t = 'products.view_ar' | t
+  assign image_modal_t = 'products.image_modal' | t
+
+  assign media_size = media_size | default: ''
+  assign video_looping_enabled = video_looping_enabled | default: false
+  assign zoom_enabled = zoom_enabled | default: false
+
+  assign aspect_ratio = product_media.aspect_ratio | round: 3
+  if product_media.media_type == 'model'
+    assign aspect_ratio = product_media.preview_image.aspect_ratio | round: 3
+  endif
+-%}
+
+<div
+  class="product-media--root"
+  data-id="{{ product_media.id }}"
+  data-active="{{ media_active }}"
+  data-media-type="{{ product_media.media_type }}"
+  style="--product-media--aspect-ratio:{{ aspect_ratio }};"
+>
+  {%- case product_media.media_type -%}
+    {%- when "image" -%}
+      {%- capture image -%}
+        {%- if zoom_enabled -%}
+          {%- liquid
+            assign magnify = 1.7
+            assign magnified_width = product_media.width | times: magnify
+          -%}
+
+          <product-zoom-element
+            class="product-zoom--root"
+            data-id="{{ product_media.id }}"
+            data-magnify="{{ magnify }}"
+          >
+            {{-
+              product_media |
+              image_url: width: product_media.width |
+              image_tag:
+                class: 'product-zoom--wrapper',
+                widths: '300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 1800, 2100, 2400, 3000',
+                sizes: sizes,
+                loading: loading,
+                fetchpriority: fetchpriority
+            -}}
+
+            {{-
+              product_media |
+              image_url: width: magnified_width |
+              image_tag:
+                class: 'product-zoom--enlarged',
+                widths: '300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 1800, 2100, 2400, 3000',
+                loading: 'lazy',
+                aria-hidden: 'true'
+            -}}
+          </product-zoom-element>
+
+        {%- else -%}
+          {{-
+            product_media |
+            image_url: width: product_media.width |
+            image_tag:
+              widths: '300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 1800, 2100, 2400, 3000',
+              sizes: sizes,
+              loading: loading,
+              fetchpriority: fetchpriority
+          -}}
+
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- if modal_enabled -%}
+        <modal-trigger
+          class="product-media--modal"
+          data-id="{{ product_id }}_main-product"
+          data-index="{{ modal_index }}"
+          aria-label="{{ image_modal_t }}"
+          tabindex="0"
+        >
+          {{- image -}}
+        </modal-trigger>
+      {%- else -%}
+        {{- image -}}
+      {%- endif -%}
+
+    {%- when "video" -%}
+      <product-video-element
+        class="product-video--root"
+        tabindex="0"
+        data-loop-enabled="{{ video_looping_enabled }}"
+        data-api="plyr"
+        {% unless media_size == blank %}
+          data-view="{{ media_size }}"
+        {% endunless %}
+      >
+        <div class="product-video--container">
+          {{- product_media | video_tag: image_size: "1024x" -}}
+        </div>
+      </product-video-element>
+
+    {%- when "external_video" -%}
+      <product-video-element
+        class="product-video--root"
+        tabindex="0"
+        data-api="{{ product_media.host }}"
+        data-loop-enabled="{{ video_looping_enabled }}"
+        data-video-id="{{ product_media.external_id }}"
+        {% unless media_size == blank %}
+          data-view="{{ media_size }}"
+        {% endunless %}
+      >
+        <div class="product-video--container">
+          <div
+            class="product-video"
+            id="{{ media_size }}{% if media_size != blank %}-{% endif %}{{ product_media.id }}"
+          ></div>
+        </div>
+      </product-video-element>
+
+    {%- when "model" -%}
+      <product-model-element
+        class="product-model--root"
+        tabindex="0"
+        {% if media_size != blank %}
+          data-view="{{ media_size }}"
+        {% endif %}
+      >
+        {{-
+          product_media | model_viewer_tag: reveal: 'interaction',
+          toggleable: true,
+          image_size: "1024x"
+        -}}
+      </product-model-element>
+
+      <a
+        class="product-model--button"
+        role="button"
+        data-item="button-1"
+        aria-label="{{ products_view_ar_t }}"
+        tabindex="0"
+      >
+        <div
+          data-shopify-xr
+          data-shopify-model3d-id="{{ product_media.id }}"
+          data-shopify-title="{{ product.title }}"
+        >
+          {%- render 'icons', icon: '3d-badge' -%}
+          {{- products_view_ar_t -}}
+        </div>
+      </a>
+
+    {%- else -%}
+      {{- product_media | media_tag -}}
+
+  {%- endcase -%}
+</div>
+
+{% stylesheet %}
+  .product-media--modal {
+    width: 100%;
+
+    &[data-media-type='image'] {
+      cursor: zoom-in;
+    }
+  }
+
+  .product-video--root {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    border-radius: var(--image--radius);
+    overflow: hidden;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .product-video--container {
+    position: relative;
+    width: 100%;
+    padding-top: calc(100% / var(--product-media--aspect-ratio));
+
+    > :first-child {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    & button {
+      height: unset;
+    }
+
+    /* vimeo */
+    .product-video > iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* plyr css adds an outline to video on focus */
+    .plyr--video:focus-visible {
+      outline: none;
+    }
+
+    .plyr__control--overlaid:hover {
+      background: var(--button--color-1);
+    }
+
+    .plyr__controls .plyr__control:hover {
+      color: unset;
+    }
+  }
+
+  .product-model--root {
+    width: 100%;
+    max-width: 100%;
+    padding-top: calc(100% / var(--product-media--aspect-ratio));
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+
+    .shopify-model-viewer-ui {
+      /* nested to add selector weight */
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    & model-viewer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-align: left;
+      border-radius: var(--image--radius);
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
+    & button[hidden] {
+      display: none;
+    }
+  }
+
+  .product-model--button[data-item] {
+    display: none;
+    width: 100%;
+    margin-top: var(--spacing--item);
+
+    @media (max-width: 767px) {
+      display: flex;
+    }
+  }
+
+  .product-zoom--root {
+    width: 100%;
+    height: fit-content;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    border-radius: var(--image--radius);
+
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--color--gray);
+      border-radius: var(--image--radius);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover:after {
+      opacity: 0.4;
+    }
+  }
+
+  .product-zoom--enlarged {
+    position: absolute;
+    background-color: var(--bg-color--body); /* for transparent images */
+    width: var(--enlarged-width);
+    left: var(--offset-x);
+    top: var(--offset-y);
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+
+  .product-media--thumbs {
+    display: block;
+    position: relative;
+
+    @media (min-width: 768px) {
+      order: 1;
+      width: var(--thumbnail-width);
+    }
+
+    @media (max-width: 767px) {
+      padding-top: var(--media-gap);
+      width: calc(100% + 2 * var(--spacing--item));
+      margin-left: var(--spacing--neg-item);
+    }
+  }
+
+  .product-media--thumbs-wrapper {
+    display: flex;
+    gap: var(--media-gap);
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      display: none;
+    }
+
+    @media (max-width: 767px) {
+      overflow-x: auto;
+      padding: 0 var(--spacing--item);
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      justify-content: flex-start;
+      flex-direction: column;
+      overflow-y: scroll;
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  .product-media--thumb {
+    user-select: none;
+    position: relative;
+    padding: 0;
+
+    &:active {
+      scale: 0.98;
+    }
+
+    &[aria-current='true']:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--color--gray);
+      opacity: 0.4;
+      pointer-events: none;
+      border-radius: var(--image--radius);
+    }
+
+    > * {
+      pointer-events: none;
+    }
+
+    @media (min-width: 768px) {
+      width: 100%;
+    }
+
+    @media (max-width: 767px) {
+      min-width: var(--thumbnail-width);
+
+      &:first-child {
+        [data-mobile-x-alignment='right'] &,
+        [data-mobile-x-alignment='center'] & {
+          margin-left: auto;
+        }
+      }
+
+      &:last-child {
+        [data-mobile-x-alignment='center'] & {
+          margin-right: auto;
+        }
+      }
+    }
+  }
+
+  .product-media--thumb-icon {
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    margin: var(--spacing--0);
+
+    &:after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--color--gray);
+      border-radius: 2px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    svg.icon--root {
+      background-color: var(--bg-color--body);
+      border-radius: 2px;
+
+      > * {
+        opacity: 0.8;
+      }
+    }
+  }
+{% endstylesheet %}

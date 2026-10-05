@@ -1,0 +1,452 @@
+<!-- snippets/social-media.liquid -->
+
+{%- doc -%}
+  Renders follow or share social icon sets.
+  @param {string} [alignment] - Desktop alignment.
+  @param {string} [direction] - Display direction (`horizontal` or `vertical`). Defaults to `horizontal`.
+  @param {string} [heading] - Optional heading text.
+  @param {string} [mobile_alignment] - Mobile alignment.
+  @param {object} [social_settings] - Share settings when `type` is `share`.
+  @param {string} [text_type] - Typography style value for `data-item` attribute. Defaults to `nav-text`.
+  @param {string} [type] - Icon group type (`follow` or `share`).
+  @param {string} [view] - Display type (`icons` or `links`). Defaults to `icons`.
+{%- enddoc -%}
+
+{%- liquid
+  assign direction = direction | default: 'horizontal'
+  assign text_type = text_type | default: 'nav-text'
+  assign view = view | default: 'icons'
+-%}
+
+<div
+  class="social-media--root"
+  data-type="{{ type }}"
+  data-view="{{ view }}"
+  data-hover-color="{{ settings.social--hover-color }}"
+  data-alignment="{{ alignment }}"
+  data-mobile-alignment="{{ mobile_alignment }}"
+  {% unless heading == blank %}
+    data-container="block"
+  {% endunless %}
+>
+  {%- case type -%}
+    {%- when 'follow' -%}
+      {%- liquid
+        assign follow_index = 0
+        assign types = "facebook x instagram linkedin tumblr snapchat pinterest vimeo youtube tiktok threads bluesky" | split: ' '
+      -%}
+
+      {%- for type in types -%}
+        {%- liquid
+          capture setting_url
+            echo 'social--' | append: type | append: '--url'
+          endcapture
+
+          capture brand_url
+            if type == 'x'
+              echo shop.brand.metafields.social_links.twitter.value
+            else
+              echo shop.brand.metafields.social_links[type].value
+            endif
+          endcapture
+        -%}
+
+        {%- capture follow_html -%}
+          {{- follow_html -}}
+
+          {%- unless settings[setting_url] == blank and brand_url == blank -%}
+            <li
+              class="social-media--item"
+              style="--index:{{ follow_index }};"
+            >
+              <a
+                class="social-{{ type }}--link"
+                rel="noreferrer"
+                target="_blank"
+                {% if settings[setting_url] != blank %}
+                  href="{{ settings[setting_url] | escape }}"
+                {% elsif brand_url != blank %}
+                  href="{{ brand_url | escape }}"
+                {% endif %}
+                {% if view == 'links' %}
+                  data-item="{{ text_type }}"
+                {% endif %}
+                aria-label="{{ type }}"
+              >
+                {%- liquid
+                  if view == 'links'
+                    echo type | capitalize
+                  else
+                    render 'icons', icon: type
+                  endif
+                -%}
+              </a>
+            </li>
+            {%- assign follow_index = follow_index | plus: 1 -%}
+          {%- endunless -%}
+        {%- endcapture -%}
+      {%- endfor -%}
+
+      {%- unless follow_html == blank -%}
+        {%- unless heading == blank -%}
+          <p class="social-media--title" data-item="{{ text_type }}">
+            {{- heading -}}
+          </p>
+        {%- endunless -%}
+
+        <ul
+          class="social-media--items"
+          {% if direction == 'vertical' %}
+            data-container="block"
+          {% endif %}
+        >
+          {{- follow_html -}}
+        </ul>
+      {%- endunless -%}
+
+    {%- when 'share' -%}
+      {%- liquid
+        assign facebook_share_t = 'general.social.facebook' | t
+        assign x_share_t = 'general.social.x' | t
+        assign pinterest_share_t = 'general.social.pinterest' | t
+        assign email_share_t = 'general.social.email' | t
+        assign url_share_t = 'general.social.url' | t
+
+        assign facebook = social_settings.facebook-enabled
+        assign x = social_settings.x-enabled
+        assign pinterest = social_settings.pinterest-enabled
+        assign email = social_settings.email-enabled
+        assign url = social_settings.url-enabled
+
+        if request.page_type == 'product'
+          assign media = product.featured_media | image_url: width: 1024, height: 1024
+          assign title = product.title | strip_html | escape | replace: ' ', '%20'
+        elsif request.page_type == 'article'
+          assign media = article.image | image_url: width: 1024, height: 1024
+          assign title = article.title | strip_html | escape | replace: ' ', '%20'
+        endif
+      -%}
+
+      {%- if facebook or x or pinterest or email or url -%}
+        {%- unless heading == blank -%}
+          <div class="social-media--title" data-item="{{ text_type }}">
+            {{- heading -}}
+          </div>
+        {%- endunless -%}
+
+        <ul
+          class="social-media--items"
+          {% if direction == 'vertical' %}
+            data-container="block"
+          {% endif %}
+        >
+          {%- if facebook -%}
+            <li class="social-media--item">
+              <a
+                class="social-facebook--link"
+                href="https://facebook.com/sharer.php?u={{ canonical_url }}&t={{ title }}"
+                target="_blank"
+                aria-label="{{ facebook_share_t }}"
+              >
+                {%- liquid
+                  if view == 'links'
+                    echo facebook_share_t
+                  else
+                    render 'icons', icon: 'facebook'
+                  endif
+                -%}
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- if x -%}
+            <li class="social-media--item">
+              <a
+                class="social-x--link"
+                href="https://twitter.com/intent/tweet?text=Check%20out%20this%20{{ request.page_type }}:+{{ canonical_url }}"
+                target="_blank"
+                aria-label="{{ x_share_t }}"
+              >
+                {%- liquid
+                  if view == 'links'
+                    echo x_share_t
+                  else
+                    render 'icons', icon: 'x'
+                  endif
+                -%}
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- if pinterest -%}
+            <li class="social-media--item">
+              <a
+                class="social-pinterest--link"
+                href="https://pinterest.com/pin/create/button/?url={{ canonical_url }}&media={{ media }}&description={{ title }}"
+                target="_blank"
+                aria-label="{{ pinterest_share_t }}"
+              >
+                {%- liquid
+                  if view == 'links'
+                    echo pinterest_share_t
+                  else
+                    render 'icons', icon: 'pinterest'
+                  endif
+                -%}
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- if email -%}
+            <li class="social-media--item">
+              <a
+                class="social-email--link"
+                href="mailto:?Subject={% if request.page_type == 'product' %}{{ product.title | url_escape }}{% elsif request.page_type == 'article' %}{{ article.title | url_escape }}{% endif %}&body={{ canonical_url }}"
+                aria-label="{{ email_share_t }}"
+              >
+                {%- liquid
+                  if view == 'links'
+                    echo email_share_t
+                  else
+                    render 'icons', icon: 'email'
+                  endif
+                -%}
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- if url -%}
+            <li class="social-media--item">
+              <share-url
+                class="social-url--link"
+                tabindex="0"
+                role="button"
+                aria-label="{{ url_share_t }}"
+                aria-describedby="feedback"
+              >
+                {%- if view == 'links' -%}
+                  {{- url_share_t -}}
+                {%- else -%}
+                  <span aria-hidden="false">
+                    {%- render 'icons', icon: 'link' -%}
+                  </span>
+                  <span aria-hidden="true">
+                    {%- render 'icons', icon: 'share' -%}
+                  </span>
+                {%- endif -%}
+              </share-url>
+            </li>
+          {%- endif -%}
+
+        </ul>
+      {%- endif -%}
+
+    {%- endcase -%}
+</div>
+
+{% stylesheet %}
+  .social-media--root {
+    display: inline-flex;
+
+    &[data-type='follow'] {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    &[data-alignment='left'] {
+      justify-content: flex-start;
+    }
+
+    &[data-alignment='right'] {
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 767px) {
+      &[data-mobile-align='center'] {
+        justify-content: center;
+      }
+    }
+
+    .icon--threads {
+      box-sizing: content-box;
+      padding: 4px 3px;
+      margin: -4px -3px;
+    }
+
+    .icon--x {
+      height: 18px;
+      width: 18px;
+      margin: -4px;
+    }
+
+    & svg {
+      height: 14px;
+      width: 14px;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .social-media--items {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    column-gap: 14px;
+
+    .social-media--root[data-view='icons'] & {
+      row-gap: var(--spacing--1);
+    }
+
+    @media (min-width: 768px) {
+      .social-media--root[data-alignment='center'] & {
+        justify-content: center;
+      }
+
+      .social-media--root[data-alignment='right'] & {
+        justify-content: flex-end;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .social-media--root[data-mobile-alignment='center'] & {
+        justify-content: center;
+      }
+
+      .social-media--root[data-mobile-alignment='left'] & {
+        justify-content: flex-start;
+      }
+
+      .social-media--root[data-mobile-alignment='right'] & {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .social-media--item {
+    display: inline-flex;
+
+    > :is(a, share-url) {
+      display: inline-flex;
+
+      .icon--root {
+        overflow: visible;
+      }
+
+      .social-media--root[data-view='icons'] & {
+        padding: var(--spacing--0);
+        margin: var(--spacing--neg-0);
+      }
+
+      .social-media--root[data-hover-color='opacity'] &:is(:focus-visible, :hover) > * {
+        opacity: 0.6;
+      }
+
+      .social-media--root[data-hover-color='brand'] & {
+        &:is(:focus-visible, :hover) .icon--x > * {
+          color: #ffffff;
+        }
+
+        &:is(:focus-visible, :hover) .icon--threads > * {
+          color: #ffffff;
+        }
+
+        &:is(:focus-visible, :hover) .icon--facebook > * {
+          color: #49659d;
+        }
+
+        &:is(:focus-visible, :hover) .icon--linkedin > * {
+          color: #0b65c2;
+        }
+
+        &:is(:focus-visible, :hover) .icon--pinterest > * {
+          color: #cb1f2b;
+        }
+
+        &:is(:focus-visible, :hover) .icon--youtube > * {
+          color: #ff0000;
+        }
+
+        &:is(:focus-visible, :hover) .icon--snapchat > * {
+          color: #ffffff;
+        }
+
+        &:is(:focus-visible, :hover) .icon--tumblr > * {
+          color: #35465c;
+        }
+
+        &:is(:focus-visible, :hover) .icon--vimeo > * {
+          color: #1ab7ea;
+        }
+
+        &:is(:focus-visible, :hover) .icon--email > * {
+          color: #deb72c;
+        }
+
+        &:is(:focus-visible, :hover) :is(.icon--link, .icon--share) > * {
+          color: #0c63a9;
+        }
+
+        &:is(:focus-visible, :hover) .icon--bluesky > * {
+          color: #1384fd;
+        }
+
+        &:is(:focus-visible, :hover) > :is(.icon--threads, .icon--x) {
+          background-color: #000000;
+          border-radius: 4px;
+        }
+
+        &:is(:focus-visible, :hover) > .icon--snapchat {
+          stroke: black;
+        }
+
+        &:is(:focus-visible, :hover) > .icon--tiktok {
+          filter: drop-shadow(1px 1px 0px #fd3e3e) drop-shadow(-0.5px -0.5px 0px #4de8f4);
+        }
+
+        &:is(:focus-visible, :hover) > .icon--instagram path {
+          fill: url(#instagram-hover);
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .social-media--title {
+    .social-media--root[data-type='follow'] & {
+      width: 100%;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .social-media--root[data-alignment='right'] & {
+        text-align: right;
+      }
+
+      .social-media--root[data-alignment='left'] & {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .social-media--root[data-mobile-alignment='right'] & {
+        text-align: right;
+      }
+    }
+  }
+
+  .social-url--link {
+    > [aria-hidden='true'] {
+      display: none;
+    }
+
+    > [aria-hidden='false'] {
+      display: inline-flex;
+    }
+  }
+{% endstylesheet %}

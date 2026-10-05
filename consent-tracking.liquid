@@ -1,0 +1,65 @@
+<!-- snippets/consent-tracking.liquid -->
+
+{%- doc -%}
+  Renders the popup consent tracking block used in `sections/popup`.
+  @param {block} block - Popup block settings.
+{%- enddoc -%}
+
+{%- liquid
+  assign accept_t = 'general.consent_tracking.accept' | t
+  assign decline_t = 'general.consent_tracking.decline' | t
+
+  assign accept_button_style = block.settings.accept-button-style
+  assign bg_color = block.settings.background-color
+  assign decline_button_style = block.settings.decline-button-style
+  assign description = block.settings.description
+  assign heading = block.settings.heading
+  assign position = block.settings.position
+  assign text_alignment = block.settings.text-alignment
+  assign text_color = block.settings.text-color
+  assign translucent = block.settings.translucent
+-%}
+
+<consent-tracking
+  class="popup--block--root"
+  data-block-id="{{ block.id | camelize }}"
+  data-background-color="{{ bg_color }}"
+  data-translucent="{{ translucent }}"
+  data-text-color="{{ text_color }}"
+  data-position="{{ position }}"
+  data-x-alignment="{{ text_alignment }}"
+  aria-hidden="true"
+  {{ block.shopify_attributes }}
+>
+  <div class="popup--block--container">
+    {%- unless heading == blank -%}
+      <h3 class="popup--block--heading" data-item="block-heading">
+        {{ heading }}
+      </h3>
+    {%- endunless -%}
+
+    {%- unless description == blank -%}
+      <div class="popup--block--description" data-item="rte-content">
+        {{- description -}}
+      </div>
+    {%- endunless -%}
+
+    <div class="popup--block--button-container">
+      <button
+        class="popup--block--accept"
+        data-item="{{ accept_button_style }}"
+        data-text="{{ accept_t }}"
+      >
+        <span>{{- accept_t -}}</span>
+      </button>
+
+      <button
+        class="popup--block--decline"
+        data-item="{{ decline_button_style }}"
+        data-text="{{ decline_t }}"
+      >
+        <span>{{- decline_t -}}</span>
+      </button>
+    </div>
+  </div>
+</consent-tracking>
