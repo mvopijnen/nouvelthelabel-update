@@ -62,7 +62,8 @@
     "filter_feedback": "No se encontró ningún producto que coincida con este filtro.",
     "no_products_feedback": "No hay productos en esta colección.",
     "numbered_title": "Colección {{ count }}",
-    "view_more": "Ver más"
+    "view_more": "Ver más",
+    "browse": "Explorar colecciones"
   },
   "customer": {
     "account": {
@@ -190,7 +191,8 @@
       "no_filters": "No hay filtros disponibles",
       "reset": "Restablecer",
       "search_by_name": "buscar por nombre",
-      "to": "hasta"
+      "to": "hasta",
+      "sort_by": "Ordenar por"
     },
     "localization": {
       "region": "Selector de países",
@@ -232,7 +234,8 @@
       "share": "Compartir",
       "x": "Publicar en X",
       "url": "Copiar URL"
-    }
+    },
+    "browser_unsupported": "Navegador no compatible. Actualízalo o utiliza otro navegador."
   },
   "layout": {
     "gift_card": {
@@ -250,7 +253,9 @@
       "account_view_link": "Cuenta",
       "back": "Volver",
       "menu": "Menú",
-      "toggle_drawer": "Alternar cajón"
+      "toggle_drawer": "Alternar cajón",
+      "cart": "Carrito",
+      "search": "Buscar"
     },
     "footer": {
       "navigation": "Navegación"
@@ -316,7 +321,8 @@
   },
   "sections": {
     "contact": {
-      "success_feedback_html": "¡Gracias por ponerse en contacto con nosotros! Le contestaremos lo antes posible."
+      "success_feedback_html": "¡Gracias por ponerse en contacto con nosotros! Le contestaremos lo antes posible.",
+      "button": "Enviar"
     },
     "countdown": {
       "day": "día",
@@ -343,7 +349,9 @@
       "large_layout": "alternar vista de producto más grande",
       "results_for": "Resultados para",
       "small_layout": "alternar vista de producto más pequeña",
-      "sort_by": "Ordenar por"
+      "sort_by": "Ordenar por",
+      "browse": "Explorar",
+      "refine": "Refinar"
     },
     "onboarding": {
       "collection_title": "Título de la colección",
@@ -354,7 +362,14 @@
       "price": "34,99",
       "price_int": "35",
       "product_title": "Título del producto",
-      "vendor": "Proveedor"
+      "vendor": "Proveedor",
+      "overline": "Antetítulo"
+    },
+    "featured_blog": {
+      "continue_reading": "Seguir leyendo",
+      "date": "Hace 2 horas",
+      "excerpt": "Aquí se mostrará el extracto del artículo.",
+      "item_title": "Entrada del blog"
     }
   }
 }

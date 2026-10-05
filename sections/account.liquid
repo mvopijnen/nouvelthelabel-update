@@ -95,7 +95,7 @@
                   </span>
                 </td>
                 <td class="money">
-                  {{- order.total_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros | append: ' ' | append: cart.currency.iso_code -}}
+                  {{- order.total_price | money_with_currency -}}
                 </td>
               </tr>
               {% endfor %}

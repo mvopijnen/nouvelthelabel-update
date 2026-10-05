@@ -62,7 +62,8 @@
     "filter_feedback": "Aucun produit ne correspond à ce filtre.",
     "no_products_feedback": "Il n'y a pas de produits dans cette collection.",
     "numbered_title": "Collection {{ count }}",
-    "view_more": "Voir plus"
+    "view_more": "Voir plus",
+    "browse": "Parcourir les collections"
   },
   "customer": {
     "account": {
@@ -190,7 +191,8 @@
       "no_filters": "Aucun filtre disponible",
       "reset": "Réinitialiser",
       "search_by_name": "rechercher par nom",
-      "to": "au"
+      "to": "au",
+      "sort_by": "Trier par"
     },
     "localization": {
       "region": "Sélecteur de pays",
@@ -232,7 +234,8 @@
       "share": "Partager",
       "x": "Publier sur X",
       "url": "Copier l'URL"
-    }
+    },
+    "browser_unsupported": "Navigateur non pris en charge. Mettez-le à jour ou utilisez un autre navigateur."
   },
   "layout": {
     "gift_card": {
@@ -250,7 +253,9 @@
       "account_view_link": "Compte",
       "back": "Retour",
       "menu": "Menu",
-      "toggle_drawer": "Basculer le tiroir"
+      "toggle_drawer": "Basculer le tiroir",
+      "cart": "Panier",
+      "search": "Rechercher"
     },
     "footer": {
       "navigation": "Navigation"
@@ -316,7 +321,8 @@
   },
   "sections": {
     "contact": {
-      "success_feedback_html": "Merci de nous avoir contactés ! Nous vous contacterons au plus tôt."
+      "success_feedback_html": "Merci de nous avoir contactés ! Nous vous contacterons au plus tôt.",
+      "button": "Envoyer"
     },
     "countdown": {
       "day": "jour",
@@ -343,7 +349,9 @@
       "large_layout": "agrandir l'image du produit",
       "results_for": "Résultats pour",
       "small_layout": "diminuer l'image du produit",
-      "sort_by": "Trier par"
+      "sort_by": "Trier par",
+      "browse": "Parcourir",
+      "refine": "Affiner"
     },
     "onboarding": {
       "collection_title": "Titre de la collection",
@@ -354,7 +362,14 @@
       "price": "34,99",
       "price_int": "35",
       "product_title": "Titre du produit",
-      "vendor": "Vendeur"
+      "vendor": "Vendeur",
+      "overline": "Surtitre"
+    },
+    "featured_blog": {
+      "continue_reading": "Lire la suite",
+      "date": "Il y a 2 heures",
+      "excerpt": "Le résumé de l’article s’affichera ici.",
+      "item_title": "Article de blog"
     }
   }
 }

@@ -359,15 +359,18 @@
           "warnings": []
         }
       ],
-      "median": {
+      "valid": false,
+      "invalidReason": "Mislabelled: CLI-only preset flag was ignored by the Node API; formFactor, viewport and user-agent are mobile. Do not use as desktop baseline or comparison.",
+      "legacyRecordedMedian": {
         "score": 53.0,
         "FCP_ms": 2909.22875,
         "LCP_ms": 6157.334500000001,
         "TBT_ms": 850,
         "CLS": 0,
         "SpeedIndex_ms": 3476.947187711209
-      }
+      },
+      "median": null
     }
   },
-  "limitations": "Cloud proxy, restricted analytics hosts, no field data or changed Shopify preview. These are exploratory baseline results, not a PageSpeed reproduction or a before/after improvement."
+  "limitations": "Historical cloudproxy lab data. Desktop results are invalid and must not be compared. Future summaries require validated per-run profile metadata."
 }
