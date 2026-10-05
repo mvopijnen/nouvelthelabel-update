@@ -164,8 +164,8 @@
           '.jdgm-verified-badge svg',
           '.jdgm-verified svg',
           '[class*="verified-buyer-badge"] svg',
-          '[aria-label*="verified"] svg',
-          '[title*="verified"] svg'
+          '[aria-label*="verified" i] svg',
+          '[title*="verified" i] svg'
         ].join(',');
         var reviewNameParents = new WeakSet();
 
@@ -233,55 +233,42 @@
           });
         }
 
-        function processAddedReviewContent(nodes) {
-          var roots = [];
-          nodes.forEach(function(node) {
-            if (node.nodeType !== Node.ELEMENT_NODE ||
-                node.classList.contains('custom-verified-badge')) return;
-            roots.push(node);
+        function collectMutationRoots(mutation, roots) {
+          var onlyBadges = mutation.addedNodes.length > 0;
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+              onlyBadges = false;
+              return;
+            }
+            if (node.classList.contains('custom-verified-badge')) return;
+            onlyBadges = false;
             hideNativeReviewIcons(node);
             hideNativeReviewTextNode(node);
+            roots.push(node);
           });
-          return roots;
-        }
+          if (onlyBadges) return;
 
-        function processReviewMutation(mutation, addedReviewContent) {
-          var roots = addedReviewContent.slice();
           var target = mutation.target;
-
           if (target.nodeType === Node.ELEMENT_NODE) {
             var name = target.closest(reviewNameSelector);
-            if (name && !name.querySelector('.custom-verified-badge')) roots.push(name);
+            if (name) roots.push(name.parentElement || name);
             if (reviewNameParents.has(target)) roots.push(target);
-            if (reviewNameParents.has(target.parentElement)) roots.push(target.parentElement);
+            else if (target.parentElement && reviewNameParents.has(target.parentElement)) {
+              roots.push(target.parentElement);
+            }
           }
-
-          processReviewRoots(roots);
         }
 
         function startVerifiedBadgeScript() {
           processReviewRoots([document.body]);
 
           var observer = new MutationObserver(function(mutations) {
+            var roots = [];
             mutations.forEach(function(mutation) {
               if (mutation.type !== 'childList') return;
-              var addedNodes = Array.prototype.slice.call(mutation.addedNodes);
-              var onlyBadges = addedNodes.length > 0 && addedNodes.every(function(node) {
-                return node.nodeType === Node.ELEMENT_NODE &&
-                  node.classList.contains('custom-verified-badge');
-              });
-              if (onlyBadges) return;
-
-              var addedReviewContent = Array.prototype.filter.call(
-                addedNodes,
-                function(node) {
-                  return node.nodeType === Node.ELEMENT_NODE &&
-                    !node.classList.contains('custom-verified-badge');
-                }
-              );
-              var roots = processAddedReviewContent(addedReviewContent);
-              processReviewMutation(mutation, roots);
+              collectMutationRoots(mutation, roots);
             });
+            processReviewRoots(roots);
           });
 
           observer.observe(document.body, {
