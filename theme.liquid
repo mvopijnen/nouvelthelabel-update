@@ -182,20 +182,22 @@
 
         function hideNativeReviewText(root) {
           forEachMatch(root, 'p, span, div', function(node) {
-            if (!node.matches(reviewNameSelector) &&
-                !node.classList.contains('custom-verified-badge') &&
-                (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
+            if (node !== root && isNativeVerifiedText(node)) {
               node.style.display = 'none';
             }
           });
         }
 
+        function isNativeVerifiedText(node) {
+          return !node.matches(reviewNameSelector) &&
+            !node.classList.contains('custom-verified-badge') &&
+            (node.textContent || '').trim().toLowerCase() === 'geverifieerd';
+        }
+
         function hideNativeReviewTextNode(node) {
           if (node.nodeType === Node.ELEMENT_NODE &&
               node.matches('p, span, div') &&
-              !node.matches(reviewNameSelector) &&
-              !node.classList.contains('custom-verified-badge') &&
-              (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
+              isNativeVerifiedText(node)) {
             node.style.display = 'none';
           }
         }
