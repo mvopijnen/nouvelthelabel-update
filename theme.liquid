@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="ltr">
+  <head>
+    <!-- Blockshop theme - Version 13.1.0 by Troop Themes - https://troopthemes.com/ -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if canonical_url != blank -%}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | image_url: width: 32 }}" type="image/png">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180 }}">
+    {%- endif -%}
+
+    {%- liquid
+      render 'preload'
+      render 'meta-tags'
+      render 'css-typography'
+      render 'css-variables'
+      render 'custom-styles'
+    -%}
+
+    {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ content_for_header }}
+    {%- render 'routes' -%}
+
+    <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+
+    {%- if request.page_type contains 'customers' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+      <script src="{{ 'customer_area.js' | shopify_asset_url }}" defer></script>
+    {%- endif -%}
+
+    {%- if request.design_mode -%}
+      <script type="module" src="{{ 'theme-editor.min.js' | asset_url }}"></script>
+      <script
+        src="https://licences.troopthemes.com/analytics.js"
+        data-json='{"merchant":{"email":"{{ shop.email }}"},"store":{"shopify_id":"{{ shop.id }}","domain":"{{ shop.domain }}"},"theme":{"shopify_id":"{{ theme.id }}","role":"{{ theme.role }}"}}'
+        async
+      ></script>
+    {%- endif -%}
+
+    {{- settings.advanced--head-liquid -}}
+
+    <style>
+      .custom-verified-badge {
+        display: inline-block !important;
+        margin-left: 8px !important;
+        padding: 2px 6px !important;
+        border: 1px solid #000 !important;
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 10px !important;
+        font-weight: 400 !important;
+        line-height: 1.2 !important;
+        border-radius: 0 !important;
+        white-space: nowrap !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+      }
+
+      .jdgm-review-card__name,
+      .jdgm-review-card__reviewer-name,
+      .jm-reviewer-info__name,
+      .jdgm-rev__author,
+      .jdgm-author,
+      .jdgm-carousel-item__reviewer-name,
+      .jdgm-carousel-item__reviewer-name-wrapper,
+      .jm-review-author__name,
+      .jm-author-name {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0 !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        line-height: normal !important;
+      }
+
+      @media screen and (max-width: 749px) {
+        .custom-verified-badge {
+          margin-left: 6px !important;
+          padding: 1px 5px !important;
+          font-size: 9px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="template--{{ template | split: '.' | first | remove: '_' | replace: '/', '--' }}"
+    data-theme-id="606"
+    data-theme-name="Blockshop"
+    data-theme-version="13.1.0"
+    data-theme-preset="{{ settings.preset }}"
+    data-transition-container="viewport"
+  >
+    <a data-item="a11y-button" href="#main_content" id="a11y_skip">
+      {{- 'general.a11y.skip_main' | t -}}
+    </a>
+
+    <div
+      class="layout--viewport"
+      data-button-transitions="{% if settings.transitions--buttons %}false{% else %}true{% endif %}"
+      data-drawer-status="closed"
+      data-drop-shadows="{{ settings.drop-shadows-enabled }}"
+      data-cart-empty="{% if cart.item_count > 0 %}false{% else %}true{% endif %}"
+      data-logged-in="{% if customer %}true{% else %}false{% endif %}"
+      data-money-format="{{ shop.money_format | replace: 'EUR', '€' | replace: 'amount', 'amount_no_decimals' | escape }}"
+      data-product-storage="4"
+    >
+      {%- sections 'header-group' -%}
+      {%- sections 'overlay-group' -%}
+
+      <div class="layout--main-content">
+        <aside class="layout--sidebar" data-mq="medium-large"></aside>
+
+        <main class="layout--template" id="main_content">
+          {{ content_for_layout }}
+        </main>
+      </div>
+
+      <div class="layout--footer-group">
+        {%- sections 'footer-group' -%}
+      </div>
+
+      {%- liquid
+        render 'layout--navigation'
+        render 'drawer'
+        render 'feedback-bar'
+        render 'icons', icon: 'defs'
+      -%}
+    </div>
+
+    <script>
+      (function () {
+        function addVerifiedBadges() {
+          var reviewNameSelectors = [
+            '.jdgm-review-card__name',
+            '.jdgm-review-card__reviewer-name',
+            '.jm-reviewer-info__name',
+            '.jdgm-rev__author',
+            '.jdgm-author',
+            '.jdgm-carousel-item__reviewer-name',
+            '.jdgm-carousel-item__reviewer-name-wrapper',
+            '.jm-review-author__name',
+            '.jm-author-name'
+          ];
+
+          reviewNameSelectors.forEach(function(selector) {
+            document.querySelectorAll(selector).forEach(function(el) {
+              if (el.querySelector('.custom-verified-badge')) return;
+
+              var badge = document.createElement('span');
+              badge.className = 'custom-verified-badge';
+              badge.textContent = 'Geverifieerd';
+              el.appendChild(badge);
+            });
+          });
+        }
+
+        function hideNativeVerifiedIcons() {
+          var nativeIconSelectors = [
+            '.jm-verified-buyer-badge svg',
+            '.jm-verified-buyer-badge [class*="icon"]',
+            '.jdgm-verified-badge svg',
+            '.jdgm-verified svg',
+            '[class*="verified-buyer-badge"] svg',
+            '[aria-label*="verified"] svg',
+            '[title*="verified"] svg'
+          ];
+
+          nativeIconSelectors.forEach(function(selector) {
+            document.querySelectorAll(selector).forEach(function(el) {
+              el.style.display = 'none';
+            });
+          });
+        }
+
+        function hideNativeNameVerifiedText() {
+          var nameContainers = [
+            '.jdgm-review-card__name',
+            '.jdgm-review-card__reviewer-name',
+            '.jm-reviewer-info__name',
+            '.jdgm-rev__author',
+            '.jdgm-author',
+            '.jdgm-carousel-item__reviewer-name',
+            '.jdgm-carousel-item__reviewer-name-wrapper',
+            '.jm-review-author__name',
+            '.jm-author-name'
+          ];
+
+          nameContainers.forEach(function(selector) {
+            document.querySelectorAll(selector).forEach(function(el) {
+              var parent = el.parentElement;
+              if (!parent) return;
+
+              parent.querySelectorAll('p, span, div').forEach(function(node) {
+                if (node === el) return;
+                if (node.classList && node.classList.contains('custom-verified-badge')) return;
+
+                var text = (node.textContent || '').trim().toLowerCase();
+                if (text === 'geverifieerd') {
+                  node.style.display = 'none';
+                }
+              });
+            });
+          });
+        }
+
+        function runVerifiedFix() {
+          hideNativeVerifiedIcons();
+          hideNativeNameVerifiedText();
+          addVerifiedBadges();
+        }
+
+        function startVerifiedBadgeScript() {
+          runVerifiedFix();
+
+          var observer = new MutationObserver(function() {
+            runVerifiedFix();
+          });
+
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', startVerifiedBadgeScript);
+        } else {
+          startVerifiedBadgeScript();
+        }
+
+        document.addEventListener('shopify:section:load', runVerifiedFix);
+        document.addEventListener('shopify:section:reorder', runVerifiedFix);
+        document.addEventListener('shopify:section:select', runVerifiedFix);
+      })();
+    </script>
+  </body>
+</html>
