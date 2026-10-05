@@ -1,0 +1,32 @@
+name: Theme validation
+on:
+  pull_request:
+  push:
+    branches: [main, fix/slideshow-performance-and-metadata]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+      - run: npm test
+      - run: npm run test:browser
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: npm run theme-check
+        env:
+          SHOPIFY_CLI_NO_ANALYTICS: '1'
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shopify-theme-and-checks
+          path: artifacts/

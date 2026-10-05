@@ -1,0 +1,10 @@
+extends: theme-check:recommended
+# Development files and raw browser traces are not Shopify theme input.
+# All seven upload directories remain checked with the recommended rules.
+ignore:
+  - node_modules/**
+  - artifacts/**
+  - tests/**
+  - scripts/**
+  - docs/**
+  - .github/**

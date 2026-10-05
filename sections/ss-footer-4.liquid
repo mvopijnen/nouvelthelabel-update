@@ -1125,6 +1125,19 @@
   root.dataset.tabsInitialized = 'true';
   const controller = new AbortController();
   const signal = controller.signal;
+  const timers = new Set();
+  const schedule = (callback, delay = 0) => {
+    const timer = setTimeout(() => {
+      timers.delete(timer);
+      if (!signal.aborted) callback();
+    }, delay);
+    timers.add(timer);
+    return timer;
+  };
+  signal.addEventListener('abort', () => {
+    timers.forEach(timer => clearTimeout(timer));
+    timers.clear();
+  }, { once: true });
   function initFooterTabs() {
     const answerPaddingTop = 10;
     const answerPaddingBottom = 10;
@@ -1148,7 +1161,7 @@
       const height = answersHeightCalElements[index].offsetHeight;
 
       answers[index].style.display = 'block';
-      setTimeout(() => {
+      schedule(() => {
         if (activeIndex !== index || !root.isConnected) return;
         answers[index].style.paddingTop = `${answerPaddingTop}px`;
         answers[index].style.paddingBottom = `${answerPaddingBottom}px`;
@@ -1162,7 +1175,7 @@
       answers[index].style.height = 0;
       icons[index].style.setProperty('--rotate', '0deg');
 
-      setTimeout(() => {
+      schedule(() => {
         if (activeIndex !== index) answers[index].style.display = 'none';
       }, 300);
     }
@@ -1195,7 +1208,7 @@
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
+      resizeTimer = schedule(() => {
         if (activeIndex !== -1) {
           const height = answersHeightCalElements[activeIndex].offsetHeight;
           answers[activeIndex].style.height = `${height + 30}px`;

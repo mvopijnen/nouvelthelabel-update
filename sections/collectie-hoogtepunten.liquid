@@ -9,6 +9,7 @@
 <style>
 
   .ch-wrapper-{{ section.id }} {
+    display: block;
     background-color: {{ section.settings.bg_color }};
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
@@ -165,7 +166,7 @@
   }
 </style>
 
-<div class="ch-wrapper-{{ section.id }}">
+<collection-highlights class="ch-wrapper-{{ section.id }}" data-mobile-layout="{{ section.settings.mobile_layout }}">
   <div class="ch-container">
     <div class="ch-grid">
       
@@ -207,63 +208,86 @@
 
     </div>
   </div>
-</div>
+</collection-highlights>
 
 <script>
-  (function() {
-    const init = () => {
-      const wrapper = document.querySelector('.ch-wrapper-{{ section.id }}');
-      if (!wrapper || wrapper.dataset.initialized) return;
-      wrapper.dataset.initialized = "true";
+  (() => {
+    if (customElements.get('collection-highlights')) return;
+    class CollectionHighlights extends HTMLElement {
+      connectedCallback() {
+        const wrapper = this;
+        wrapper.collectionHighlightsCleanup?.();
+        const controller = new AbortController();
+        const { signal } = controller;
+        let observer;
+        let frame = 0;
+        let currentIdx = 0;
+        let initialized = false;
+        let items;
+        let images;
 
-      const items = wrapper.querySelectorAll('.ch-item');
-      const images = wrapper.querySelectorAll('.ch-img');
-      let currentIdx = 0;
-      let ticking = false;
+        const cleanup = () => {
+          observer?.disconnect();
+          cancelAnimationFrame(frame);
+          controller.abort();
+          delete wrapper.dataset.initialized;
+          delete wrapper.collectionHighlightsCleanup;
+        };
+        wrapper.collectionHighlightsCleanup = cleanup;
 
-      const updateActive = (idx) => {
-        if (idx === currentIdx || ticking) return;
-        ticking = true;
-
-        requestAnimationFrame(() => {
-          items.forEach((i, index) => {
-            const isActive = index === idx;
-            i.classList.toggle('is-active', isActive);
-            images[index].classList.toggle('is-active', isActive);
+        const updateActive = (idx) => {
+          if (idx === currentIdx || frame || signal.aborted) return;
+          frame = requestAnimationFrame(() => {
+            frame = 0;
+            if (signal.aborted) return;
+            items.forEach((item, index) => {
+              item.classList.toggle('is-active', index === idx);
+              images[index]?.classList.toggle('is-active', index === idx);
+            });
+            currentIdx = idx;
           });
-          currentIdx = idx;
-          ticking = false;
-        });
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
+        };
+        const init = () => {
+          if (initialized || signal.aborted) return;
+          initialized = true;
+          items = wrapper.querySelectorAll('.ch-item');
+          images = wrapper.querySelectorAll('.ch-img');
+          currentIdx = Math.max(0, [...items].findIndex(item => item.classList.contains('is-active')));
+          wrapper.dataset.initialized = 'true';
+          let bound = false;
+          observer = new IntersectionObserver((entries) => {
+            if (bound || signal.aborted || !entries.some(entry => entry.isIntersecting)) return;
+            bound = true;
             items.forEach((item, index) => {
               item.addEventListener('mouseenter', () => {
                 if (window.innerWidth >= 990) updateActive(index);
-              });
-              item.addEventListener('click', (e) => {
-                if (window.innerWidth < 990 && "{{ section.settings.mobile_layout }}" === "interactive") {
-                  if (e.target.closest('a')) return;
+              }, { signal });
+              item.addEventListener('click', (event) => {
+                if (window.innerWidth < 990 && wrapper.dataset.mobileLayout === 'interactive') {
+                  if (event.target.closest('a')) return;
                   updateActive(index);
                 }
-              });
+              }, { signal });
             });
             observer.disconnect();
-          }
-        });
-      }, { threshold: 0.1 });
-
-      observer.observe(wrapper);
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init, { once: true });
-    } else {
-      init();
+          }, { threshold: 0.1 });
+          observer.observe(wrapper);
+        };
+        document.addEventListener('shopify:section:unload', (event) => {
+          if (event.target === wrapper || event.target.contains(wrapper)) cleanup();
+        }, { signal });
+        // The custom element initializes replacement markup even if inline scripts are not re-executed.
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', init, { once: true, signal });
+        } else {
+          queueMicrotask(init);
+        }
+      }
+      disconnectedCallback() {
+        this.collectionHighlightsCleanup?.();
+      }
     }
-    document.addEventListener('shopify:section:load', init);
+    customElements.define('collection-highlights', CollectionHighlights);
   })();
 </script>
 

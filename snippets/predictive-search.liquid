@@ -1,0 +1,316 @@
+<!-- snippets/predictive-search.liquid -->
+
+{%- doc -%}
+  Renders predictive search resources and product results.
+
+  Here you can change the max number of results per resource, API can go as high as 10
+{%- enddoc -%}
+
+{%- liquid
+  assign blog_t = 'general.search.blog' | t
+  assign collections_t = 'general.search.collections' | t
+  assign pages_t = 'general.search.pages' | t
+  assign no_results_t = 'general.search.no_results' | t
+  assign queries_t = 'general.search.queries' | t
+  assign products_t = 'general.search.products' | t
+  assign view_all_t = 'general.search.view_all' | t
+
+  assign blog_limit = 8
+  assign collections_limit = 8
+  assign pages_limit = 8
+  assign queries_limit = 8
+  assign custom_list_limit = 8
+
+  assign article_results = predictive_search.resources.articles
+  assign collection_results = predictive_search.resources.collections
+  assign page_results = predictive_search.resources.pages
+  assign query_results = predictive_search.resources.queries
+  assign show_default_products = settings.search--show-products
+
+  assign show_resources_column = false
+  if article_results.size > 0 or collection_results.size > 0 or page_results.size > 0 or query_results.size > 0
+    assign show_resources_column = true
+  elsif predictive_search.performed != true and settings.search--list != blank
+    assign show_resources_column = true
+  endif
+
+  assign mobile_columns = 2
+  assign columns = 4
+
+  assign product_limit = 8
+  if predictive_search.performed != true
+    assign product_limit = 4
+  endif
+
+  assign products = blank
+  assign product_heading = false
+  if predictive_search.performed
+    assign products = predictive_search.resources.products
+    assign product_heading = products_t
+  elsif show_default_products
+    if settings.search--product-list == blank
+      assign products = collections.all.products | sort: 'total_sold' | reverse
+    else
+      assign products = settings.search--product-list
+    endif
+
+    unless settings.search--product-heading == blank
+      assign product_heading = settings.search--product-heading
+    endunless
+  endif
+-%}
+
+{%- if show_resources_column -%}
+  <div class="predictive-search--resources">
+    {%- liquid
+      if predictive_search.performed
+        if query_results.size > 0
+          render 'predictive-search--item', type: 'query', results: query_results, title: queries_t, limit: queries_limit
+        endif
+
+        if article_results.size > 0
+          render 'predictive-search--item', type: 'article', results: article_results, title: blog_t, limit: blog_limit
+        endif
+
+        if collection_results.size > 0
+          render 'predictive-search--item', type: 'collection', results: collection_results, title: collections_t, limit: collections_limit
+        endif
+
+        if page_results.size > 0
+          render 'predictive-search--item', type: 'page', results: page_results, title: pages_t, limit: pages_limit
+        endif
+
+      else
+        render 'predictive-search--item', type: 'custom', limit: custom_list_limit
+
+      endif
+    -%}
+  </div>
+{%- endif -%}
+
+<div class="predictive-search--products">
+  {%- if product_heading -%}
+    <h3 class="predictive-search--heading" data-item="block-heading">
+      {{- product_heading -}}
+    </h3>
+  {%- endif -%}
+
+  {%- unless products == blank -%}
+    <div
+      class="predictive-search--product-grid"
+      data-container="panel"
+      data-columns="{{ columns }}"
+      data-mobile-columns="{{ mobile_columns }}"
+      >
+        {%- liquid
+        for product in products limit: product_limit
+          render 'product-card', product_item: product, transition_id: 'search', sizes: '(max-width: 767px) 50vw, 25vw', loading: 'lazy'
+        endfor
+
+        assign products_rendered = products.size
+        if products.size > product_limit
+          assign products_rendered = product_limit
+        endif
+
+        assign remainder = products_rendered | modulo: columns
+        assign blank_count = 0
+        if remainder > 0
+          assign blank_count = columns | minus: remainder
+        endif
+      -%}
+
+      {%- if blank_count > 0 -%}
+        {%- for i in (1..blank_count) -%}
+          <div
+            data-item="blank"
+            aria-hidden="true"
+            {% unless settings.transitions--other %}
+              data-transition-item="search"
+            {% endunless %}
+          ></div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+  {%- elsif predictive_search.performed -%}
+    <div class="predictive-search--feedback" data-item="paragraph">
+      {{- no_results_t -}}
+    </div>
+
+  {%- endunless -%}
+
+  {%- if predictive_search.performed and products != blank -%}
+    <div class="predictive-search--view-all">
+      <a
+        href="{{ routes.search_url }}?type=product&q={{ predictive_search.terms }}*"
+        data-item="button-1"
+        data-text="{{- view_all_t -}}"
+      >
+        <span>{{- view_all_t -}}</span>
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .search--root {
+    display: block;
+
+    .icon--x-mark {
+      color: var(--input--color);
+    }
+  }
+
+  .search--bar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing--item);
+  }
+
+  .search--bar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing--1);
+    background-color: var(--input--bg-color);
+    border-radius: var(--input--radius);
+    padding: 6px;
+    width: calc(20% + var(--spacing--block));
+    border: 1px solid var(--border--color-dark);
+
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+
+    [data-text-color='white'] & {
+      border: 1px solid var(--border--color-light);
+    }
+
+    [data-text-color='white'] [data-text-color='body'] & {
+      border: 1px solid var(--border--color-dark);
+    }
+  }
+
+  .search--clear {
+    cursor: pointer;
+    display: flex;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+
+  .search--cancel {
+    display: flex;
+  }
+
+  /* Needs input[type="search"] to override existing styles */
+  input[type='search'].search--textbox {
+    --input--bg-color: transparent;
+    --input--height: var(--spacing--4);
+
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    margin: 0;
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  input[type='text']::-ms-clear {
+    display: none;
+  }
+
+  .search--icon {
+    width: var(--spacing--4);
+    height: var(--spacing--4);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    .icon--search {
+      color: var(--input--color);
+    }
+
+    .icon--spinner {
+      scale: calc(7 / 5);
+      color: var(--input--color);
+      height: inherit;
+    }
+
+    .search--root[aria-busy='true'] & .icon--search,
+    .search--root[aria-busy='false'] & .icon--spinner {
+      display: none;
+    }
+  }
+
+  .search--results {
+    display: flex;
+
+    @media (min-width: 768px) {
+      gap: var(--spacing--block);
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
+
+    > * {
+      padding-top: var(--spacing--block);
+      width: 100%;
+    }
+  }
+
+  .predictive-search--products:empty {
+    display: none;
+  }
+
+  .predictive-search--product-grid[data-container='panel'] {
+    @media (min-width: 768px) and (max-width: 1023px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .predictive-search--heading {
+    display: flex;
+    padding-bottom: var(--spacing--item);
+  }
+
+  .predictive-search--resources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--block);
+
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      flex: 1 0 20%;
+    }
+  }
+
+  .predictive-search--item {
+    a span {
+      font-weight: 700;
+    }
+  }
+
+  .predictive-search--container {
+    display: grid;
+    grid-gap: var(--spacing--1);
+  }
+
+  .predictive-search--view-all {
+    margin-top: var(--spacing--block);
+    text-align: right;
+  }
+{% endstylesheet %}
