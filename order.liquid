@@ -157,12 +157,12 @@
             >
               {%- if line_item.original_line_price > line_item.final_line_price -%}
                 <div data-item="nav-text" data-text-color="gray">
-                  <s class="money">{{ line_item.original_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</s>
+                  <s class="money">{{ line_item.original_price | money }}</s>
                 </div>
               {%- endif -%}
 
               <div class="money" data-item="nav-text">
-                {{- line_item.final_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
+                {{- line_item.final_price | money -}}
               </div>
 
               <div
@@ -171,7 +171,7 @@
                 data-text-color="gray"
               >
                 {%- if line_item.unit_price_measurement -%}
-                  {{- line_item.unit_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}/
+                  {{- line_item.unit_price | money -}}/
                   {%- if line_item.unit_price_measurement.reference_value != 1 -%}
                     {{- line_item.unit_price_measurement.reference_value -}}
                   {%- endif -%}
@@ -182,7 +182,7 @@
               {%- if line_item.line_level_discount_allocations.size > 0 -%}
                 <div data-item="nav-text" data-text-color="gray">
                   {% for discount_allocation in line_item.line_level_discount_allocations %}
-                    {{ discount_allocation.discount_application.title }} (-<span class="money">{{ discount_allocation.amount | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</span>)
+                    {{ discount_allocation.discount_application.title }} (-<span class="money">{{ discount_allocation.amount | money }}</span>)
                   {% endfor %}
                 </div>
               {%- endif -%}
@@ -201,11 +201,11 @@
             >
               {%- if line_item.original_line_price > line_item.final_line_price -%}
                 <div data-item="nav-text" data-text-color="gray">
-                  <s class="money">{{ line_item.original_line_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</s>
+                  <s class="money">{{ line_item.original_line_price | money }}</s>
                 </div>
               {%- endif -%}
               <div class="money">
-                {{- line_item.quantity | times: line_item.final_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
+                {{- line_item.quantity | times: line_item.final_price | money -}}
               </div>
             </td>
           </tr>
@@ -220,7 +220,7 @@
           <td>{{ 'customer.order.subtotal' | t }}</td>
           <td colspan="3"></td>
           <td class="order--item--total money" data-item="nav-text">
-            {{- order.line_items_subtotal_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
+            {{- order.line_items_subtotal_price | money -}}
           </td>
         </tr>
 
@@ -234,7 +234,7 @@
                 </div>
               </td>
               <td class="order--discount" data-item="nav-text" data-text-color="gray">
-                -<span class="money">{{ discount_application.total_allocated_amount | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</span>
+                -<span class="money">{{ discount_application.total_allocated_amount | money }}</span>
               </td>
             </tr>
           {%- endfor -%}
@@ -245,7 +245,7 @@
             <td>{{ shipping_method.title }}:</td>
             <td colspan="3"></td>
             <td class="order--item--total money" data-item="nav-text">
-              {{ shipping_method.price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}
+              {{ shipping_method.price | money }}
             </td>
           </tr>
         {%- endfor -%}
@@ -255,7 +255,7 @@
             <td>{{ tax_line.title }} {{ tax_line.rate | times: 100 }}%:</td>
             <td colspan="3"></td>
             <td class="order--item--total money" data-item="nav-text">
-              {{- tax_line.price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
+              {{- tax_line.price | money -}}
             </td>
           </tr>
         {%- endfor -%}
@@ -264,7 +264,7 @@
           <td>{{ 'customer.order.total' | t }}</td>
           <td colspan="3"></td>
           <td class="order--item--total money" data-item="nav-text">
-            {{- order.total_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }} {{ order.currency -}}
+            {{- order.total_price | money }} {{ order.currency -}}
           </td>
         </tr>
       </tbody>

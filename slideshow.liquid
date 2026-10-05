@@ -29,6 +29,17 @@
   endif
 -%}
 
+{%- if is_lcp_section and section.blocks.size > 0 -%}
+  {%- comment -%}
+    Forceer de browser om de eerste afbeelding direct te downloaden met hoge prioriteit.
+    Dit voorkomt dat de browser wacht op scripts of CSS.
+  {%- endcomment -%}
+  {%- assign lcp_image = section.blocks[0].settings.media-1 -%}
+  {%- if lcp_image -%}
+    <link rel="preload" as="image" href="{{ lcp_image | image_url: width: 2000 }}" fetchpriority="high">
+  {%- endif -%}
+{%- endif -%}
+
 {%- capture slideshow_blocks -%}
   {%- # We lopen door de blokken om de 'is_lcp' status per slide door te geven -%}
   {%- for block in section.blocks -%}
@@ -52,9 +63,7 @@
       text_style: text_style,
       text_color: text_color,
       transition_type: transition_type,
-      is_lcp: is_lcp_slide,
-      slide_index: forloop.index,
-      first_slide: forloop.first
+      is_lcp: is_lcp_slide
     -%}
     {%- unless forloop.last -%}
       <span class="divider"></span>

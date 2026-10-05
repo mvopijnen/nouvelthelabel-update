@@ -1,7 +1,7 @@
 <!-- sections/gift-card.liquid -->
 
 {%- liquid
-  assign formatted_initial_value = gift_card.initial_value | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros: gift_card.currency
+  assign formatted_initial_value = gift_card.initial_value | money_without_trailing_zeros: gift_card.currency
   assign logo_image = section.settings.logo-image
   assign logo_height = section.settings.logo-height
   assign mobile_logo_height = section.settings.mobile-logo-height
@@ -1016,7 +1016,7 @@
               id="gift-card-amount"
             >
               {%- if gift_card.balance != gift_card.initial_value -%}
-                <span class="tooltip-container"><span class="tooltip-label money">{{ gift_card.balance | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }} <small>left</small></span><span class="tooltip-triangle"></span></span>
+                <span class="tooltip-container"><span class="tooltip-label money">{{ gift_card.balance | money }} <small>left</small></span><span class="tooltip-triangle"></span></span>
               {%- endif -%}
               <strong>{{ formatted_initial_value }}</strong>
             </div>
