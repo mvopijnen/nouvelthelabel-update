@@ -21,6 +21,7 @@
 {%- enddoc -%}
 
 {%- if request.page_type == 'product' -%}
+  {%- comment -%}Product JSON-LD is supplied by the enabled TinySEO app embed.{%- endcomment -%}
   <meta property="og:type" content="product" />
   <meta property="og:title" content="{{ product.title | strip_html | escape }}" />
 

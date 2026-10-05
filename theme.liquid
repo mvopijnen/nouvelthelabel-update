@@ -169,9 +169,9 @@
         ].join(',');
         var reviewNameParents = new WeakSet();
 
-        // The WeakSet scopes later mutations; each batch scans a parent only when it finds reviewer names there.
-        // Ignore badge-only records because this script creates those nodes itself.
+        // Scope later mutations to known review-name parents.
         function forEachMatch(root, selector, callback) {
+          // Include the root itself as well as matching descendants.
           if (root.matches && root.matches(selector)) callback(root);
           root.querySelectorAll(selector).forEach(callback);
         }
@@ -183,6 +183,7 @@
         }
 
         function hideNativeReviewText(root) {
+          // Keep the name parent visible; only hide matching label descendants.
           root.querySelectorAll('p, span, div').forEach(function(node) {
             if (isNativeVerifiedText(node)) {
               node.style.display = 'none';
@@ -280,7 +281,7 @@
             roots.push(node);
             if (reviewParent) artifactRoots.push({ root: node, parent: reviewParent });
           });
-          // Ignore our badge-only updates, but still process other nodes in mixed batches.
+          // Ignore badge-only records from this script, but process other nodes in mixed batches.
           if (onlyBadges) return;
 
           if (hasTextNode && reviewParent) {
