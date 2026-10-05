@@ -1,0 +1,69 @@
+name: Unpublished Shopify preview
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: shopify-preview-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  preview:
+    # Fork code must never receive the Shopify token. Never use pull_request_target.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: shopify-preview
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+      - run: npm test
+      - run: npm run test:browser
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: npm run theme-check
+        env:
+          SHOPIFY_CLI_NO_ANALYTICS: '1'
+      - run: npm run package
+      - name: Check preview credentials; skip safely when unavailable
+        id: credentials
+        run: node scripts/shopify-preview.mjs check
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+          SHOPIFY_PREVIEW_THEME_ID: ${{ secrets.SHOPIFY_PREVIEW_THEME_ID }}
+      - name: Deploy dedicated unpublished theme only
+        if: steps.credentials.outputs.ready == 'true'
+        run: node scripts/shopify-preview.mjs deploy
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+          SHOPIFY_PREVIEW_THEME_ID: ${{ secrets.SHOPIFY_PREVIEW_THEME_ID }}
+      - name: Install pinned Playwright Chromium
+        if: steps.credentials.outputs.ready == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Shopify E2E and accessibility at 390, 768 and 1280 pixels
+        if: steps.credentials.outputs.ready == 'true'
+        run: npm run test:e2e
+        env:
+          SHOPIFY_STOREFRONT_PASSWORD: ${{ secrets.SHOPIFY_STOREFRONT_PASSWORD }}
+          SHOPIFY_E2E_PRODUCT_HANDLE: ${{ vars.SHOPIFY_E2E_PRODUCT_HANDLE }}
+          SHOPIFY_E2E_COLLECTION_PATH: ${{ vars.SHOPIFY_E2E_COLLECTION_PATH }}
+      - name: Three mobile and three desktop lab measurements
+        if: ${{ !cancelled() && steps.credentials.outputs.ready == 'true' && success() }}
+        run: npm run test:performance
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          SHOPIFY_STOREFRONT_PASSWORD: ${{ secrets.SHOPIFY_STOREFRONT_PASSWORD }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unpublished-preview-and-checks
+          path: artifacts/
+          retention-days: 7
