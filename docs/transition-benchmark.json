@@ -1,0 +1,59 @@
+{
+  "kind": "controlled Chromium component benchmark; not a storefront LCP/TBT measurement",
+  "items": 400,
+  "cpuSlowdown": 4,
+  "runs": {
+    "before": [
+      {
+        "run": 1,
+        "durationMs": 40.09999999962747,
+        "styleRecalculations": 400,
+        "layouts": 0
+      },
+      {
+        "run": 2,
+        "durationMs": 58.59999999962747,
+        "styleRecalculations": 400,
+        "layouts": 0
+      },
+      {
+        "run": 3,
+        "durationMs": 64,
+        "styleRecalculations": 400,
+        "layouts": 0
+      }
+    ],
+    "after": [
+      {
+        "run": 1,
+        "durationMs": 14.100000000558794,
+        "styleRecalculations": 1,
+        "layouts": 0
+      },
+      {
+        "run": 2,
+        "durationMs": 8.700000000186265,
+        "styleRecalculations": 1,
+        "layouts": 0
+      },
+      {
+        "run": 3,
+        "durationMs": 7.5,
+        "styleRecalculations": 1,
+        "layouts": 0
+      }
+    ]
+  },
+  "medians": {
+    "before": {
+      "durationMs": 58.59999999962747,
+      "styleRecalculations": 400,
+      "layouts": 0
+    },
+    "after": {
+      "durationMs": 8.700000000186265,
+      "styleRecalculations": 1,
+      "layouts": 0
+    }
+  }
+}

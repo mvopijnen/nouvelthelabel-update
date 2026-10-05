@@ -62,7 +62,8 @@
     "filter_feedback": "Keine Produkte entsprechen diesem Filter.",
     "no_products_feedback": "Es gibt keine Produkte in dieser Kollektion.",
     "numbered_title": "Kollektion {{ count }}",
-    "view_more": "Mehr anzeigen"
+    "view_more": "Mehr anzeigen",
+    "browse": "Kollektionen durchsuchen"
   },
   "customer": {
     "account": {
@@ -190,7 +191,8 @@
       "no_filters": "Keine Filter vorhanden",
       "reset": "Zurücksetzen",
       "search_by_name": "Nach Namen suchen",
-      "to": "bis"
+      "to": "bis",
+      "sort_by": "Sortieren nach"
     },
     "localization": {
       "region": "Länderauswahl",
@@ -232,7 +234,8 @@
       "share": "Teilen",
       "x": "Auf X veröffentlichen",
       "url": "URL kopieren"
-    }
+    },
+    "browser_unsupported": "Browser nicht unterstützt. Bitte aktualisieren Sie ihn oder verwenden Sie einen anderen Browser."
   },
   "layout": {
     "gift_card": {
@@ -250,7 +253,9 @@
       "account_view_link": "Konto",
       "back": "Zurück",
       "menu": "Menü",
-      "toggle_drawer": "Schublade umschalten"
+      "toggle_drawer": "Schublade umschalten",
+      "cart": "Warenkorb",
+      "search": "Suchen"
     },
     "footer": {
       "navigation": "Navigation"
@@ -316,7 +321,8 @@
   },
   "sections": {
     "contact": {
-      "success_feedback_html": "Vielen Dank für Ihre Kontaktaufnahme! Wir werden uns so schnell wie möglich bei Ihnen melden."
+      "success_feedback_html": "Vielen Dank für Ihre Kontaktaufnahme! Wir werden uns so schnell wie möglich bei Ihnen melden.",
+      "button": "Senden"
     },
     "countdown": {
       "day": "Tag",
@@ -343,7 +349,9 @@
       "large_layout": "Zur größeren Produktansicht wechseln",
       "results_for": "Ergebnisse für",
       "small_layout": "Zur kleineren Produktansicht wechseln",
-      "sort_by": "Sortieren nach"
+      "sort_by": "Sortieren nach",
+      "browse": "Durchsuchen",
+      "refine": "Verfeinern"
     },
     "onboarding": {
       "collection_title": "Titel der Kollektion",
@@ -354,7 +362,14 @@
       "price": "34,99",
       "price_int": "35",
       "product_title": "Produkttitel",
-      "vendor": "Verkäufer"
+      "vendor": "Verkäufer",
+      "overline": "Überschrift"
+    },
+    "featured_blog": {
+      "continue_reading": "Weiterlesen",
+      "date": "Vor 2 Stunden",
+      "excerpt": "Hier wird der Auszug aus dem Artikel angezeigt.",
+      "item_title": "Blogbeitrag"
     }
   }
 }
