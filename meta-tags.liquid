@@ -21,9 +21,6 @@
 {%- enddoc -%}
 
 {%- if request.page_type == 'product' -%}
-  {%- assign current_variant = product.selected_or_first_available_variant -%}
-  {%- assign reviews = product.metafields.reviews -%}
-
   <meta property="og:type" content="product" />
   <meta property="og:title" content="{{ product.title | strip_html | escape }}" />
 
@@ -39,55 +36,6 @@
     property="og:price:amount"
     content="{{ product.price | money_without_currency | strip_html | escape }}"
   />
-
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": "{{ product.title }}",
-      "image": [
-        {%- for media in product.media limit: 3 -%}
-          "{{ media | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
-        {%- endfor -%}
-        ],
-      "description": "{{ product.description | strip_html | truncate: 100 | strip_newlines }}",
-      "sku": "{{ current_variant.sku }}",
-      "brand": {
-        "@type": "Brand",
-        "name": "{{ product.vendor }}"
-      },
-      {%- if reviews.rating.value != blank and reviews.rating_count != 0 -%}
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "{{- reviews.rating.value.rating -}}",
-          "reviewCount": "{{- reviews.rating_count -}}"
-        },
-      {%- endif -%}
-      "offers": [
-        {%- for variant in product.variants limit: 20 -%}
-          {
-            "@type" : "Offer",
-            {%- if variant.sku != blank -%}
-              "sku": {{ variant.sku | json }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 12 -%}
-              "gtin12": {{ variant.barcode }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 13 -%}
-              "gtin13": {{ variant.barcode }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 14 -%}
-              "gtin14": {{ variant.barcode }},
-            {%- endif -%}
-            "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
-            "price": {{ variant.price | divided_by: 100.00 | json }},
-            "priceCurrency": {{ cart.currency.iso_code | json }},
-            "url": {{ request.origin | append: variant.url | json }}
-          }{% unless forloop.last %},{% endunless %}
-        {%- endfor -%}
-      ]
-    }
-  </script>
 
 {%- elsif request.page_type == 'article' -%}
   <meta property="og:type" content="article" />
