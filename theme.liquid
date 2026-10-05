@@ -164,8 +164,8 @@
           '.jdgm-verified-badge svg',
           '.jdgm-verified svg',
           '[class*="verified-buyer-badge"] svg',
-          '[aria-label*="verified" i] svg',
-          '[title*="verified" i] svg'
+          '[aria-label*="verified"] svg',
+          '[title*="verified"] svg'
         ].join(',');
         var reviewNameParents = new WeakSet();
 
@@ -189,6 +189,7 @@
         }
 
         function isNativeVerifiedText(node) {
+          // Keep reviewer names intact even when a name matches the badge label.
           return !node.matches(reviewNameSelector) &&
             !node.classList.contains('custom-verified-badge') &&
             (node.textContent || '').trim().toLowerCase() === 'geverifieerd';
@@ -237,12 +238,18 @@
 
         function collectMutationRoots(mutation, roots) {
           var onlyBadges = mutation.addedNodes.length > 0;
+          var badgeAdded = false;
+          var nonBadgeTextAdded = false;
           mutation.addedNodes.forEach(function(node) {
             if (node.nodeType !== Node.ELEMENT_NODE) {
               onlyBadges = false;
+              nonBadgeTextAdded = true;
               return;
             }
-            if (node.classList.contains('custom-verified-badge')) return;
+            if (node.classList.contains('custom-verified-badge')) {
+              badgeAdded = true;
+              return;
+            }
             onlyBadges = false;
             hideNativeReviewIcons(node);
             hideNativeReviewTextNode(node);
@@ -253,7 +260,11 @@
           var target = mutation.target;
           if (target.nodeType === Node.ELEMENT_NODE) {
             var name = target.closest(reviewNameSelector);
-            if (name) roots.push(name.parentElement || name);
+            if (name && (!name.querySelector('.custom-verified-badge') ||
+                (!badgeAdded && mutation.addedNodes.length) ||
+                (badgeAdded && nonBadgeTextAdded))) {
+              roots.push(name.parentElement || name);
+            }
             if (reviewNameParents.has(target)) roots.push(target);
             else if (target.parentElement && reviewNameParents.has(target.parentElement)) {
               roots.push(target.parentElement);
