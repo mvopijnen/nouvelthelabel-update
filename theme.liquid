@@ -222,9 +222,11 @@
             if (name.parentElement) parents.add(name.parentElement);
           });
 
+          var scannedParents = new Set();
           parents.forEach(function(parent) {
             if (reviewNameParents.has(parent)) return;
             reviewNameParents.add(parent);
+            scannedParents.add(parent);
             hideNativeReviewIcons(parent);
             hideNativeReviewText(parent);
           });
@@ -236,9 +238,25 @@
             badge.textContent = 'Geverifieerd';
             name.appendChild(badge);
           });
+          return scannedParents;
         }
 
-        function collectMutationRoots(mutation, roots) {
+        function processNativeReviewArtifacts(root) {
+          if (root.nodeType !== Node.ELEMENT_NODE) return;
+          hideNativeReviewIcons(root);
+          hideNativeReviewTextNode(root);
+          hideNativeReviewText(root);
+        }
+
+        function findReviewNameParent(node) {
+          for (var current = node; current && current.nodeType === Node.ELEMENT_NODE; current = current.parentElement) {
+            if (reviewNameParents.has(current)) return current;
+          }
+          var name = node.nodeType === Node.ELEMENT_NODE ? node.closest(reviewNameSelector) : null;
+          return name && name.parentElement;
+        }
+
+        function collectMutationRoots(mutation, roots, artifactRoots) {
           var addedNodes = Array.prototype.slice.call(mutation.addedNodes);
           var isCustomBadge = function(node) {
             return node.nodeType === Node.ELEMENT_NODE &&
@@ -246,33 +264,29 @@
           };
 
           var onlyBadges = addedNodes.length > 0;
-          var hasTextNode = false;
+          var hasTextNode = addedNodes.some(function(node) {
+            return node.nodeType !== Node.ELEMENT_NODE;
+          });
+          var target = mutation.target;
+          var reviewParent = findReviewNameParent(target);
           addedNodes.forEach(function(node) {
             if (node.nodeType !== Node.ELEMENT_NODE) {
               onlyBadges = false;
-              hasTextNode = true;
               return;
             }
             if (isCustomBadge(node)) return;
             onlyBadges = false;
-            hideNativeReviewIcons(node);
-            hideNativeReviewTextNode(node);
-            hideNativeReviewText(node);
             roots.push(node);
+            if (reviewParent) artifactRoots.push({ root: node, parent: reviewParent });
           });
           // Ignore our badge-only updates, but still process other nodes in mixed batches.
           if (onlyBadges) return;
 
-          var target = mutation.target;
-          if (target.nodeType === Node.ELEMENT_NODE) {
-            if (hasTextNode &&
-                (reviewNameParents.has(target) ||
-                 (target.parentElement && reviewNameParents.has(target.parentElement)) ||
-                 target.closest(reviewNameSelector))) {
-              hideNativeReviewTextNode(target);
-              hideNativeReviewText(target);
-            }
+          if (hasTextNode && reviewParent) {
+            artifactRoots.push({ root: target, parent: reviewParent });
+          }
 
+          if (target.nodeType === Node.ELEMENT_NODE) {
             var name = target.closest(reviewNameSelector);
             if (name && !name.querySelector('.custom-verified-badge')) {
               roots.push(name.parentElement || name);
@@ -286,12 +300,16 @@
 
           var observer = new MutationObserver(function(mutations) {
             var roots = [];
+            var artifactRoots = [];
             mutations.forEach(function(mutation) {
               if (mutation.type !== 'childList') return;
               // Ignore self-generated badge additions to avoid reprocessing them.
-              collectMutationRoots(mutation, roots);
+              collectMutationRoots(mutation, roots, artifactRoots);
             });
-            processReviewRoots(roots);
+            var scannedParents = processReviewRoots(roots);
+            artifactRoots.forEach(function(entry) {
+              if (!scannedParents.has(entry.parent)) processNativeReviewArtifacts(entry.root);
+            });
           });
 
           observer.observe(document.body, {
