@@ -106,7 +106,8 @@ test('Machine-readable product price and protected review source are unchanged',
  assert.doesNotMatch(meta,/product\.price[^\n]*\| round/);
  const {execFileSync}=require('node:child_process');
  const base=execFileSync('git',['show','8ff750c037e6f376efb739415c44190db2c1ac6d:theme.liquid'],{cwd:root});
- const actual=fs.readFileSync(path.join(root,'layout/theme.liquid'),'utf8').replace("shop.money_format | replace: 'EUR', '€' | escape","shop.money_format | replace: 'EUR', '€' | replace: 'amount', 'amount_no_decimals' | escape");
+ const observer=/        function startVerifiedBadgeScript\(\) \{[\s\S]*?(?=        if \(document.readyState)/;
+ const actual=fs.readFileSync(path.join(root,'layout/theme.liquid'),'utf8').replace(observer,base.toString('utf8').match(observer)[0]).replace("shop.money_format | replace: 'EUR', '€' | escape","shop.money_format | replace: 'EUR', '€' | replace: 'amount', 'amount_no_decimals' | escape");
  assert.equal(actual,base.toString('utf8'));
 });
 

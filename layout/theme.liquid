@@ -299,25 +299,72 @@
 
         function startVerifiedBadgeScript() {
           processReviewRoots([document.body]);
+          var containerSelector = '.jdgm-widget, .jdgm-rev-widg, .jdgm-carousel-wrapper, .jdgm-carousel, .jm-review-widget, .jm-widget, [data-judgeme-widget]';
+          var containers = new Set();
 
-          var observer = new MutationObserver(function(mutations) {
+          function processMutations(mutations) {
             var roots = [];
             var artifactRoots = [];
             mutations.forEach(function(mutation) {
               if (mutation.type !== 'childList') return;
-              // Ignore self-generated badge additions to avoid reprocessing them.
               collectMutationRoots(mutation, roots, artifactRoots);
             });
             var scannedParents = processReviewRoots(roots);
             artifactRoots.forEach(function(entry) {
               if (!scannedParents.has(entry.parent)) processNativeReviewArtifacts(entry.root);
             });
-          });
+          }
 
-          observer.observe(document.body, {
-            childList: true,
-            subtree: true
+          // Badge work observes the widgets, rather than every page mutation.
+          var reviewObserver = new MutationObserver(processMutations);
+          function registerContainer(container) {
+            if (containers.has(container)) return;
+            containers.add(container);
+            reviewObserver.observe(container, { childList: true, subtree: true });
+          }
+          forEachMatch(document.body, containerSelector, registerContainer);
+
+          function insideContainer(node) {
+            for (var container of containers) {
+              if (container === node || container.contains(node)) return true;
+            }
+            return false;
+          }
+
+          // Keep a lightweight discovery fallback for late/replaced widgets and
+          // legacy review markup. Only inspect added subtrees; never rescan body.
+          var discoveryObserver = new MutationObserver(function(mutations) {
+            var disconnected = false;
+            containers.forEach(function(container) {
+              if (!container.isConnected) {
+                containers.delete(container);
+                disconnected = true;
+              }
+            });
+            if (disconnected) {
+              reviewObserver.disconnect();
+              containers.forEach(function(container) {
+                reviewObserver.observe(container, { childList: true, subtree: true });
+              });
+            }
+            var fallbackMutations = [];
+            mutations.forEach(function(mutation) {
+              if (insideContainer(mutation.target)) return;
+              if (findReviewNameParent(mutation.target)) {
+                fallbackMutations.push(mutation);
+                return;
+              }
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType !== Node.ELEMENT_NODE || node.classList.contains('custom-verified-badge')) return;
+                if (!node.matches(containerSelector + ', ' + reviewNameSelector) &&
+                    !node.querySelector(containerSelector + ', ' + reviewNameSelector)) return;
+                forEachMatch(node, containerSelector, registerContainer);
+                processReviewRoots([node]);
+              });
+            });
+            if (fallbackMutations.length) processMutations(fallbackMutations);
           });
+          discoveryObserver.observe(document.body, { childList: true, subtree: true });
         }
 
         if (document.readyState === 'loading') {
