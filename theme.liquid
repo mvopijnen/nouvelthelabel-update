@@ -190,27 +190,35 @@
           });
         }
 
+        function hideNativeReviewTextNode(node) {
+          if (node.nodeType === Node.ELEMENT_NODE &&
+              node.matches('p, span, div') &&
+              !node.matches(reviewNameSelector) &&
+              !node.classList.contains('custom-verified-badge') &&
+              (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
+            node.style.display = 'none';
+          }
+        }
+
         function collectReviewNames(root, names) {
           if (root.nodeType !== Node.ELEMENT_NODE) return;
           forEachMatch(root, reviewNameSelector, function(name) {
-            names.push(name);
+            names.add(name);
           });
         }
 
         function processReviewRoots(roots) {
-          var names = [];
+          var names = new Set();
           roots.forEach(function(root) {
             collectReviewNames(root, names);
           });
 
-          var namesByParent = new Map();
+          var parents = new Set();
           names.forEach(function(name) {
-            if (!name.parentElement) return;
-            if (!namesByParent.has(name.parentElement)) namesByParent.set(name.parentElement, []);
-            namesByParent.get(name.parentElement).push(name);
+            if (name.parentElement) parents.add(name.parentElement);
           });
 
-          namesByParent.forEach(function(reviewNames, parent) {
+          parents.forEach(function(parent) {
             reviewNameParents.add(parent);
             hideNativeReviewIcons(parent);
             hideNativeReviewText(parent);
@@ -232,8 +240,22 @@
                 node.classList.contains('custom-verified-badge')) return;
             roots.push(node);
             hideNativeReviewIcons(node);
-            hideNativeReviewText(node);
+            hideNativeReviewTextNode(node);
           });
+          return roots;
+        }
+
+        function processReviewMutation(mutation, addedReviewContent) {
+          var roots = addedReviewContent.slice();
+          var target = mutation.target;
+
+          if (target.nodeType === Node.ELEMENT_NODE) {
+            var name = target.closest(reviewNameSelector);
+            if (name && !name.querySelector('.custom-verified-badge')) roots.push(name);
+            if (reviewNameParents.has(target)) roots.push(target);
+            if (reviewNameParents.has(target.parentElement)) roots.push(target.parentElement);
+          }
+
           processReviewRoots(roots);
         }
 
@@ -257,18 +279,8 @@
                     !node.classList.contains('custom-verified-badge');
                 }
               );
-              processAddedReviewContent(addedReviewContent);
-
-              if (mutation.target.nodeType === Node.ELEMENT_NODE) {
-                var name = mutation.target.closest(reviewNameSelector);
-                if (name && !name.querySelector('.custom-verified-badge')) {
-                  processReviewRoots([name]);
-                } else if (!addedReviewContent.length && mutation.addedNodes.length &&
-                    (reviewNameParents.has(mutation.target) ||
-                     reviewNameParents.has(mutation.target.parentElement))) {
-                  processReviewRoots([mutation.target.parentElement || mutation.target]);
-                }
-              }
+              var roots = processAddedReviewContent(addedReviewContent);
+              processReviewMutation(mutation, roots);
             });
           });
 
