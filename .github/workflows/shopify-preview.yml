@@ -10,14 +10,14 @@ jobs:
   preview:
     # Fork code must never receive the Shopify token. Never use pull_request_target.
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     environment: shopify-preview
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0, Node 24
         with:
           node-version: '24'
           cache: npm
@@ -62,7 +62,7 @@ jobs:
         env:
           CHROME_PATH: /usr/bin/google-chrome
           SHOPIFY_STOREFRONT_PASSWORD: ${{ secrets.SHOPIFY_STOREFRONT_PASSWORD }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1, Node 24
         if: always()
         with:
           name: unpublished-preview-and-checks

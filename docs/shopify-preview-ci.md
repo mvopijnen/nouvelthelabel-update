@@ -1,6 +1,6 @@
 # Ongepubliceerde Shopify-preview en acceptatie
 
-Workflow: `.github/workflows/shopify-preview.yml`. Geen `pull_request_target`, geen credentials voor forks, geen live-publicatie. Eén dedicated ongepubliceerd theme per repository; runs worden sequentieel uitgevoerd. Gebruik een teststore als cart/checkout-tests niet op de productiestore gewenst zijn.
+Workflow: `.github/workflows/shopify-preview.yml`. Runner vast op Ubuntu 24.04; officiële checkout/setup-node/upload-artifact Actions gebruiken Node 24 en zijn op hun gecontroleerde release-commit-SHA vastgezet. Geen `pull_request_target`, geen credentials voor forks, geen live-publicatie. Eén dedicated ongepubliceerd theme per repository; runs worden sequentieel uitgevoerd. Gebruik een teststore als cart/checkout-tests niet op de productiestore gewenst zijn.
 
 Maak in Shopify een **ongepubliceerd testtheme** en noteer het ID. Het script controleert de rol voor en na de upload en weigert `main`, `live`, `development`, een ontbrekend ID of een onverwacht uploadresultaat. Het gebruikt alleen `theme push --theme ID --strict --nodelete --json`; nooit `--publish`, `--live` of `--allow-live`. Geërfde `SHOPIFY_FLAG_*`-variabelen worden uit de CLI-omgeving verwijderd. Alleen de gegenereerde upload-ZIP wordt geüpload.
 
