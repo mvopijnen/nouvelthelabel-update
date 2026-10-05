@@ -25,10 +25,10 @@
   else
     assign compare_price = false
     if product.compare_at_price > product.price and product.available
-      assign compare_price = product.compare_at_price | money
+      assign compare_price = product.compare_at_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros
     endif
 
-    assign price = product.price | money
+    assign price = product.price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros
   endif
 -%}
 
@@ -58,7 +58,7 @@
   {%- if current_variant.unit_price_measurement -%}
     <div class="product--unit-price-container" data-item="small-text">
       <span class="product--unit-price">
-        {{- current_variant.unit_price | money -}}
+        {{- current_variant.unit_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
       </span>/
 
       {%- if current_variant.unit_price_measurement.reference_value != 1 -%}

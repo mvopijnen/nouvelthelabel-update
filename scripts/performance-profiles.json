@@ -1,4 +1,0 @@
-{
-  "mobile": {"formFactor":"mobile","width":412,"height":823,"mobile":true,"deviceScaleFactor":1.75},
-  "desktop": {"formFactor":"desktop","width":1350,"height":940,"mobile":false,"deviceScaleFactor":1}
-}

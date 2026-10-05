@@ -17,7 +17,7 @@ npm run package
 
 In een cloudomgeving met een beperkt beschrijfbare home-directory: `npm ci --cache /workspace/.npm-cache`. TLS- en pakketintegriteitscontrole blijven ingeschakeld.
 
-Theme Check moet nul fouten geven. Alle geërfde fouten zijn opgelost; de oude baseline accepteert geen errors meer. De runner bewaart de ruwe CLI-exitcode en faalt op iedere error. De aanbevolen regels blijven aan en alle uploadmappen worden gecontroleerd. Er blijven 316 waarschuwingen, afzonderlijk gerapporteerd.
+Theme Check heeft bestaande fouten. De regressiepoort vergelijkt exacte meldingen met `docs/theme-check-known-errors.json`, bewaart de ruwe CLI-exitcode en faalt op nieuwe fouten. Een geslaagde regressiepoort betekent geen foutloos theme. Alle uploadmappen blijven gecontroleerd; ontwikkelbestanden en meettraces zijn geen theme-input.
 
 De upload-ZIP staat in `artifacts/nouvelthelabel-update-shopify.zip`; alleen de zeven thememappen staan direct in de ZIP-root. GitHub Actions herhaalt de controles en bewaart het uploadbestand en controle-uitvoer als artifact.
 
@@ -33,8 +33,4 @@ node scripts/inspect-storefront.cjs
 
 Gebruik voor de nameting een ongepubliceerde Shopify-preview met deze code en een afzonderlijke uitvoermap. Een publieke URL zonder gewijzigd theme is uitsluitend een nulmeting. Houd browser, netwerkbeleid, consent, throttling en cachecondities gelijk. De scripts gebruiken de bestaande HTTPS-proxy indien ingesteld en houden certificaatcontrole actief. Het browsercertificaatvertrouwen moet vooraf werken.
 
-De Node-API krijgt een expliciete mobiele of desktopconfiguratie. Verkeerde formFactor, viewport of user-agent, ontbrekende runs en inconsistente metadata maken de run ongeldig. De oude desktopbaseline was feitelijk mobiel en is ongeldig verklaard. Gebruik [de gecorrigeerde zes labruns](docs/lab-baseline-round-2-2026-10-05.json).
-
-Zie [de actuele audit van ronde 2](docs/production-readiness-round-2.md), [preview CI en benodigde secrets](docs/shopify-preview-ci.md), [bestandsherkomst](docs/theme-path-mapping.json) en [CSS-bronnen](docs/css-sources.json). De zichtbare prijzen behouden nu Shopify's echte centbedragen. Reviewstyling, selectors, instellingen en overige reviewcode zijn exact beschermd; alleen de expliciet gevraagde observerregistratie is aangepast met dynamische regressietests. De homepageconfiguratie en bestaande branding zijn behouden.
-
-`npm run preview:check` slaat previewwerk zonder credentials expliciet over. De PR-workflow deployt uitsluitend naar een bestaand dedicated unpublished theme; zie de documentatie voor E2E, axe, zes labruns en acceptatie. Zonder uitgevoerde Shopify-previewtests en nametingen is volledige production-readiness nog niet aangetoond. Merge, live-publicatie en bestellingen vallen buiten deze oplevering.
+Zie [de volledige audit](docs/codeaudit-2026-10-05.md), [bestandsherkomst](docs/theme-path-mapping.json), [CSS-bronnen](docs/css-sources.json) en [verse labnulmetingen](docs/lab-baseline-2026-10-05.json). Reviews zijn beschermd door exacte Git-vergelijkingen. Merge of live-publicatie valt buiten deze oplevering.

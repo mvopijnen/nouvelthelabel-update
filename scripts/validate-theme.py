@@ -77,20 +77,10 @@ for old, current in {
 }.items():
     baseline = subprocess.check_output(["git", "show", f"{SOURCE}:{old}"], cwd=ROOT)
     actual = (ROOT / current).read_bytes()
-    if current == 'layout/theme.liquid':
-        # Authorized round-2 changes: money-format attribute and observer registration only.
-        # Review selectors, badge behavior/styles and the rest of this file stay exact.
-        actual = actual.replace(b"shop.money_format | replace: 'EUR', '\xe2\x82\xac' | escape", b"shop.money_format | replace: 'EUR', '\xe2\x82\xac' | replace: 'amount', 'amount_no_decimals' | escape")
-        observer = rb"        function startVerifiedBadgeScript\(\) \{[\s\S]*?(?=        if \(document.readyState)"
-        original_observer = re.search(observer, baseline)
-        actual, replacements = re.subn(observer, lambda _: original_observer.group(0), actual)
-        if replacements != 1:
-            errors.append('Missing or duplicate review observer registration')
     if actual != baseline:
         errors.append(f"Protected source differs: {current}")
     else:
-        label = 'Preserved outside authorized money/observer changes' if current == 'layout/theme.liquid' else 'Exact preservation'
-        print(f"{label}: {current} ({hashlib.sha256(actual).hexdigest()})")
+        print(f"Exact preservation: {current} ({hashlib.sha256(actual).hexdigest()})")
 
 for p in (ROOT / "assets").glob("*.js"):
     result = subprocess.run(["node", "--check", str(p)], capture_output=True, text=True)

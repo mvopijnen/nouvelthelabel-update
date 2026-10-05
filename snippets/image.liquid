@@ -83,7 +83,7 @@
       image_tag: widths: widths, sizes: sizes, loading: loading, fetchpriority: fetchpriority, draggable: draggable
     -}}
   {% else %}
-    <img width="{{ mobile_image.width | default: 1 }}" height="{{ mobile_image.height | default: 1 }}" sizes="{{ sizes }}">
+    <img sizes="{{ sizes }}">
   {% endif %}
 </picture>
 

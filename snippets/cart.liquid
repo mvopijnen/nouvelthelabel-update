@@ -63,7 +63,7 @@
             <li class="cart--discount">
               <div data-item="nav-text">{{ discount_application.title }}</div>
               <span data-item="nav-text" data-text-color="gray">
-                –<span class="money">{{ discount_application.total_allocated_amount | money }}
+                –<span class="money">{{ discount_application.total_allocated_amount | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}
                 </span>
               </span>
             </li>
@@ -76,7 +76,7 @@
           {{- subtotal_t -}}:
         </div>
         <div class="cart--total-price money" data-item="nav-text">
-          {{- cart.total_price | money_with_currency -}}
+          {{- cart.total_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros | append: ' ' | append: cart.currency.iso_code -}}
         </div>
       </div>
 
@@ -169,7 +169,7 @@
             assign message = settings.cart--shipping-after
           else
             assign width = cart.total_price | divided_by: free_shipping_limit | times: 100
-            assign remaining = free_shipping_limit | minus: cart.total_price | money
+            assign remaining = free_shipping_limit | minus: cart.total_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros
             assign message = settings.cart--shipping-before | replace: '[$]', remaining
           endif
         -%}
@@ -277,18 +277,18 @@
             <div class="cart--item--price" data-item="nav-text">
               {%- unless item.original_price == item.final_price -%}
                 <div data-item="nav-text" data-text-color="gray">
-                  <s class="money">{{ item.original_price | money }}</s>
+                  <s class="money">{{ item.original_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</s>
                 </div>
               {%- endunless -%}
 
               <div class="money" data-item="nav-text">
-                {{- item.final_price | money -}}
+                {{- item.final_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
               </div>
 
               {%- if item.unit_price_measurement -%}
                 <div class="cart--item--unit-price-container" data-item="small-text">
                   {%- liquid
-                    echo item.unit_price | money | append: '/'
+                    echo item.unit_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros | append: '/'
                     if item.unit_price_measurement.reference_value != 1
                       echo item.unit_price_measurement.reference_value
                     endif
@@ -300,7 +300,7 @@
               {% if item.line_level_discount_allocations.size > 0 %}
                 <div class="money" data-item="nav-text" data-text-color="gray">
                   {%- for discount_allocation in item.line_level_discount_allocations -%}
-                    {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+                    {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }})
                   {%- endfor -%}
                 </div>
               {% endif %}
@@ -358,12 +358,12 @@
               <div class="cart--item--total" data-item="nav-text">
                 {%- unless item.original_line_price == item.final_line_price -%}
                   <div data-item="nav-text" data-text-color="gray">
-                    <s class="money">{{ item.original_line_price | money }}</s>
+                    <s class="money">{{ item.original_line_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }}</s>
                   </div>
                 {%- endunless -%}
 
                 <div class="money">
-                  {{- item.final_line_price | money -}}
+                  {{- item.final_line_price | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros -}}
                 </div>
               </div>
 
