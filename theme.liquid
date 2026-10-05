@@ -190,7 +190,8 @@
 
         function isNativeVerifiedText(node) {
           // Keep reviewer names intact even when a name matches the badge label.
-          return !node.matches(reviewNameSelector) &&
+          return node.style.display !== 'none' &&
+            !node.matches(reviewNameSelector) &&
             !node.classList.contains('custom-verified-badge') &&
             (node.textContent || '').trim().toLowerCase() === 'geverifieerd';
         }
@@ -237,32 +238,30 @@
         }
 
         function collectMutationRoots(mutation, roots) {
-          var onlyBadges = mutation.addedNodes.length > 0;
-          var badgeAdded = false;
-          var nonBadgeTextAdded = false;
-          mutation.addedNodes.forEach(function(node) {
-            if (node.nodeType !== Node.ELEMENT_NODE) {
-              onlyBadges = false;
-              nonBadgeTextAdded = true;
-              return;
-            }
-            if (node.classList.contains('custom-verified-badge')) {
-              badgeAdded = true;
-              return;
-            }
-            onlyBadges = false;
+          var addedNodes = Array.prototype.slice.call(mutation.addedNodes);
+          var isCustomBadge = function(node) {
+            return node.nodeType === Node.ELEMENT_NODE &&
+              node.classList.contains('custom-verified-badge');
+          };
+
+          // Ignore our badge-only updates, but still process other nodes in mixed batches.
+          if (addedNodes.length && addedNodes.every(isCustomBadge)) return;
+
+          var hasBadge = addedNodes.some(isCustomBadge);
+          var hasTextNode = addedNodes.some(function(node) {
+            return node.nodeType !== Node.ELEMENT_NODE;
+          });
+          addedNodes.forEach(function(node) {
+            if (node.nodeType !== Node.ELEMENT_NODE || isCustomBadge(node)) return;
             hideNativeReviewIcons(node);
             hideNativeReviewTextNode(node);
             roots.push(node);
           });
-          if (onlyBadges) return;
 
           var target = mutation.target;
           if (target.nodeType === Node.ELEMENT_NODE) {
             var name = target.closest(reviewNameSelector);
-            if (name && (!name.querySelector('.custom-verified-badge') ||
-                (!badgeAdded && mutation.addedNodes.length) ||
-                (badgeAdded && nonBadgeTextAdded))) {
+            if (name && (!name.querySelector('.custom-verified-badge') || !hasBadge || hasTextNode)) {
               roots.push(name.parentElement || name);
             }
             if (reviewNameParents.has(target)) roots.push(target);
