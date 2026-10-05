@@ -189,7 +189,7 @@
         }
 
         function isNativeVerifiedText(node) {
-          // Keep reviewer names intact even when a name matches the badge label.
+          // Keep reviewer containers intact while suppressing nested native badge labels.
           return node.style.display !== 'none' &&
             !node.matches(reviewNameSelector) &&
             !node.classList.contains('custom-verified-badge') &&
@@ -261,7 +261,7 @@
           var target = mutation.target;
           if (target.nodeType === Node.ELEMENT_NODE) {
             var name = target.closest(reviewNameSelector);
-            if (name && (!name.querySelector('.custom-verified-badge') || !hasBadge || hasTextNode)) {
+            if (name && shouldReprocessReviewParent(name, hasBadge, hasTextNode)) {
               roots.push(name.parentElement || name);
             }
             if (reviewNameParents.has(target)) roots.push(target);
@@ -269,6 +269,10 @@
               roots.push(target.parentElement);
             }
           }
+        }
+
+        function shouldReprocessReviewParent(name, hasBadge, hasTextNode) {
+          return !name.querySelector('.custom-verified-badge') || !hasBadge || hasTextNode;
         }
 
         function startVerifiedBadgeScript() {
