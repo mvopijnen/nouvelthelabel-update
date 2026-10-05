@@ -534,6 +534,7 @@
 
   #gift-card img {
     border-radius: 10px;
+    height: auto;
   }
 
   #gift-card-code-outer {
@@ -1008,6 +1009,8 @@
           <div id="gift-card">
             <img loading="lazy"
               src="{{ 'gift-card/card.jpg' | shopify_asset_url }}"
+              width="540"
+              height="330"
               alt="Gift card illustration"
             >
             {%- assign initial_value_size = formatted_initial_value | size -%}
