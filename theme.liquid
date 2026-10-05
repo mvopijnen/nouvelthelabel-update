@@ -223,6 +223,7 @@
           });
 
           parents.forEach(function(parent) {
+            if (reviewNameParents.has(parent)) return;
             reviewNameParents.add(parent);
             hideNativeReviewIcons(parent);
             hideNativeReviewText(parent);
@@ -244,35 +245,40 @@
               node.classList.contains('custom-verified-badge');
           };
 
-          // Ignore our badge-only updates, but still process other nodes in mixed batches.
-          if (addedNodes.length && addedNodes.every(isCustomBadge)) return;
-
-          var hasBadge = addedNodes.some(isCustomBadge);
-          var hasTextNode = addedNodes.some(function(node) {
-            return node.nodeType !== Node.ELEMENT_NODE;
-          });
+          var onlyBadges = addedNodes.length > 0;
+          var hasTextNode = false;
           addedNodes.forEach(function(node) {
-            if (node.nodeType !== Node.ELEMENT_NODE || isCustomBadge(node)) return;
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+              onlyBadges = false;
+              hasTextNode = true;
+              return;
+            }
+            if (isCustomBadge(node)) return;
+            onlyBadges = false;
             hideNativeReviewIcons(node);
             hideNativeReviewTextNode(node);
+            hideNativeReviewText(node);
             roots.push(node);
           });
+          // Ignore our badge-only updates, but still process other nodes in mixed batches.
+          if (onlyBadges) return;
 
           var target = mutation.target;
           if (target.nodeType === Node.ELEMENT_NODE) {
+            if (hasTextNode &&
+                (reviewNameParents.has(target) ||
+                 (target.parentElement && reviewNameParents.has(target.parentElement)) ||
+                 target.closest(reviewNameSelector))) {
+              hideNativeReviewTextNode(target);
+              hideNativeReviewText(target);
+            }
+
             var name = target.closest(reviewNameSelector);
-            if (name && shouldReprocessReviewParent(name, hasBadge, hasTextNode)) {
+            if (name && !name.querySelector('.custom-verified-badge')) {
               roots.push(name.parentElement || name);
             }
-            if (reviewNameParents.has(target)) roots.push(target);
-            else if (target.parentElement && reviewNameParents.has(target.parentElement)) {
-              roots.push(target.parentElement);
-            }
+            if (!addedNodes.length && reviewNameParents.has(target)) roots.push(target);
           }
-        }
-
-        function shouldReprocessReviewParent(name, hasBadge, hasTextNode) {
-          return !name.querySelector('.custom-verified-badge') || !hasBadge || hasTextNode;
         }
 
         function startVerifiedBadgeScript() {
