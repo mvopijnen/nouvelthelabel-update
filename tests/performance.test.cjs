@@ -46,3 +46,12 @@ test('Six distinct validated report/metadata pairs produce medians; missing runs
   const metadataPath=path.join(directory,'desktop-3.meta.json');const metadata=JSON.parse(fs.readFileSync(metadataPath));metadata.LCP_ms=1;fs.writeFileSync(metadataPath,JSON.stringify(metadata));assert.throws(summarize);
  }finally{fs.rmSync(directory,{recursive:true,force:true});}
 });
+test('Before/after comparisons reject unknown public revisions, mixed browser versions and single runs',async()=>{
+ const {compare}=await import('../scripts/compare-performance.mjs');
+ const data=()=>({profiles:Object.fromEntries(['mobile','desktop'].map(profile=>[profile,{valid:true,configuration:{profile},runs:[1,2,3].map(run=>({profile,run,url:'https://test.myshopify.com/?preview_theme_id=123',finalURL:'https://test.myshopify.com/?preview_theme_id=123',userAgent:'same-browser',lighthouseVersion:'13.0.1',storefrontRevision:'a'.repeat(40),score:90,FCP_ms:1000,LCP_ms:2000,TBT_ms:30,CLS:0,SpeedIndex_ms:2000})),median:{score:90,FCP_ms:1000,LCP_ms:2000,TBT_ms:30,CLS:0,SpeedIndex_ms:2000}}]))});
+ const before=data(),after=data();assert(compare(before,after).acceptance.passed);
+ const bad=data();bad.profiles.mobile.runs.pop();assert.throws(()=>compare(before,bad));
+ const unknown=data();unknown.profiles.desktop.runs[0].storefrontRevision=null;assert.throws(()=>compare(before,unknown));
+ const browser=data();browser.profiles.mobile.runs[0].userAgent='other-browser';assert.throws(()=>compare(before,browser));
+ const single=data();single.profiles.mobile.median.LCP_ms=1;assert.throws(()=>compare(before,single));
+});

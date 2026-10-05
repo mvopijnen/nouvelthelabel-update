@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import {validateManifest} from './shopify-preview.mjs';
+const verifiedContexts=new WeakSet();
 
 export function manifest(){return validateManifest(JSON.parse(fs.readFileSync(process.env.SHOPIFY_PREVIEW_MANIFEST||'artifacts/preview/deployment.json','utf8')));}
 export function previewURL(route='/',target=manifest()){
@@ -12,6 +13,7 @@ export async function assertPreview(page,target=manifest()){
 export async function openPreview(page,route='/',target=manifest()){
  await page.goto(previewURL(route,target),{waitUntil:'domcontentloaded'});
  if(new URL(page.url()).pathname==='/password'){
+  if(verifiedContexts.has(page.context()))throw Error('Preview authentication was lost; refusing to submit a password while test tracing may be active');
   if(!process.env.SHOPIFY_STOREFRONT_PASSWORD)throw Error('Preview requires SHOPIFY_STOREFRONT_PASSWORD');
   // Authentication happens before test tracing to keep password data out of artifacts.
   const response=await page.context().request.post(new URL('/password',page.url()).href,{form:{form_type:'storefront_password',utf8:'✓',password:process.env.SHOPIFY_STOREFRONT_PASSWORD}});
@@ -19,6 +21,7 @@ export async function openPreview(page,route='/',target=manifest()){
   await page.goto(previewURL(route,target),{waitUntil:'domcontentloaded'});
  }
  await assertPreview(page,target);
+ verifiedContexts.add(page.context());
 }
 export function cents(text){
  const number=text.replace(/[^\d.,-]/g,'');

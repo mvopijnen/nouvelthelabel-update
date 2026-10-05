@@ -39,6 +39,7 @@ jobs:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_PREVIEW_THEME_ID: ${{ secrets.SHOPIFY_PREVIEW_THEME_ID }}
       - name: Deploy dedicated unpublished theme only
+        id: deploy
         if: steps.credentials.outputs.ready == 'true'
         run: node scripts/shopify-preview.mjs deploy
         env:
@@ -56,7 +57,7 @@ jobs:
           SHOPIFY_E2E_PRODUCT_HANDLE: ${{ vars.SHOPIFY_E2E_PRODUCT_HANDLE }}
           SHOPIFY_E2E_COLLECTION_PATH: ${{ vars.SHOPIFY_E2E_COLLECTION_PATH }}
       - name: Three mobile and three desktop lab measurements
-        if: ${{ !cancelled() && steps.credentials.outputs.ready == 'true' && success() }}
+        if: ${{ !cancelled() && steps.deploy.outcome == 'success' }}
         run: npm run test:performance
         env:
           CHROME_PATH: /usr/bin/google-chrome

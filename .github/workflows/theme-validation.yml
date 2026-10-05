@@ -2,7 +2,7 @@ name: Theme validation
 on:
   pull_request:
   push:
-    branches: [main, fix/slideshow-performance-and-metadata]
+    branches: [main, fix/production-readiness-round-2]
 permissions:
   contents: read
 jobs:
@@ -20,6 +20,9 @@ jobs:
       - run: npm run validate
       - run: npm test
       - run: npm run test:browser
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: node scripts/benchmark-transitions.cjs
         env:
           CHROME_PATH: /usr/bin/google-chrome
       - run: npm run theme-check
