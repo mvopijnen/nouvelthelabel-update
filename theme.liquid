@@ -147,91 +147,71 @@
 
     <script>
       (function () {
-        function addVerifiedBadges() {
-          var reviewNameSelectors = [
-            '.jdgm-review-card__name',
-            '.jdgm-review-card__reviewer-name',
-            '.jm-reviewer-info__name',
-            '.jdgm-rev__author',
-            '.jdgm-author',
-            '.jdgm-carousel-item__reviewer-name',
-            '.jdgm-carousel-item__reviewer-name-wrapper',
-            '.jm-review-author__name',
-            '.jm-author-name'
-          ];
+        var reviewNameSelector = [
+          '.jdgm-review-card__name',
+          '.jdgm-review-card__reviewer-name',
+          '.jm-reviewer-info__name',
+          '.jdgm-rev__author',
+          '.jdgm-author',
+          '.jdgm-carousel-item__reviewer-name',
+          '.jdgm-carousel-item__reviewer-name-wrapper',
+          '.jm-review-author__name',
+          '.jm-author-name'
+        ].join(',');
+        var nativeIconSelector = [
+          '.jm-verified-buyer-badge svg',
+          '.jm-verified-buyer-badge [class*="icon"]',
+          '.jdgm-verified-badge svg',
+          '.jdgm-verified svg',
+          '[class*="verified-buyer-badge"] svg',
+          '[aria-label*="verified"] svg',
+          '[title*="verified"] svg'
+        ].join(',');
 
-          reviewNameSelectors.forEach(function(selector) {
-            document.querySelectorAll(selector).forEach(function(el) {
-              if (el.querySelector('.custom-verified-badge')) return;
-
-              var badge = document.createElement('span');
-              badge.className = 'custom-verified-badge';
-              badge.textContent = 'Geverifieerd';
-              el.appendChild(badge);
-            });
-          });
+        function forEachMatch(root, selector, callback) {
+          if (root.matches && root.matches(selector)) callback(root);
+          root.querySelectorAll(selector).forEach(callback);
         }
 
-        function hideNativeVerifiedIcons() {
-          var nativeIconSelectors = [
-            '.jm-verified-buyer-badge svg',
-            '.jm-verified-buyer-badge [class*="icon"]',
-            '.jdgm-verified-badge svg',
-            '.jdgm-verified svg',
-            '[class*="verified-buyer-badge"] svg',
-            '[aria-label*="verified"] svg',
-            '[title*="verified"] svg'
-          ];
-
-          nativeIconSelectors.forEach(function(selector) {
-            document.querySelectorAll(selector).forEach(function(el) {
-              el.style.display = 'none';
+        function processReviewName(el) {
+          var parent = el.parentElement;
+          if (parent) {
+            forEachMatch(parent, nativeIconSelector, function(icon) {
+              icon.style.display = 'none';
             });
-          });
+
+            parent.querySelectorAll('p, span, div').forEach(function(node) {
+              if (node !== el &&
+                  !node.classList.contains('custom-verified-badge') &&
+                  (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
+                node.style.display = 'none';
+              }
+            });
+          }
+
+          if (el.querySelector('.custom-verified-badge')) return;
+          var badge = document.createElement('span');
+          badge.className = 'custom-verified-badge';
+          badge.textContent = 'Geverifieerd';
+          el.appendChild(badge);
         }
 
-        function hideNativeNameVerifiedText() {
-          var nameContainers = [
-            '.jdgm-review-card__name',
-            '.jdgm-review-card__reviewer-name',
-            '.jm-reviewer-info__name',
-            '.jdgm-rev__author',
-            '.jdgm-author',
-            '.jdgm-carousel-item__reviewer-name',
-            '.jdgm-carousel-item__reviewer-name-wrapper',
-            '.jm-review-author__name',
-            '.jm-author-name'
-          ];
-
-          nameContainers.forEach(function(selector) {
-            document.querySelectorAll(selector).forEach(function(el) {
-              var parent = el.parentElement;
-              if (!parent) return;
-
-              parent.querySelectorAll('p, span, div').forEach(function(node) {
-                if (node === el) return;
-                if (node.classList && node.classList.contains('custom-verified-badge')) return;
-
-                var text = (node.textContent || '').trim().toLowerCase();
-                if (text === 'geverifieerd') {
-                  node.style.display = 'none';
-                }
-              });
-            });
-          });
-        }
-
-        function runVerifiedFix() {
-          hideNativeVerifiedIcons();
-          hideNativeNameVerifiedText();
-          addVerifiedBadges();
+        function processReviewContent(node) {
+          if (node.nodeType !== Node.ELEMENT_NODE) return;
+          forEachMatch(node, reviewNameSelector, processReviewName);
         }
 
         function startVerifiedBadgeScript() {
-          runVerifiedFix();
+          processReviewContent(document.body);
 
-          var observer = new MutationObserver(function() {
-            runVerifiedFix();
+          var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(processReviewContent);
+              if (mutation.target.nodeType === Node.ELEMENT_NODE) {
+                var name = mutation.target.closest(reviewNameSelector);
+                if (name) processReviewName(name);
+              }
+            });
           });
 
           observer.observe(document.body, {
@@ -246,9 +226,11 @@
           startVerifiedBadgeScript();
         }
 
-        document.addEventListener('shopify:section:load', runVerifiedFix);
-        document.addEventListener('shopify:section:reorder', runVerifiedFix);
-        document.addEventListener('shopify:section:select', runVerifiedFix);
+        ['shopify:section:load', 'shopify:section:reorder', 'shopify:section:select'].forEach(function(eventName) {
+          document.addEventListener(eventName, function(event) {
+            processReviewContent(event.target);
+          });
+        });
       })();
     </script>
   </body>
