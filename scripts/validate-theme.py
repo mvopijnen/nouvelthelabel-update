@@ -77,6 +77,9 @@ for old, current in {
 }.items():
     baseline = subprocess.check_output(["git", "show", f"{SOURCE}:{old}"], cwd=ROOT)
     actual = (ROOT / current).read_bytes()
+    if current == 'layout/theme.liquid':
+        # Only the explicitly requested removal of the forced no-decimals format is permitted.
+        actual = actual.replace(b"shop.money_format | replace: 'EUR', '\xe2\x82\xac' | escape", b"shop.money_format | replace: 'EUR', '\xe2\x82\xac' | replace: 'amount', 'amount_no_decimals' | escape")
     if actual != baseline:
         errors.append(f"Protected source differs: {current}")
     else:

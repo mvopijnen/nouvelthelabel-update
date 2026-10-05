@@ -119,7 +119,7 @@
       data-drop-shadows="{{ settings.drop-shadows-enabled }}"
       data-cart-empty="{% if cart.item_count > 0 %}false{% else %}true{% endif %}"
       data-logged-in="{% if customer %}true{% else %}false{% endif %}"
-      data-money-format="{{ shop.money_format | replace: 'EUR', '€' | replace: 'amount', 'amount_no_decimals' | escape }}"
+      data-money-format="{{ shop.money_format | replace: 'EUR', '€' | escape }}"
       data-product-storage="4"
     >
       {%- sections 'header-group' -%}
