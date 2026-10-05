@@ -1,0 +1,629 @@
+<!-- sections/collection-header.liquid -->
+
+{%- liquid
+  assign aspect_ratio = 100.0 | divided_by: section.settings.aspect-ratio
+  assign border = section.settings.border
+  assign container_width = '6'
+  assign description_location = section.settings.description-alignment
+  assign display_type = section.settings.image-display-type
+  assign heading_alignment = section.settings.heading-alignment
+  assign heading_type = section.settings.heading-type
+  assign image_enabled = section.settings.image-enabled
+  assign mobile_display_type = section.settings.mobile-image-display-type
+  assign mobile_aspect_ratio = 100.0 | divided_by: section.settings.mobile-aspect-ratio
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign overlay_style = section.settings.overlay-style
+  assign show_description = section.settings.show-description
+  assign show_title = section.settings.show-title
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign parallax_enabled = section.settings.parallax-enabled
+  assign text_style = section.settings.text-style
+  assign use_image_fallback = section.settings.use-image-fallback
+  assign text_color = section.settings.text-color
+
+  if description_location == 'with-title' and show_description and collection.description != blank
+    assign show_inside_description = true
+    assign show_outside_description = false
+  elsif show_description and collection.description != blank
+    assign show_inside_description = false
+    assign show_outside_description = true
+  else
+    assign show_inside_description = false
+    assign show_outside_description = false
+  endif
+
+  assign loading = 'lazy'
+  assign fetchpriority = 'auto'
+  if section.index == 1
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  endif
+-%}
+
+{%- capture header_image -%}
+  {%- if image_enabled %}
+    <div
+      class="collection-header--image"
+      {% unless settings.transitions--image or parallax_enabled %}
+        data-transition-item
+        data-transition-type="zoom-in"
+        data-transition-trigger="hover"
+      {% endunless %}
+    >
+      {%- liquid
+        assign image_to_render = nil
+        if collection.image
+          assign image_to_render = collection.image
+        elsif collection.products.length > 0 and use_image_fallback
+          for product in collection.products
+            if product.featured_media.preview_image
+              assign image_to_render = product.featured_media.preview_image
+              break
+            endif
+          endfor
+        endif
+
+        if image_to_render
+          capture sizes
+            render 'sizes-cover', aspect_ratio: aspect_ratio, container_width: container_width, display_type: display_type, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: true, original_aspect_ratio: image_to_render.aspect_ratio
+          endcapture
+
+          render 'image', image: image_to_render, display_type: display_type, aspect_ratio: aspect_ratio, mobile_display_type: mobile_display_type, mobile_aspect_ratio: mobile_aspect_ratio, overlay_style: overlay_style, mobile_overlay_style: overlay_style, mobile_full_width: true, parallax: parallax_enabled, full_width: true, loading: loading, fetchpriority: fetchpriority, sizes: sizes
+        else
+          assign image_enabled = false
+        endif
+      -%}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+<div
+  class="collection-header--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="none"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-show-title="{{ show_title }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  {% if image_enabled %}
+    data-mobile-full-width="true"
+    data-header-overlap-compatible
+  {% endif %}
+>
+  <div
+    class="collection-header--wrapper"
+    data-x-alignment="{{ heading_alignment }}"
+    data-text-color="{{ text_color }}"
+  >
+    {%- liquid
+      if image_enabled
+        echo header_image
+      endif
+    -%}
+
+    {%- if show_title or show_inside_description -%}
+      <div class="collection-header--heading">
+        <div
+          class="collection-header--heading-wrapper"
+          {% if image_enabled %}
+            data-text-style="{{ text_style }}"
+          {% endif %}
+        >
+          {%- if show_title and collection.title != blank -%}
+            <div
+              {% unless settings.transitions--text %}
+                data-transition-item="viewport"
+                data-transition-type="slide-in"
+              {% endunless %}
+            >
+              <h1 data-item="{{ heading_type }}">
+                {{- collection.title -}}
+              </h1>
+            </div>
+          {%- endif -%}
+
+          {%- if show_inside_description -%}
+            <p data-item="featured-paragraph">
+              {{- collection.description -}}
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if show_outside_description -%}
+    <div
+      class="collection-header--description"
+      {% if description_location == 'left-aligned-outside' %}
+        data-x-alignment="left"
+      {% elsif description_location == 'centered-outside' %}
+        data-x-alignment="center"
+      {% endif %}
+    >
+      <p data-item="paragraph">
+        {{- collection.description -}}
+      </p>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .collection-header--root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .collection-header--wrapper {
+    position: relative;
+
+    &[data-x-alignment='center'] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .collection-header--image {
+    width: 100%;
+  }
+
+  .collection-header--heading {
+    max-width: var(--max-width--x-small);
+    pointer-events: none;
+
+    &:has(> *:empty) {
+      display: none;
+    }
+
+    .collection-header--root[data-header-overlap-compatible] & {
+      position: absolute;
+      padding: var(--spacing--section--x);
+      max-width: var(--max-width--x-small);
+      z-index: 1;
+    }
+
+    .collection-header--root:not([data-header-overlap-compatible]) & {
+      margin: 0;
+    }
+
+    .collection-header--wrapper[data-x-alignment='left'] & {
+      bottom: 0;
+    }
+
+    .collection-header--wrapper[data-x-alignment='right'] & {
+      bottom: 0;
+      right: 0;
+      margin-left: auto;
+    }
+
+    > *:not(:last-child) {
+      padding-bottom: var(--spacing--item);
+    }
+
+    @media (min-width: 768px) {
+      padding: 0 var(--spacing--section--x);
+
+      .layout--viewport[data-header-layout='sidebar'] &:only-child {
+        padding: 0;
+      }
+    }
+  }
+
+  .collection-header--description {
+    padding: var(--spacing--block) var(--spacing--section--x);
+
+    @media (max-width: 767px) {
+      padding: var(--spacing--section--mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection header",
+  "class": "section--collection-header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "id": "show-title",
+      "label": "Show collection title",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "show-description",
+      "label": "Show collection description",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "description-alignment",
+      "label": "Position description",
+      "type": "select",
+      "options": [
+        { "value": "with-title", "label": "With title" },
+        { "value": "centered-outside", "label": "Centered outside header" },
+        { "value": "left-aligned-outside", "label": "Left-aligned outside header" }
+      ],
+      "default": "with-title",
+      "visible_if": "{{ section.settings.show-description == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        {
+          "label": "Banner",
+          "value": "banner-heading"
+        },
+        {
+          "label": "Featured",
+          "value": "featured-heading"
+        },
+        {
+          "label": "Large",
+          "value": "section-heading"
+        },
+        {
+          "label": "Medium",
+          "value": "block-heading"
+        }
+      ],
+      "default": "featured-heading",
+      "visible_if": "{{ section.settings.show-title == true }}"
+    },
+    {
+      "id": "heading-alignment",
+      "label": "Heading alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "white"
+    },
+    {
+      "id": "overlay-style",
+      "label": "Image darkness",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Darken entire image",
+          "value": "darken"
+        },
+        {
+          "label": "Darken top down",
+          "value": "darken-top"
+        },
+        {
+          "label": "Darken bottom up",
+          "value": "darken-bottom"
+        }
+      ],
+      "default": "darken-bottom",
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "id": "text-style",
+      "label": "Text shadows",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Text shadow",
+          "value": "text-shadow"
+        },
+        {
+          "label": "Oval shadow",
+          "value": "eclipse-shadow"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Image layout"
+    },
+    {
+      "id": "image-enabled",
+      "label": "Show collection image",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "use-image-fallback",
+      "label": "Use a product image if no collection image found",
+      "type": "checkbox",
+      "default": true,
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "id": "image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "medium",
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "id": "aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 24,
+      "max": 200,
+      "step": 2,
+      "default": 56,
+      "visible_if": "{{ section.settings.image-enabled == true and section.settings.image-display-type == 'aspect-ratio' }}"
+    },
+    {
+      "id": "parallax-enabled",
+      "label": "Enable parallax animation",
+      "type": "checkbox",
+      "default": false,
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "original",
+      "visible_if": "{{ section.settings.image-enabled == true }}"
+    },
+    {
+      "id": "mobile-aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 32,
+      "max": 200,
+      "step": 2,
+      "default": 134,
+      "visible_if": "{{ section.settings.image-enabled == true and section.settings.mobile-image-display-type == 'aspect-ratio' }}"
+    }
+  ]
+}
+{% endschema %}

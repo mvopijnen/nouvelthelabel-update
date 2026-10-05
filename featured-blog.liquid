@@ -1,0 +1,492 @@
+<!-- sections/featured-blog.liquid -->
+
+{%- liquid
+  assign bg_color = section.settings.background-color
+  assign blog = blogs[section.settings.blog]
+  assign blog_heading = section.settings.blog-heading | escape
+  assign border = section.settings.border
+  assign button_text = section.settings.button-text
+  assign button_style = section.settings.button-style
+  assign container_width = section.settings.container-width
+  assign heading_type = section.settings.heading-type
+  assign mobile_heading_alignment = section.settings.mobile-heading-alignment
+  assign mobile_media_layout = section.settings.mobile-media-layout
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign mobile_text_alignment = section.settings.mobile-text-alignment
+  assign section_alignment = section.settings.section-alignment
+  assign selected_tag = section.settings.tag-select | downcase | escape
+  assign show_cta = section.settings.show-cta
+  assign show_date = section.settings.show-date
+  assign show_excerpt = section.settings.show-excerpt
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_alignment = section.settings.text-alignment
+  assign text_color = section.settings.text-color
+
+  assign loading = 'lazy'
+  if section.index < 3
+    assign loading = 'eager'
+  endif
+-%}
+
+<div
+  class="featured-blog--root"
+  data-section-id="{{ section.id }}"
+  data-aspect-ratio="{{ settings.image--article-size }}"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  data-text-color="{{ text_color }}"
+>
+  <div class="featured-blog--wrapper" data-container="section">
+    <div
+      class="featured-blog--header-nav"
+      data-container="nav"
+      data-x-alignment="{{ section_alignment }}"
+      data-mobile-x-alignment="{{ mobile_heading_alignment }}"
+    >
+      <div
+        class="featured-blog--header"
+        data-container="block"
+        {% unless settings.transitions--text %}
+          data-transition-item="viewport"
+          data-transition-type="slide-in"
+        {% endunless %}
+      >
+        {%- unless blog_heading == blank -%}
+          <h2 class="featured-blog--heading" data-item="{{ heading_type }}">
+            {{- blog_heading -}}
+          </h2>
+        {%- endunless -%}
+      </div>
+
+      {%- liquid
+        if mobile_media_layout == 'slideshow'
+          assign total_slides_mobile = 3
+          if blog.articles.size < 3 and blog.articles.size > 0
+            assign total_slides_mobile = blog.articles.size
+          endif
+
+          render 'carousel-nav-arrow', id: section.id, total_slides_mobile: total_slides_mobile
+        endif
+      -%}
+    </div>
+
+    {%-
+      render 'blog-grid',
+      section: section,
+      alignment: text_alignment,
+      blog: blog,
+      container_width: container_width,
+      mobile_alignment: mobile_text_alignment,
+      mobile_media_layout: mobile_media_layout,
+      loading: loading,
+      selected_tag: selected_tag,
+      show_cta: show_cta,
+      show_date: show_date,
+      show_excerpt: show_excerpt,
+      transition_id: section.id
+    -%}
+
+    {%- unless button_text == blank -%}
+      <div
+        class="featured-blog--footer"
+        data-container="block"
+        data-x-alignment="{{ section_alignment }}"
+      >
+        <a
+          data-item="{{ button_style }}"
+          data-text="{{ button_text }}"
+          href="{{ blog.url }}"
+        >
+          <span>{{ button_text }}</span>
+        </a>
+      </div>
+    {%- endunless -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .featured-blog--root {
+    &[data-text-color='white'] .article-card--date {
+      color: white;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "class": "section--featured-blog",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "blog",
+      "label": "Choose blog",
+      "type": "blog"
+    },
+    {
+      "id": "blog-heading",
+      "label": "Heading",
+      "type": "text",
+      "default": "Blog posts"
+    },
+    {
+      "id": "button-text",
+      "label": "Button text",
+      "type": "text",
+      "default": "Button"
+    },
+    {
+      "id": "button-style",
+      "label": "Button style",
+      "type": "select",
+      "options": [
+        {
+          "label": "Style 1",
+          "value": "button-1"
+        },
+        {
+          "label": "Style 2",
+          "value": "button-2"
+        },
+        {
+          "label": "Style 3",
+          "value": "button-3"
+        },
+        {
+          "label": "Style 4",
+          "value": "button-4"
+        },
+        {
+          "label": "Link",
+          "value": "block-link"
+        }
+      ],
+      "default": "button-1"
+    },
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "container-width",
+      "label": "Maximum container width",
+      "type": "select",
+      "options": [
+        { "label": "Extra small", "value": "1" },
+        { "label": "Small", "value": "2" },
+        { "label": "Medium", "value": "3" },
+        { "label": "Large", "value": "4" },
+        { "label": "Extra large", "value": "5" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "id": "tag-select",
+      "label": "Filter by tag",
+      "type": "text",
+      "default": "pinned",
+      "info": "Tag articles with 'pinned' or change this to match an existing tag"
+    },
+    {
+      "id": "show-cta",
+      "label": "Show button",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "show-date",
+      "label": "Show date",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "show-excerpt",
+      "label": "Show excerpt",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        {
+          "label": "Banner",
+          "value": "banner-heading"
+        },
+        {
+          "label": "Featured",
+          "value": "featured-heading"
+        },
+        {
+          "label": "Large",
+          "value": "section-heading"
+        },
+        {
+          "label": "Medium",
+          "value": "block-heading"
+        }
+      ],
+      "default": "section-heading"
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "id": "section-alignment",
+      "label": "Alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "id": "text-alignment",
+      "label": "Block text alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-heading-alignment",
+      "label": "Heading alignment",
+      "type": "text_alignment",
+      "default": "left"
+    },
+    {
+      "id": "mobile-text-alignment",
+      "label": "Block text alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "id": "mobile-media-layout",
+      "label": "Media layout",
+      "type": "select",
+      "options": [
+        {
+          "label": "Slideshow",
+          "value": "slideshow"
+        },
+        {
+          "label": "Grid",
+          "value": "grid"
+        }
+      ],
+      "default": "slideshow"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog posts",
+      "category": "Brand Trust",
+      "settings": {
+        "blog": "News"
+      }
+    }
+  ],
+  "disabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

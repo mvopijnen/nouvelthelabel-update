@@ -1,0 +1,79 @@
+<!-- sections/activate-account.liquid -->
+
+{%- liquid
+  assign activate_title_t = 'customer.activate_account.page_title' | t
+  assign activate_subtext_t = 'customer.activate_account.subtext' | t
+  assign activate_password_t = 'customer.activate_account.password' | t
+  assign activate_password_confirm_t = 'customer.activate_account.password_confirm' | t
+  assign activate_cancel_t = 'customer.activate_account.cancel' | t
+  assign activate_submit_t = 'customer.activate_account.submit' | t
+-%}
+
+<div
+  class="customer--root account--activate"
+  data-section-id="{{ section.id }}"
+  data-container-width="2"
+  data-background-color="none"
+  data-spacing-above="large"
+  data-spacing-below="large"
+  data-mobile-spacing-above="large"
+  data-mobile-spacing-below="large"
+>
+  <div class="customer--wrapper">
+    <h1
+      data-item="section-heading"
+      {% unless settings.transitions--text %}
+        data-transition-item="viewport"
+        data-transition-type="slide-in"
+      {% endunless %}
+    >
+      {{- activate_title_t -}}
+    </h1>
+
+    <p class="account--activate--create-password">
+      {{- activate_subtext_t -}}
+    </p>
+
+    {%- form 'activate_customer_password' -%}
+      {{- form.errors | default_errors -}}
+
+      <label for="customer_password">
+        {{- activate_password_t -}}
+      </label>
+      <input
+        class="text"
+        type="password"
+        value=""
+        name="customer[password]"
+        id="customer_password"
+        size="16"
+      />
+
+      <label for="customer_password_confirmation">
+        {{- activate_password_confirm_t -}}
+      </label>
+      <input
+        class="text"
+        type="password"
+        value=""
+        name="customer[password_confirmation]"
+        id="customer_password_confirmation"
+        size="16"
+      />
+
+      <div class="account--activate--button-container">
+        <button
+          value="{{ activate_submit_t }}"
+          type="submit"
+          class="account--activate--button"
+          data-item="button-1"
+        >
+          <span>{{- activate_submit_t -}}</span>
+        </button>
+        <a href="{{ routes.root_url }}" data-item="block-link">
+          <span>{{- activate_cancel_t -}}</span>
+        </a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>

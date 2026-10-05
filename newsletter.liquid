@@ -1,0 +1,715 @@
+<!-- sections/newsletter.liquid -->
+
+{%- liquid
+  assign aspect_ratio = 100.0 | divided_by: section.settings.aspect-ratio
+  assign bg_color = section.settings.background-color
+  assign border = section.settings.border
+  assign container_width = section.settings.container-width
+  assign image = section.settings.image
+  assign image_enabled = section.settings.image-enabled
+  assign image_display_type = section.settings.image-display-type
+  assign mobile_aspect_ratio = 100.0 | divided_by: section.settings.mobile-aspect-ratio
+  assign mobile_display_type = section.settings.mobile-image-display-type
+  assign mobile_image = section.settings.mobile-image
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign mobile_text_alignment = section.settings.mobile-text-alignment
+  assign outer_background = section.settings.outer-background
+  assign parallax_enabled = section.settings.parallax-enabled
+  assign reverse_layout = section.settings.reverse-layout
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_alignment = section.settings.text-alignment
+  assign text_color = section.settings.text-color
+
+  assign mobile_image_full_width = false
+  if outer_background
+    assign mobile_image_full_width = true
+  endif
+
+  assign loading = 'lazy'
+  if section.index < 3
+    assign loading = 'eager'
+  endif
+-%}
+
+<div
+  class="newsletter--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-mobile-full-width="true"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-outer-background="{{ outer_background }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  data-text-color="{{ text_color }}"
+  {% unless settings.transitions--text %}
+    data-transition-container="{{ section.id }}"
+    data-transition-type="slide-in"
+    data-transition-cascade="vertical"
+    data-transition-cascade-interval="500"
+  {% endunless %}
+>
+  <div
+    class="newsletter--wrapper"
+    data-container="split"
+    data-reverse-layout="{{ reverse_layout }}"
+  >
+    {%- if image_enabled -%}
+      <div
+        class="newsletter--image"
+        data-item="image"
+        {% unless settings.transitions--image %}
+          data-transition-item="viewport"
+          data-transition-type="image"
+        {% endunless %}
+      >
+        {%- if image -%}
+          {%- liquid
+            capture sizes
+              render 'sizes-cover', aspect_ratio: aspect_ratio, columns: 2, container_width: container_width, display_type: image_display_type, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_original_aspect_ratio: mobile_image.aspect_ratio, original_aspect_ratio: image.aspect_ratio
+            endcapture
+          -%}
+
+          {%-
+            render 'image',
+            image: image,
+            aspect_ratio: aspect_ratio,
+            display_type: image_display_type,
+            mobile_aspect_ratio: mobile_aspect_ratio,
+            mobile_display_type: mobile_display_type,
+            mobile_full_width: mobile_image_full_width,
+            mobile_image: mobile_image,
+            parallax: parallax_enabled,
+            sizes: sizes,
+            loading: loading
+          -%}
+        {%- else -%}
+          {%-
+            render 'placeholder',
+            type: 'lifestyle',
+            placeholder_index: 1,
+            aspect_ratio: aspect_ratio,
+            display_type: image_display_type,
+            mobile_aspect_ratio: mobile_aspect_ratio,
+            mobile_display_type: mobile_display_type,
+            mobile_full_width: mobile_image_full_width,
+            parallax: parallax_enabled
+          -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%-
+      render 'section-blocks',
+      section_id: section.id,
+      blocks: section.blocks,
+      mobile_x_alignment: mobile_text_alignment,
+      text_color: text_color,
+      x_alignment: text_alignment
+    -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .newsletter--wrapper {
+    @media (min-width: 768px) {
+      align-items: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "section--newsletter",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "id": "image",
+        "label": "Image",
+        "type": "image_picker",
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "id": "image-enabled",
+        "label": "Show image",
+        "type": "checkbox",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "General layout"
+      },
+      {
+        "id": "border",
+        "label": "Border",
+        "type": "select",
+        "options": [
+          {
+            "label": "Top",
+            "value": "top"
+          },
+          {
+            "label": "Bottom",
+            "value": "bottom"
+          },
+          {
+            "label": "Both",
+            "value": "both"
+          },
+          {
+            "label": "None",
+            "value": "none"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "id": "spacing-above",
+        "label": "Spacing above",
+        "type": "select",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          }
+        ],
+        "default": "large"
+      },
+      {
+        "id": "spacing-below",
+        "label": "Spacing below",
+        "type": "select",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          }
+        ],
+        "default": "large"
+      },
+      {
+        "id": "container-width",
+        "label": "Maximum container width",
+        "type": "select",
+        "options": [
+          { "label": "Extra small", "value": "1" },
+          { "label": "Small", "value": "2" },
+          { "label": "Medium", "value": "3" },
+          { "label": "Large", "value": "4" },
+          { "label": "Extra large", "value": "5" }
+        ],
+        "default": "4"
+      },
+      {
+        "id": "background-color",
+        "label": "Background color",
+        "type": "select",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Light",
+            "value": "light"
+          },
+          {
+            "label": "Dark",
+            "value": "dark"
+          },
+          {
+            "label": "Accent 1",
+            "value": "accent-1"
+          },
+          {
+            "label": "Accent 2",
+            "value": "accent-2"
+          },
+          {
+            "label": "Accent 3",
+            "value": "accent-3"
+          }
+        ],
+        "default": "light"
+      },
+      {
+        "id": "outer-background",
+        "label": "Outer background",
+        "type": "checkbox"
+      },
+      {
+        "id": "reverse-layout",
+        "label": "Reverse layout",
+        "type": "checkbox",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Text layout"
+      },
+      {
+        "id": "text-color",
+        "label": "Text color",
+        "type": "select",
+        "options": [
+          {
+            "label": "Light",
+            "value": "white"
+          },
+          {
+            "label": "Dark",
+            "value": "body"
+          }
+        ],
+        "default": "body"
+      },
+      {
+        "id": "text-alignment",
+        "label": "Text alignment",
+        "type": "text_alignment",
+        "default": "left"
+      },
+      {
+        "type": "header",
+        "content": "Image layout",
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "id": "image-display-type",
+        "label": "Image proportions",
+        "type": "select",
+        "options": [
+          {
+            "label": "Original aspect ratio",
+            "value": "original"
+          },
+          {
+            "label": "Adjustable aspect ratio",
+            "value": "aspect-ratio"
+          },
+          {
+            "label": "Extra small",
+            "value": "x-small"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          },
+          {
+            "label": "Fit screen",
+            "value": "fit-screen"
+          }
+        ],
+        "default": "x-small",
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "id": "aspect-ratio",
+        "label": "Adjustable aspect ratio",
+        "type": "range",
+        "min": 24,
+        "max": 200,
+        "step": 2,
+        "default": 56,
+        "visible_if": "{{ section.settings.image-enabled == true and section.settings.image-display-type == 'aspect-ratio' }}"
+      },
+      {
+        "id": "parallax-enabled",
+        "label": "Enable parallax animation",
+        "type": "checkbox",
+        "default": false,
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "type": "header",
+        "content": "Mobile"
+      },
+      {
+        "id": "mobile-spacing-above",
+        "label": "Spacing above",
+        "type": "select",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          }
+        ],
+        "default": "medium"
+      },
+      {
+        "id": "mobile-spacing-below",
+        "label": "Spacing below",
+        "type": "select",
+        "options": [
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          }
+        ],
+        "default": "medium"
+      },
+      {
+        "id": "mobile-text-alignment",
+        "label": "Text alignment",
+        "type": "text_alignment",
+        "default": "left"
+      },
+      {
+        "id": "mobile-image",
+        "label": "Image (optional)",
+        "type": "image_picker",
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "id": "mobile-image-display-type",
+        "label": "Image proportions",
+        "type": "select",
+        "options": [
+          {
+            "label": "Original aspect ratio",
+            "value": "original"
+          },
+          {
+            "label": "Adjustable aspect ratio",
+            "value": "aspect-ratio"
+          },
+          {
+            "label": "Extra small",
+            "value": "x-small"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra large",
+            "value": "x-large"
+          },
+          {
+            "label": "Fit screen",
+            "value": "fit-screen"
+          }
+        ],
+        "default": "original",
+        "visible_if": "{{ section.settings.image-enabled == true }}"
+      },
+      {
+        "id": "mobile-aspect-ratio",
+        "label": "Adjustable aspect ratio",
+        "type": "range",
+        "min": 32,
+        "max": 200,
+        "step": 2,
+        "default": 134,
+        "visible_if": "{{ section.settings.image-enabled == true and section.settings.mobile-image-display-type == 'aspect-ratio' }}"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "overline",
+        "name": "Overline",
+        "settings": [
+          {
+            "id": "overline",
+            "label": "Overline",
+            "type": "text",
+            "default": "Overline text"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "id": "heading-type",
+            "label": "Heading type",
+            "type": "select",
+            "options": [
+              {
+                "label": "Banner",
+                "value": "banner-heading"
+              },
+              {
+                "label": "Featured",
+                "value": "featured-heading"
+              },
+              {
+                "label": "Large",
+                "value": "section-heading"
+              },
+              {
+                "label": "Medium",
+                "value": "block-heading"
+              }
+            ],
+            "default": "section-heading"
+          },
+          {
+            "id": "title",
+            "label": "Heading",
+            "type": "text",
+            "default": "Subscribe to our newsletter",
+            "info": "Highlight headings by wrapping text with square brackets, ie. This is [highlighted]."
+          },
+          {
+            "id": "highlight-type",
+            "label": "Highlight type",
+            "type": "select",
+            "options": [
+              {
+                "label": "Italic",
+                "value": "italic"
+              },
+              {
+                "label": "Bold",
+                "value": "bold"
+              },
+              {
+                "label": "Bold italic",
+                "value": "bold-italic"
+              },
+              {
+                "label": "Text color",
+                "value": "color"
+              },
+              {
+                "label": "Outlined",
+                "value": "outlined"
+              },
+              {
+                "label": "Highlight",
+                "value": "highlight"
+              },
+              {
+                "label": "Half highlight",
+                "value": "half-highlight"
+              },
+              {
+                "label": "Underline",
+                "value": "underline"
+              },
+              {
+                "label": "Reverse opacity",
+                "value": "reverse-opacity"
+              }
+            ],
+            "default": "italic"
+          },
+          {
+            "id": "highlight-color",
+            "label": "Highlight color",
+            "type": "select",
+            "options": [
+              {
+                "label": "Transparent",
+                "value": "transparent"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "accent-2"
+          },
+          {
+            "id": "highlight-text",
+            "label": "Highlighted text color",
+            "type": "select",
+            "options": [
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "none"
+          }
+        ]
+      },
+      {
+        "type": "description",
+        "name": "Description",
+        "settings": [
+          {
+            "id": "description",
+            "label": "Description",
+            "type": "richtext",
+            "default": "<p>A short sentence describing what someone will receive by subscribing</p>"
+          },
+          {
+            "id": "mobile-hide-enabled",
+            "label": "Hide in mobile",
+            "type": "checkbox",
+            "default": false
+          }
+        ]
+      },
+      {
+        "type": "newsletter",
+        "name": "Newsletter form",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Customers who subscribe will have their email address added to the “accepts marketing” [customer list](/admin/customers?query=&accepts_marketing=1)"
+          }
+        ],
+        "limit": 1
+      },
+      {
+        "type": "custom-liquid",
+        "name": "Custom liquid",
+        "settings": [
+          {
+            "type": "liquid",
+            "id": "custom-liquid",
+            "label": "Custom Liquid",
+            "info": "Add app snippets or other Liquid code to create advanced customizations."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Newsletter",
+        "category": "Signups",
+        "blocks": [
+          { "type": "overline" },
+          { "type": "heading" },
+          { "type": "description" },
+          { "type": "newsletter" }
+        ]
+      }
+    ],
+    "disabled_on": {
+      "groups": ["aside"]
+    }
+  }
+{% endschema %}

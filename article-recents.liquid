@@ -1,0 +1,321 @@
+<!-- sections/article-recents.liquid -->
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign heading_alignment = section.settings.heading-alignment
+  assign heading_type = section.settings.heading-type
+  assign mobile_heading_alignment = section.settings.mobile-heading-alignment
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign mobile_text_alignment = section.settings.mobile-text-alignment
+  assign show_author = section.settings.show-author
+  assign show_date = section.settings.show-date
+  assign show_excerpt = section.settings.show-excerpt
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_alignment = section.settings.text-alignment
+
+  assign other_article = blank
+  for a in blog.articles
+    unless a.id == article.id or a.id == blog.previous_article.id or a.id == blog.next_article.id
+      assign other_article = a
+      break
+    endunless
+  endfor
+
+  assign columns = 3
+  unless blog.next_article and blog.previous_article and other_article != blank
+    assign columns = 2
+  endunless
+
+  capture sizes
+    render 'sizes-grid', container_width: '2', columns: columns, mobile_columns: 1
+  endcapture
+
+  capture article_items
+    if blog.previous_article
+      render 'article-card', featured_article: blog.previous_article, heading_type: 'paragraph', show_author: show_author, show_date: show_date, show_excerpt: show_excerpt, sizes: sizes
+      echo '<span class="divider"></span>'
+    endif
+
+    unless other_article == blank
+      render 'article-card', featured_article: other_article, heading_type: 'paragraph',  show_author: show_author, show_date: show_date, show_excerpt: show_excerpt, sizes: sizes
+      echo '<span class="divider"></span>'
+    endunless
+
+    if blog.next_article
+      render 'article-card', featured_article: blog.next_article, heading_type: 'paragraph',  show_author: show_author, show_date: show_date, show_excerpt: show_excerpt, sizes: sizes
+      echo '<span class="divider"></span>'
+    endif
+  endcapture
+
+  assign article_items_arr = article_items | split: '<span class="divider"></span>'
+-%}
+
+<div
+  class="article--recents-root"
+  data-section-id="{{ section.id }}"
+  data-aspect-ratio="{{ settings.image--article-size }}"
+  data-background-color="none"
+  data-container-width="2"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+>
+  <div class="article--recents-wrapper" data-container="section">
+    {%- unless heading == blank -%}
+      <div
+        class="article--recents-header"
+        data-container="block"
+        data-mobile-x-alignment="{{ mobile_heading_alignment }}"
+        data-x-alignment="{{ heading_alignment }}"
+        {% unless settings.transitions--text %}
+          data-transition-item="viewport"
+          data-transition-type="slide-in"
+        {% endunless %}
+      >
+        <h2 class="article--recents-title" data-item="{{ heading_type }}">
+          {{- heading -}}
+        </h2>
+      </div>
+    {%- endunless -%}
+
+    <div
+      class="article--recents-grid"
+      data-mobile-x-alignment="{{ mobile_text_alignment }}"
+      data-x-alignment="{{ text_alignment }}"
+      {% unless settings.transitions--other %}
+        data-transition-container="{{ section.id }}"
+        data-transition-type="fade-in"
+        data-transition-cascade-interval="200"
+        data-transition-cascade="horizontal"
+      {% endunless %}
+    >
+      {%-
+        render 'card-carousel',
+        section: section,
+        blocks: article_items_arr,
+        blocks_per_slide: columns,
+        blocks_per_slide_mobile: 1,
+        spacing_around_blocks: true,
+        mobile_only: true,
+        total_blocks: article_items_arr.size,
+        total_slides: article_items_arr.size
+      -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Recent articles",
+  "class": "section--recent-articles",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "heading",
+      "label": "Heading",
+      "type": "text",
+      "default": "Continue reading"
+    },
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "id": "show-author",
+      "label": "Show author",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "id": "show-date",
+      "label": "Show date",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "id": "show-excerpt",
+      "label": "Show excerpt",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        {
+          "label": "Banner",
+          "value": "banner-heading"
+        },
+        {
+          "label": "Featured",
+          "value": "featured-heading"
+        },
+        {
+          "label": "Large",
+          "value": "section-heading"
+        },
+        {
+          "label": "Medium",
+          "value": "block-heading"
+        }
+      ],
+      "default": "section-heading"
+    },
+    {
+      "id": "heading-alignment",
+      "label": "Heading alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "id": "text-alignment",
+      "label": "Block text alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "mobile-heading-alignment",
+      "label": "Heading alignment",
+      "type": "text_alignment",
+      "default": "left"
+    },
+    {
+      "id": "mobile-text-alignment",
+      "label": "Block text alignment",
+      "type": "text_alignment",
+      "default": "center"
+    }
+  ]
+}
+{% endschema %}

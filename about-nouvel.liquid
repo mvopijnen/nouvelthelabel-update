@@ -1,0 +1,209 @@
+{% comment %}
+  About Us Section - Nouvél the Label
+  Typography: Playfair Display & Arial
+  Inclusief +8.5 Kwaliteitsstandaard highlight.
+{% endcomment %}
+
+<!-- Google Font Import -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<!-- Lucide Icons -->
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+
+<style>
+  .about-container {
+    --bg-color: {{ section.settings.bg_color }};
+    background-color: var(--bg-color);
+    color: #1a1a1a;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* TYPOGRAFIE MATCHING */
+  .about-playfair {
+    font-family: 'Playfair Display', serif !important;
+    letter-spacing: 0px !important;
+    text-transform: none !important;
+    margin: 0;
+  }
+  .about-arial {
+    font-family: Arial, sans-serif !important;
+    letter-spacing: 0px !important;
+  }
+  .about-p {
+    font-family: Arial, sans-serif !important;
+    font-size: 11px !important;
+    line-height: 1.8;
+    color: #444;
+  }
+  .about-overline {
+    font-family: Arial, sans-serif !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.15em !important;
+    color: #a8a8a8;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  /* HEADINGS MATEN */
+  .about-h1 { font-size: 36px !important; line-height: 1.2; } /* Mobile */
+  .about-h2 { font-size: 26px !important; line-height: 1.2; } /* Mobile */
+  @media (min-width: 768px) {
+    .about-h1 { font-size: 55px !important; } 
+    .about-h2 { font-size: 36px !important; }
+  }
+
+  /* LAYOUT */
+  .about-max-width { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .about-section { padding: 60px 0; }
+  @media (min-width: 768px) { .about-section { padding: 100px 0; } }
+
+  /* VISION BLOCK (+8.5 STANDARD) */
+  .about-vision-box {
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 40px;
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .about-vision-box { grid-template-columns: 0.4fr 1.6fr; gap: 60px; padding: 60px; }
+  }
+  .about-badge {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  /* GRID FOR PILLARS */
+  .about-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 50px;
+    margin-top: 60px;
+  }
+  @media (min-width: 768px) {
+    .about-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  }
+  .about-card { border-top: 1px solid #eee; padding-top: 30px; }
+
+  /* CTA */
+  .about-cta-section { padding: 100px 24px; text-align: center; background: #fff; border-top: 1px solid #0000; }
+  .about-button { 
+    display: inline-block; background: #ffff; color: #0000; padding: 18px 45px; 
+    text-decoration: none; font-family: Arial; font-size: 11px; text-transform: uppercase; 
+    font-weight: bold; letter-spacing: 0.15em; transition: opacity 0.3s;
+  }
+  .about-button:hover { opacity: 0.8; }
+</style>
+
+<div class="about-container">
+  
+  <!-- HERO: HET ONTSTAAN -->
+  <section class="about-hero about-section" style="background: {{ section.settings.hero_bg }};">
+    <div class="about-max-width">
+      <span class="about-overline">Over Nouvél the Label</span>
+      <h1 class="about-playfair about-h1">MINDER, MAAR BETER</h1>
+      <div style="display: grid; grid-template-columns: 1fr; gap: 40px; margin-top: 40px;">
+        <div class="about-p" style="font-size: 13px !important; max-width: 700px; line-height: 2;">
+          Nouvél the Label is ontstaan vanuit een eenvoudige observatie: veel kleding en sieraden zien er online goed uit, maar verliezen hun vorm, kleur of kwaliteit al na korte tijd.
+          <br><br>
+          Een garderobe vol impulsaankopen creëert zelden een stijl die echt lang meegaat. Daarom besloten wij het anders te doen. Nouvél staat voor tijdloze kleding en minimalistische sieraden die zorgvuldig geselecteerd worden op kwaliteit, materiaal en draagbaarheid.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIE & +8.5 STANDAARD -->
+  <section class="about-section" style="background: #fff;">
+    <div class="about-max-width">
+      <span class="about-overline">Onze Visie</span>
+      <h2 class="about-playfair about-h2">DE KWALITEITSSTANDAARD</h2>
+      
+      <div class="about-vision-box">
+        <div class="about-badge">
+          <span class="about-arial" style="font-size: 10px; font-weight: bold; color: #a8a8a8;">STANDAARD</span>
+          <span class="about-playfair" style="font-size: 28px; font-weight: bold;">+8.5</span>
+        </div>
+        <div>
+          <p class="about-p" style="font-size: 12px !important;">
+            Wij geloven dat stijl ontstaat door minder, maar beter te kiezen. In plaats van honderden producten te lanceren, selecteren wij alleen items die voldoen aan onze <strong>+8.5 kwaliteitsstandaard</strong>. 
+            <br><br>
+            Dit betekent dat elk product wordt beoordeeld op meerdere criteria zoals materiaal, constructie, duurzaamheid en productconsistentie. Alleen wanneer een product aantoonbaar aan deze standaard voldoet, wordt het onderdeel van de collectie.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRIE PILLERS -->
+  <section class="about-section" style="background: #FAFAF8;">
+    <div class="about-max-width">
+      <div class="about-grid-3">
+        <!-- Pijler 1 -->
+        <div class="about-card">
+          <h3 class="about-playfair" style="font-size: 22px; margin-bottom: 20px;">TIJDLOZE ONTWERPEN</h3>
+          <p class="about-p">
+            Onze ontwerpen zijn bewust rustig. Wij geloven dat de kracht van stijl ligt in eenvoud en balans. Tijdloze silhouetten die moeiteloos gecombineerd kunnen worden, seizoen na seizoen.
+          </p>
+        </div>
+        <!-- Pijler 2 -->
+        <div class="about-card">
+          <h3 class="about-playfair" style="font-size: 22px; margin-bottom: 20px;">KWALITEIT BOVEN TRENDS</h3>
+          <p class="about-p">
+            Nouvél kiest voor een andere benadering dan de massa. Door streng te selecteren op afwerking en betrouwbare productiepartners, garanderen wij items die langdurig gedragen kunnen worden.
+          </p>
+        </div>
+        <!-- Pijler 3 -->
+        <div class="about-card">
+          <h3 class="about-playfair" style="font-size: 22px; margin-bottom: 20px;">BEWUSTE KEUZES</h3>
+          <p class="about-p">
+            Ontworpen voor vrouwen die waarde hechten aan eenvoud. Onze collectie is geen verzameling trends, maar een selectie van stukken die elkaar versterken en een duurzame garderobe vormen.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="about-cta-section">
+    <div class="about-max-width">
+      <p class="about-playfair" style="font-size: 28px; max-width: 750px; margin: 0 auto 40px auto; line-height: 1.4; font-style: regular;">
+        "INVESTEREN IN MINDER, MAAR BETERE ITEMS CREËERT EEN STIJL DIE NIET AFHANKELIJK IS VAN SEIZOENEN"
+      </p>
+      <a href="{{ section.settings.cta_link | default: '/collections/all' }}" class="sust-button sust-arial">
+        {{ section.settings.cta_text | default: 'ONTDEK DE COLLECTIE' }}
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Over Ons - Nouvél",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Achtergrond", "default": "#f5f5f4" },
+    { "type": "color", "id": "hero_bg", "label": "Hero Achtergrond", "default": "#FAFAF8" },
+    { "type": "text", "id": "cta_text", "label": "Knop Tekst", "default": "Ontdek de Collectie" },
+    { "type": "url", "id": "cta_link", "label": "Knop Link" }
+  ],
+  "presets": [ { "name": "Over Ons - Nouvél" } ]
+}
+{% endschema %}

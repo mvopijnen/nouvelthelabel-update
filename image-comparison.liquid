@@ -1,0 +1,1092 @@
+<!-- sections/image-comparison.liquid -->
+
+{%- liquid
+  assign cursor_t = 'sections.image_comparison.cursor' | t
+
+  assign aspect_ratio = 100.0 | divided_by: section.settings.aspect-ratio
+  assign bg_color = section.settings.background-color
+  assign border = section.settings.border
+  assign button_link = section.settings.button-link
+  assign button_style = section.settings.button-style
+  assign button_text = section.settings.button-text
+  assign cursor_direction = section.settings.cursor-direction
+  assign cursor_position = section.settings.cursor-position
+  assign container_width = section.settings.container-width
+  assign display_type = section.settings.image-display-type
+  assign heading = section.settings.heading | escape
+  assign heading_type = section.settings.heading-type
+  assign mobile_aspect_ratio = 100.0 | divided_by: section.settings.mobile-aspect-ratio
+  assign mobile_display_type = section.settings.mobile-image-display-type
+  assign mobile_full_width = section.settings.mobile-full-width
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign overline = section.settings.overline | escape
+  assign section_alignment = section.settings.section-alignment
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_color = section.settings.text-color
+
+  assign full_width = false
+  if container_width == '6'
+    assign full_width = true
+  endif
+
+  assign loading = 'lazy'
+  if section.index < 3
+    assign loading = 'eager'
+  endif
+
+  assign before_block = section.blocks | find: 'type', 'before'
+  if before_block
+    assign before_image = before_block.settings.image
+    assign before_mobile_image = before_block.settings.mobile-image
+    assign before_overlay = before_block.settings.overlay-style
+    assign before_overline = before_block.settings.overline
+    assign before_heading = before_block.settings.title
+    assign before_heading_type = before_block.settings.heading-type
+    assign before_text_color = before_block.settings.text-color
+    assign before_text_pos = before_block.settings.text-position
+  endif
+
+  assign after_block = section.blocks | find: 'type', 'after'
+  if after_block
+    assign after_image = after_block.settings.image
+    assign after_mobile_image = after_block.settings.mobile-image
+    assign after_overlay = after_block.settings.overlay-style
+    assign after_overline = after_block.settings.overline
+    assign after_heading = after_block.settings.title
+    assign after_heading_type = after_block.settings.heading-type
+    assign after_text_color = after_block.settings.text-color
+    assign after_text_pos = after_block.settings.text-position
+  endif
+-%}
+
+<image-comparison-element
+  class="image-comparison--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-cursor-direction="{{ cursor_direction }}"
+  data-initial-pos="{{ cursor_position }}"
+  data-mobile-full-width="{{ mobile_full_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+>
+  <div class="image-comparison--wrapper" data-container="section">
+    {%- unless overline == blank and heading == blank -%}
+      <div
+        class="image-comparison--header"
+        data-container="block"
+        data-text-color="{{ text_color }}"
+        data-x-alignment="{{ section_alignment }}"
+        {% unless settings.transitions--text %}
+          data-transition-container="{{ section.id }}"
+          data-transition-type="slide-in"
+          data-transition-cascade="vertical"
+          data-transition-cascade-interval="500"
+        {% endunless %}
+      >
+        {%- unless overline == blank -%}
+          <div
+            class="image-comparison--overline"
+            {% unless settings.transitions--text %}
+              data-transition-item="{{ section.id }}"
+            {% endunless %}
+          >
+            <p data-item="overline">
+              {{- overline -}}
+            </p>
+          </div>
+        {%- endunless -%}
+
+        {%- unless heading == blank -%}
+          <div
+            class="image-comparison--heading"
+            {% unless settings.transitions--text %}
+              data-transition-item="{{ section.id }}"
+            {% endunless %}
+          >
+            <h3 data-item="{{ heading_type }}">
+              {{- heading -}}
+            </h3>
+          </div>
+        {%- endunless -%}
+      </div>
+    {%- endunless -%}
+
+    <div class="image-comparison--images">
+      <div class="image-comparison--before" {{ before_block.shopify_attributes }}>
+        {%- liquid
+          if before_image
+            capture sizes
+              render 'sizes-cover', container_width: container_width, display_type: display_type, mobile_display_type: mobile_display_type, aspect_ratio: aspect_ratio, mobile_aspect_ratio: mobile_aspect_ratio, original_aspect_ratio: before_image.aspect_ratio
+            endcapture
+
+            render 'image', aspect_ratio: aspect_ratio, display_type: display_type, full_width: full_width, image: before_image, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: mobile_full_width, mobile_image: before_mobile_image, mobile_overlay_style: before_overlay, overlay_style: before_overlay, sizes: sizes, loading: loading
+          else
+            render 'placeholder', aspect_ratio: aspect_ratio, display_type: display_type, full_width: full_width, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: mobile_full_width, mobile_overlay_style: before_overlay, overlay_style: before_overlay, placeholder_index: 1, type: 'lifestyle', overlay_text_color: before_text_color
+          endif
+        -%}
+
+        {%- unless before_overline == blank and before_heading == blank -%}
+          <div
+            class="image-comparison--before-text"
+            data-text-color="{{ before_text_color }}"
+            data-transition-item="viewport"
+            data-transition-type="fade-in"
+            data-transition-active="true"
+            data-transition-trigger="custom"
+            style="--text-position:{{ before_text_pos }};"
+          >
+            {%- unless before_overline == blank -%}
+              <div class="image-comparison--before-overline" data-item="overline">
+                {{- before_overline -}}
+              </div>
+            {%- endunless -%}
+
+            {%- unless before_heading == blank -%}
+              <div class="image-comparison--before-heading" data-item="{{ before_heading_type }}">
+                {{- before_heading -}}
+              </div>
+            {%- endunless -%}
+          </div>
+        {%- endunless -%}
+      </div>
+
+      <div class="image-comparison--after" {{ after_block.shopify_attributes }}>
+        {%- liquid
+          if after_image
+            capture sizes
+              render 'sizes-cover', container_width: container_width, display_type: display_type, mobile_display_type: mobile_display_type, aspect_ratio: aspect_ratio, mobile_aspect_ratio: mobile_aspect_ratio, original_aspect_ratio: after_image.aspect_ratio
+            endcapture
+
+            render 'image', aspect_ratio: aspect_ratio, display_type: display_type, full_width: full_width, image: after_image, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: mobile_full_width, mobile_image: after_mobile_image, mobile_overlay_style: after_overlay, overlay_style: after_overlay, sizes: sizes, loading: loading
+          else
+            render 'placeholder', aspect_ratio: aspect_ratio, display_type: display_type, full_width: full_width, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: mobile_full_width, mobile_overlay_style: after_overlay, overlay_style: after_overlay, placeholder_index: 1, type: 'lifestyle', overlay_text_color: after_text_color
+          endif
+        -%}
+
+        {%- unless after_overline == blank and after_heading == blank -%}
+          <div
+            class="image-comparison--after-text"
+            data-text-color="{{ after_text_color }}"
+            data-transition-item="viewport"
+            data-transition-type="fade-in"
+            data-transition-active="true"
+            data-transition-trigger="custom"
+            style="--text-position:{{ after_text_pos }};"
+          >
+            {%- unless after_overline == blank -%}
+              <div class="image-comparison--after-overline" data-item="overline">
+                {{- after_overline -}}
+              </div>
+            {%- endunless -%}
+
+            {%- unless after_heading == blank -%}
+              <div class="image-comparison--after-heading" data-item="{{ after_heading_type }}">
+                {{- after_heading -}}
+              </div>
+            {%- endunless -%}
+          </div>
+        {% endunless %}
+      </div>
+
+      <div class="image-comparison--cursor-wrapper">
+        <button
+          type="button"
+          class="image-comparison--cursor"
+          aria-label="{{ cursor_t }}"
+        >
+          {%- render 'icons', icon: 'drag-indicator' -%}
+        </button>
+      </div>
+    </div>
+
+    {%- unless button_text == blank -%}
+      <div
+        class="image-comparison--footer"
+        data-container="block"
+        data-text-color="{{ text_color }}"
+        data-x-alignment="{{ section_alignment }}"
+      >
+        <a
+          class="image-comparison--button"
+          href="{{ button_link }}"
+          data-item="{{ button_style }}"
+          data-text="{{ button_text }}"
+        >
+          <span>{{ button_text }}</span>
+        </a>
+      </div>
+    {%- endunless -%}
+  </div>
+</image-comparison-element>
+
+{% stylesheet %}
+  .image-comparison--root {
+    --image-comparison--cursor-width: var(--spacing--6);
+    --image-comparison--cursor-height: var(--spacing--6);
+    --image-comparison--cursor-pos: 10%;
+    --image-comparison--transition: all 1.5s var(--transition--ease-out) 0.25s;
+
+    user-select: none;
+
+    .icon--drag-indicator {
+      color: black;
+    }
+  }
+
+  .image-comparison--images {
+    display: grid;
+    position: relative;
+
+    > * {
+      grid-area: 1 / -1;
+    }
+  }
+
+  .image-comparison--before-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: var(--spacing--block);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--spacing--1);
+
+    .image-comparison--root[data-cursor-direction='vertical'] & {
+      align-items: var(--text-position);
+      right: 0;
+    }
+
+    .image-comparison--root[data-cursor-direction='horizontal'] & {
+      justify-content: var(--text-position);
+      bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      padding: var(--spacing--item);
+    }
+  }
+
+  .image-comparison--after-text {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: var(--spacing--block);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--spacing--1);
+
+    .image-comparison--root[data-cursor-direction='vertical'] & {
+      align-items: var(--text-position);
+      left: 0;
+    }
+
+    .image-comparison--root[data-cursor-direction='horizontal'] & {
+      justify-content: var(--text-position);
+      top: 0;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      padding: var(--spacing--item);
+    }
+  }
+
+  .image-comparison--after {
+    z-index: 1;
+    transition: var(--image-comparison--transition);
+
+    .image-comparison--root[data-cursor-direction='horizontal'] & {
+      clip-path: inset(0 0 0 var(--image-comparison--cursor-pos, 0%));
+    }
+
+    .image-comparison--root[data-cursor-direction='vertical'] & {
+      clip-path: inset(var(--image-comparison--cursor-pos, 0%) 0 0 0);
+    }
+  }
+
+  .image-comparison--cursor-wrapper {
+    display: grid;
+    position: relative;
+    transition: var(--image-comparison--transition);
+
+    .image-comparison--root[data-cursor-direction='horizontal'] & {
+      justify-self: start;
+      place-items: center start;
+      inset-inline-start: calc(
+        var(--image-comparison--cursor-pos, 0%) - var(--image-comparison--cursor-width) / 2
+      );
+
+      &:before {
+        height: 100%;
+        width: 2px;
+        left: calc(50% - 1px);
+      }
+    }
+
+    .image-comparison--root[data-cursor-direction='vertical'] & {
+      align-self: start;
+      place-items: start center;
+      inset-block-start: calc(
+        var(--image-comparison--cursor-pos, 0%) - var(--image-comparison--cursor-height) / 2
+      );
+
+      &:before {
+        height: 2px;
+        width: 100%;
+        top: calc(50% - 1px);
+      }
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      background-color: white;
+    }
+  }
+
+  .image-comparison--cursor {
+    padding: 0;
+    z-index: 1;
+    border: var(--border--dark);
+    background-color: white;
+    width: var(--image-comparison--cursor-width);
+    height: var(--image-comparison--cursor-height);
+    border-radius: 50%;
+
+    &:active {
+      scale: 0.96;
+      cursor: grabbing;
+
+      body:has(&) {
+        cursor: grabbing;
+      }
+    }
+
+    .icon--drag-indicator {
+      height: var(--spacing--5);
+
+      .image-comparison--root[data-cursor-direction='horizontal'] & {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .image-comparison--button {
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Image comparison",
+  "class": "section--image-comparison",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "overline",
+      "label": "Overline",
+      "type": "text",
+      "default": "Overline text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Image comparison"
+    },
+    {
+      "id": "button-text",
+      "label": "Button text",
+      "type": "text",
+      "default": "Button"
+    },
+    {
+      "id": "button-link",
+      "label": "Button link",
+      "type": "url"
+    },
+    {
+      "id": "button-style",
+      "label": "Button style",
+      "type": "select",
+      "options": [
+        {
+          "label": "Style 1",
+          "value": "button-1"
+        },
+        {
+          "label": "Style 2",
+          "value": "button-2"
+        },
+        {
+          "label": "Style 3",
+          "value": "button-3"
+        },
+        {
+          "label": "Style 4",
+          "value": "button-4"
+        },
+        {
+          "label": "Link",
+          "value": "block-link"
+        }
+      ],
+      "default": "button-1"
+    },
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "container-width",
+      "label": "Maximum container width",
+      "type": "select",
+      "options": [
+        {
+          "label": "Extra small",
+          "value": "1"
+        },
+        {
+          "label": "Small",
+          "value": "2"
+        },
+        {
+          "label": "Medium",
+          "value": "3"
+        },
+        {
+          "label": "Large",
+          "value": "4"
+        },
+        {
+          "label": "Extra large",
+          "value": "5"
+        },
+        {
+          "label": "Full width",
+          "value": "6"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "label": "Cursor direction",
+      "id": "cursor-direction",
+      "type": "select",
+      "options": [
+        { "label": "Horizontal", "value": "horizontal" },
+        { "label": "Vertical", "value": "vertical" }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "label": "Initial cursor position",
+      "id": "cursor-position",
+      "type": "range",
+      "min": 5,
+      "max": 95,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        {
+          "label": "Banner",
+          "value": "banner-heading"
+        },
+        {
+          "label": "Featured",
+          "value": "featured-heading"
+        },
+        {
+          "label": "Large",
+          "value": "section-heading"
+        },
+        {
+          "label": "Medium",
+          "value": "block-heading"
+        }
+      ],
+      "default": "section-heading"
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "id": "section-alignment",
+      "label": "Alignment",
+      "type": "text_alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Image layout"
+    },
+    {
+      "id": "image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 24,
+      "max": 200,
+      "step": 2,
+      "default": 56,
+      "visible_if": "{{ section.settings.image-display-type == 'aspect-ratio' }}"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-full-width",
+      "label": "Full width",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "id": "mobile-aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 32,
+      "max": 200,
+      "step": 2,
+      "default": 134,
+      "visible_if": "{{ section.settings.mobile-image-display-type == 'aspect-ratio' }}"
+    }
+  ],
+  "max_blocks": 2,
+  "blocks": [
+    {
+      "type": "before",
+      "name": "Before",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "overline",
+          "label": "Overline",
+          "type": "text",
+          "default": "Overline text"
+        },
+        {
+          "id": "title",
+          "label": "Heading",
+          "type": "text",
+          "default": "Before"
+        },
+        {
+          "type": "header",
+          "content": "Text layout"
+        },
+        {
+          "id": "heading-type",
+          "label": "Heading type",
+          "type": "select",
+          "options": [
+            {
+              "label": "Banner",
+              "value": "banner-heading"
+            },
+            {
+              "label": "Featured",
+              "value": "featured-heading"
+            },
+            {
+              "label": "Large",
+              "value": "section-heading"
+            },
+            {
+              "label": "Medium",
+              "value": "block-heading"
+            }
+          ],
+          "default": "section-heading"
+        },
+        {
+          "id": "text-position",
+          "label": "Text placement",
+          "type": "select",
+          "options": [
+            { "label": "Start", "value": "start" },
+            { "label": "Center", "value": "center" },
+            { "label": "End", "value": "end" }
+          ],
+          "default": "start"
+        },
+        {
+          "id": "text-color",
+          "label": "Text color",
+          "type": "select",
+          "options": [
+            {
+              "label": "Light",
+              "value": "white"
+            },
+            {
+              "label": "Dark",
+              "value": "body"
+            }
+          ],
+          "default": "white"
+        },
+        {
+          "id": "overlay-style",
+          "label": "Image darkness",
+          "type": "select",
+          "options": [
+            {
+              "label": "None",
+              "value": "none"
+            },
+            {
+              "label": "Darken entire image",
+              "value": "darken"
+            },
+            {
+              "label": "Darken top down",
+              "value": "darken-top"
+            },
+            {
+              "label": "Darken bottom up",
+              "value": "darken-bottom"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "header",
+          "content": "Mobile"
+        },
+        {
+          "id": "mobile-image",
+          "type": "image_picker",
+          "label": "Image (optional)"
+        }
+      ]
+    },
+    {
+      "type": "after",
+      "name": "After",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "overline",
+          "label": "Overline",
+          "type": "text",
+          "default": "Overline text"
+        },
+        {
+          "id": "title",
+          "label": "Heading",
+          "type": "text",
+          "default": "After"
+        },
+        {
+          "type": "header",
+          "content": "Text layout"
+        },
+        {
+          "id": "heading-type",
+          "label": "Heading type",
+          "type": "select",
+          "options": [
+            {
+              "label": "Banner",
+              "value": "banner-heading"
+            },
+            {
+              "label": "Featured",
+              "value": "featured-heading"
+            },
+            {
+              "label": "Large",
+              "value": "section-heading"
+            },
+            {
+              "label": "Medium",
+              "value": "block-heading"
+            }
+          ],
+          "default": "section-heading"
+        },
+        {
+          "id": "text-position",
+          "label": "Text placement",
+          "type": "select",
+          "options": [
+            { "label": "Start", "value": "start" },
+            { "label": "Center", "value": "center" },
+            { "label": "End", "value": "end" }
+          ],
+          "default": "end"
+        },
+        {
+          "id": "text-color",
+          "label": "Text color",
+          "type": "select",
+          "options": [
+            {
+              "label": "Light",
+              "value": "white"
+            },
+            {
+              "label": "Dark",
+              "value": "body"
+            }
+          ],
+          "default": "white"
+        },
+        {
+          "id": "overlay-style",
+          "label": "Image darkness",
+          "type": "select",
+          "options": [
+            {
+              "label": "None",
+              "value": "none"
+            },
+            {
+              "label": "Darken entire image",
+              "value": "darken"
+            },
+            {
+              "label": "Darken top down",
+              "value": "darken-top"
+            },
+            {
+              "label": "Darken bottom up",
+              "value": "darken-bottom"
+            }
+          ],
+          "default": "darken-bottom"
+        },
+        {
+          "type": "header",
+          "content": "Mobile"
+        },
+        {
+          "id": "mobile-image",
+          "type": "image_picker",
+          "label": "Image (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image comparison",
+      "category": "Storytelling",
+      "settings": {},
+      "blocks": [
+        {
+          "type": "before"
+        },
+        {
+          "type": "after"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

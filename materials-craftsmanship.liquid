@@ -1,0 +1,749 @@
+<!-- sections/materials-craftsmanship.liquid -->
+
+{%- liquid
+  assign aspect_ratio = 100.0 | divided_by: section.settings.aspect-ratio
+  assign bg_color = section.settings.background-color
+  assign border = section.settings.border
+  assign button_text = section.settings.button-text
+  assign button_link = section.settings.button-link
+  assign button_style = section.settings.button-style
+  assign container_width = section.settings.container-width
+  assign description = section.settings.description
+  assign display_type = section.settings.image-display-type
+  assign heading = section.settings.heading | escape
+  assign heading_type = section.settings.heading-type
+  assign image = section.settings.image
+  assign mobile_aspect_ratio = 100.0 | divided_by: section.settings.mobile-aspect-ratio
+  assign mobile_display_type = section.settings.mobile-image-display-type
+  assign mobile_full_width = section.settings.mobile-full-width
+  assign mobile_image = section.settings.mobile-image
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign parallax_enabled = section.settings.parallax-enabled
+  assign reverse_layout = section.settings.reverse-layout
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_color = section.settings.text-color
+  assign text_column_width = section.settings.text-column-width
+
+  assign full_width = false
+  if container_width == '6'
+    assign full_width = true
+  endif
+
+  assign fetchpriority = 'auto'
+  if section.index == 1
+    assign fetchpriority = 'high'
+  endif
+
+  assign loading = 'lazy'
+  if section.index < 3
+    assign loading = 'eager'
+  endif
+
+  capture sizes
+    render 'sizes-cover', aspect_ratio: aspect_ratio, container_width: container_width, display_type: display_type, mobile_aspect_ratio: mobile_aspect_ratio, mobile_display_type: mobile_display_type, mobile_full_width: mobile_full_width, mobile_original_aspect_ratio: mobile_image.aspect_ratio, original_aspect_ratio: image.aspect_ratio
+  endcapture
+-%}
+
+<div
+  class="materials-craftsmanship--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-mobile-full-width="{{ mobile_full_width }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  style="--text-column-width:{{ text_column_width }}px;"
+>
+  <div
+    class="materials-craftsmanship--wrapper"
+    data-container="split"
+    data-reverse-layout="{{ reverse_layout }}"
+  >
+    <div
+      class="materials-craftsmanship--image"
+      {% unless settings.transitions--image %}
+        data-transition-item="viewport"
+        data-transition-type="image"
+      {% endunless %}
+    >
+      {%- if image -%}
+        {%-
+          render 'image',
+          image: image,
+          aspect_ratio: aspect_ratio,
+          display_type: display_type,
+          fetchpriority: fetchpriority,
+          full_width: full_width,
+          loading: loading,
+          mobile_aspect_ratio: mobile_aspect_ratio,
+          mobile_display_type: mobile_display_type,
+          mobile_full_width: mobile_full_width,
+          mobile_image: mobile_image,
+          parallax: parallax_enabled,
+          sizes: sizes
+        -%}
+      {%- else -%}
+        {%-
+          render 'placeholder',
+          type: 'lifestyle',
+          aspect_ratio: aspect_ratio,
+          display_type: display_type,
+          full_width: full_width,
+          mobile_aspect_ratio: mobile_aspect_ratio,
+          mobile_display_type: mobile_display_type,
+          mobile_full_width: mobile_full_width,
+          parallax: parallax_enabled,
+          placeholder_index: 2
+        -%}
+      {%- endif -%}
+    </div>
+
+    <div
+      class="materials-craftsmanship--content"
+      {% unless settings.transitions--text %}
+        data-transition-container="{{ section.id }}"
+        data-transition-type="fade-in"
+      {% endunless %}
+    >
+      {%- unless heading == blank -%}
+        <h2
+          class="materials-craftsmanship--heading"
+          data-item="{{ heading_type }}"
+          {% unless settings.transitions--text %}
+            data-transition-item="{{ section.id }}"
+          {% endunless %}
+        >
+          {{- heading -}}
+        </h2>
+      {%- endunless -%}
+
+      {%- unless description == blank -%}
+        <div
+          class="materials-craftsmanship--description"
+          data-item="rte-content"
+          {% unless settings.transitions--text %}
+            data-transition-item="{{ section.id }}"
+          {% endunless %}
+        >
+          {{- description -}}
+        </div>
+      {%- endunless -%}
+
+      <div class="materials-craftsmanship--blocks">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign block_heading = block.settings.heading
+            assign block_description = block.settings.description
+            assign block_default_open = block.settings.default-open
+            assign block_page_content = block.settings.page-content
+          -%}
+
+          <div
+            class="materials-craftsmanship--block"
+            {% unless settings.transitions--text %}
+              data-transition-item="{{ section.id }}"
+            {% endunless %}
+            {{ block.shopify_attributes }}
+          >
+            {%-
+              render 'collapsible-row',
+              heading: block_heading,
+              description: block_description,
+              default_open: block_default_open,
+              page_content: block_page_content,
+              id: block.id,
+              text_color: text_color
+            -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- unless button_text == blank -%}
+        <a
+          class="materials-craftsmanship--button"
+          href="{{ button_link }}"
+          data-item="{{ button_style }}"
+          data-text="{{ button_text }}"
+          {% unless reverse_layout %}
+            data-x-alignment="right"
+          {% endunless %}
+          {% unless settings.transitions--text %}
+            data-transition-item="{{ section.id }}"
+          {% endunless %}
+        >
+          <span>{{ button_text }}</span>
+        </a>
+      {%- endunless -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .materials-craftsmanship--root {
+    @media (min-width: 768px) {
+      &[data-container-width='6']
+        .materials-craftsmanship--wrapper[data-reverse-layout='true']
+        .section-blocks--wrapper {
+        margin-left: var(--spacing--section--x);
+      }
+
+      &[data-container-width='6']
+        .materials-craftsmanship--wrapper[data-reverse-layout='false']
+        .section-blocks--wrapper {
+        margin-right: var(--spacing--section--x);
+      }
+    }
+  }
+
+  .materials-craftsmanship--wrapper[data-container='split'] {
+    --column-width: var(--text-column-width);
+
+    align-items: center;
+
+    @media (min-width: 768px) {
+      --grid-columns: minmax(0, 1fr) minmax(0, var(--column-width));
+
+      &[data-reverse-layout='true'] {
+        --grid-columns: minmax(0, var(--column-width)) minmax(0, 1fr);
+      }
+
+      .materials-craftsmanship--root[data-container-width='6'] & {
+        --column-width: calc(var(--text-column-width) + var(--spacing--section--x));
+      }
+    }
+  }
+
+  .materials-craftsmanship--content {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    height: 100%;
+
+    @media (min-width: 768px) {
+      gap: var(--spacing--block);
+
+      .materials-craftsmanship--root[data-container-width='6'] .materials-craftsmanship--wrapper[data-reverse-layout='false'] & {
+        padding-right: var(--spacing--section--x);
+      }
+
+      .materials-craftsmanship--root[data-container-width='6'] .materials-craftsmanship--wrapper[data-reverse-layout='true'] & {
+        padding-left: var(--spacing--section--x);
+      }
+    }
+
+    @media (max-width: 767px) {
+      gap: var(--spacing--item);
+
+      .materials-craftsmanship--root[data-mobile-full-width='true'] &
+        > *:not(.materials-craftsmanship--blocks) {
+        padding-left: var(--spacing--item);
+        padding-right: var(--spacing--item);
+      }
+    }
+  }
+
+  .materials-craftsmanship--button {
+    margin-top: auto;
+    padding-top: var(--spacing--item);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Materials/craftsmanship",
+  "class": "section--materials-craftsmanship",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "image",
+      "label": "Image",
+      "type": "image_picker"
+    },
+    {
+      "id": "heading",
+      "label": "Heading",
+      "type": "text",
+      "default": "Materials & Craftsmanship"
+    },
+    {
+      "id": "description",
+      "label": "Description",
+      "type": "richtext",
+      "default": "<p>Designed with responsibly sourced materials and finished by skilled artisans, each piece is crafted for everyday elegance and lasting beauty.</p>"
+    },
+    {
+      "id": "button-text",
+      "label": "Button text",
+      "type": "text",
+      "default": "Learn about our process"
+    },
+    {
+      "id": "button-link",
+      "label": "Button link",
+      "type": "url"
+    },
+    {
+      "id": "button-style",
+      "label": "Button style",
+      "type": "select",
+      "options": [
+        { "label": "Style 1", "value": "button-1" },
+        { "label": "Style 2", "value": "button-2" },
+        { "label": "Style 3", "value": "button-3" },
+        { "label": "Style 4", "value": "button-4" },
+        { "label": "Link", "value": "block-link" }
+      ],
+      "default": "block-link"
+    },
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "container-width",
+      "label": "Maximum container width",
+      "type": "select",
+      "options": [
+        {
+          "label": "Extra small",
+          "value": "1"
+        },
+        {
+          "label": "Small",
+          "value": "2"
+        },
+        {
+          "label": "Medium",
+          "value": "3"
+        },
+        {
+          "label": "Large",
+          "value": "4"
+        },
+        {
+          "label": "Extra large",
+          "value": "5"
+        },
+        {
+          "label": "Full width",
+          "value": "6"
+        }
+      ],
+      "default": "6"
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "reverse-layout",
+      "label": "Reverse layout",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "id": "text-column-width",
+      "label": "Text column width",
+      "type": "range",
+      "min": 300,
+      "max": 800,
+      "step": 5,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        { "label": "Featured", "value": "featured-heading" },
+        { "label": "Large", "value": "section-heading" },
+        { "label": "Medium", "value": "block-heading" },
+        { "label": "Small", "value": "paragraph" }
+      ],
+      "default": "block-heading",
+      "visible_if": "{{ section.settings.heading != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "Image layout"
+    },
+    {
+      "id": "image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 24,
+      "max": 200,
+      "step": 2,
+      "default": 56,
+      "visible_if": "{{ section.settings.image-display-type == 'aspect-ratio' }}"
+    },
+    {
+      "id": "parallax-enabled",
+      "label": "Enable parallax animation",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-image",
+      "label": "Image (optional)",
+      "type": "image_picker"
+    },
+    {
+      "id": "mobile-image-display-type",
+      "label": "Image proportions",
+      "type": "select",
+      "options": [
+        {
+          "label": "Original aspect ratio",
+          "value": "original"
+        },
+        {
+          "label": "Adjustable aspect ratio",
+          "value": "aspect-ratio"
+        },
+        {
+          "label": "Extra small",
+          "value": "x-small"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        },
+        {
+          "label": "Fit screen",
+          "value": "fit-screen"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "id": "mobile-aspect-ratio",
+      "label": "Adjustable aspect ratio",
+      "type": "range",
+      "min": 32,
+      "max": 200,
+      "step": 2,
+      "default": 134,
+      "visible_if": "{{ section.settings.mobile-image-display-type == 'aspect-ratio' }}"
+    },
+    {
+      "id": "mobile-full-width",
+      "label": "Full width",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    }
+  ],
+   "blocks": [
+    {
+      "type": "collapsible-row",
+      "name": "Collapsible row",
+      "settings": [
+        {
+          "id": "heading",
+          "label": "Heading",
+          "type": "text",
+          "default": "Collapsible row"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Text",
+          "default": "<p>Use rows to highlight unique features, <br/>sizing information, <br/>or other sales information.</p>"
+        },
+        {
+          "type": "page",
+          "id": "page-content",
+          "label": "Row content from page"
+        },
+        {
+          "type": "checkbox",
+          "id": "default-open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Materials and craftsmanship",
+      "category": "Storytelling",
+      "blocks": [
+        {
+          "type": "collapsible-row",
+          "settings": {
+            "heading": "Solid 18k gold",
+            "description": "<p>Crafted in solid 18K gold for rich color, lasting shine, and heirloom-quality durability designed to be worn every day.</p>"
+          }
+        },
+        {
+          "type": "collapsible-row",
+          "settings": {
+            "heading": "Ethically sourced stones",
+            "description": "<p>Our stones are responsibly sourced through trusted partners, selected for exceptional clarity, brilliance, and traceable origins.</p>"
+          }
+        },
+        {
+          "type": "collapsible-row",
+          "settings": {
+            "heading": "Hand-finished settings",
+            "description": "<p>Each setting is finished by hand to refine every detail, ensuring secure placement, balanced proportions, and a polished final look.</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

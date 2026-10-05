@@ -1,63 +1,9 @@
-<!-- snippets/complementary-products.liquid -->
+<!-- sections/complementary-products.liquid -->
 
-{%- doc -%}
-  Renders complementary product recommendations used in `product-form`.
-  @param {number} product_id - Product id for requests.
-  @param {boolean} [collapsible_row] - Wrap content in a collapsible row.
-  @param {string} [heading] - Optional heading.
-  @param {number} [max_products] - Max products to fetch.
-{%- enddoc -%}
-
-{%- capture complementary_products_html -%}
-  <product-recommendations-element
-    class="complementary-products--root"
-    data-max-products="{{ max_products }}"
-    data-product-id="{{ product_id }}"
-    data-intent="complementary"
-    aria-hidden="false"
-  >
-    {%- if heading != blank and collapsible_row == false -%}
-      <h3 class="complementary-products--heading" data-item="block-heading">
-        {{- heading -}}
-      </h3>
-    {%- endif -%}
-
-    <div
-      class="complementary-products--container"
-      data-container="panel"
-      data-columns="1"
-      data-mobile-columns="1"
-    >
-      {%- comment -%}
-        `section/complementary-products.liquid` rendered here via JS
-      {%- endcomment -%}
-    </div>
-  </product-recommendations-element>
-{%- endcapture -%}
-
-{%- liquid
-  if collapsible_row
-    assign id = product_id | append: '--collapsible-row'
-    render 'collapsible-row', heading: heading, description: complementary_products_html, id: id
-  else
-    echo complementary_products_html
-  endif
--%}
-
-{% stylesheet %}
-  .complementary-products--root {
-    &[aria-hidden='true'] {
-      display: none;
-    }
-  }
-
-  .complementary-products--heading {
-    padding-bottom: var(--spacing--item);
-  }
-
-  .complementary-products--container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing--item);
-  }
-{% endstylesheet %}
+<div data-container="panel" data-columns="1" data-mobile-columns="1">
+  {%- liquid
+    for product in recommendations.products
+      render 'product-card--mini', product_item: product, full_width: true
+    endfor
+  -%}
+</div>

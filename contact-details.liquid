@@ -1,0 +1,482 @@
+<div id="ContactDetails-{{ section.id }}" class="contact-details-wrapper">
+  <div class="container-custom">
+    
+    <!-- Header -->
+    <div class="text-center section-header fade-in">
+      {% if section.settings.main_title != blank %}
+        <h2 class="banner-heading mb-4">{{ section.settings.main_title }}</h2>
+      {% endif %}
+      <div class="header-divider mx-auto mb-6"></div>
+      {% if section.settings.main_subtitle != blank %}
+        <p class="paragraph-text max-w-lg mx-auto">{{ section.settings.main_subtitle }}</p>
+      {% endif %}
+    </div>
+
+    <div class="grid-2">
+      
+      <!-- Linker kolom: Contact -->
+      <div class="info-card slide-up stagger-1">
+        <div class="card-header">
+          <div class="icon-circle">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="section-heading m-0">{{ section.settings.col1_title }}</h3>
+        </div>
+        
+        <div class="space-y-6">
+          <div class="card-row">
+            <p class="overline-text mb-1">{{ section.settings.col1_email_label }}</p>
+            <a href="mailto:{{ section.settings.col1_email }}" class="paragraph-text contact-link">{{ section.settings.col1_email }}</a>
+          </div>
+          
+          <div class="card-row">
+            <p class="overline-text mb-1">{{ section.settings.col1_wa_label }}</p>
+            <a href="https://wa.me/{{ section.settings.col1_wa_clean }}" target="_blank" rel="noopener noreferrer" class="paragraph-text contact-link">{{ section.settings.col1_wa_display }}</a>
+          </div>
+          
+          <div class="pt-2">
+            <p class="overline-text mb-2">{{ section.settings.col1_hours_label }}</p>
+            <div class="paragraph-text">{{ section.settings.col1_hours_text }}</div>
+            {% if section.settings.col1_hours_note != blank %}
+              <p class="paragraph-text mt-4 italic-note">{{ section.settings.col1_hours_note }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Rechter kolom: Bedrijfsgegevens -->
+      <div class="info-card slide-up stagger-2">
+        <div class="card-header">
+          <div class="icon-circle">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <h3 class="section-heading m-0">{{ section.settings.col2_title }}</h3>
+        </div>
+
+        <div class="space-y-6">
+          <div class="inner-grid-2 card-row">
+            <div>
+              <p class="overline-text mb-1">{{ section.settings.col2_name1_label }}</p>
+              <p class="paragraph-text text-dark">{{ section.settings.col2_name1_val }}</p>
+            </div>
+            <div>
+              <p class="overline-text mb-1">{{ section.settings.col2_name2_label }}</p>
+              <p class="paragraph-text text-dark">{{ section.settings.col2_name2_val }}</p>
+            </div>
+          </div>
+          
+          <div class="inner-grid-2 card-row">
+            <div>
+              <p class="overline-text mb-1">{{ section.settings.col2_kvk_label }}</p>
+              <p class="paragraph-text text-dark">{{ section.settings.col2_kvk_val }}</p>
+            </div>
+            <div>
+              <p class="overline-text mb-1">{{ section.settings.col2_btw_label }}</p>
+              <p class="paragraph-text text-dark">{{ section.settings.col2_btw_val }}</p>
+            </div>
+          </div>
+          
+          <div class="pt-2">
+            <p class="overline-text mb-2">{{ section.settings.col2_address_label }}</p>
+            <div class="paragraph-text text-dark">{{ section.settings.col2_address_text }}</div>
+            {% if section.settings.col2_address_note != blank %}
+              <p class="paragraph-text mt-4 italic-note">{{ section.settings.col2_address_note }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ------------------- GLOBALS & LAYOUT ------------------- */
+  #ContactDetails-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.spacing_above }};
+    padding-bottom: {{ section.settings.spacing_below }};
+    {% if section.settings.border == 'top' %}
+      border-top: 1px solid {{ section.settings.border_color }};
+    {% elsif section.settings.border == 'bottom' %}
+      border-bottom: 1px solid {{ section.settings.border_color }};
+    {% elsif section.settings.border == 'all' %}
+      border: 1px solid {{ section.settings.border_color }};
+    {% endif %}
+  }
+
+  #ContactDetails-{{ section.id }} .container-custom {
+    max-width: {{ section.settings.container_width }};
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  #ContactDetails-{{ section.id }} .section-header {
+    margin-bottom: 64px;
+    text-align: center;
+  }
+
+  /* ------------------- TYPOGRAPHY & COLORS ------------------- */
+  #ContactDetails-{{ section.id }} .banner-heading {
+    font-size: 27px;
+    letter-spacing: 1px;
+    color: {{ section.settings.title_color }};
+    text-transform: none;
+    font-weight: normal;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  #ContactDetails-{{ section.id }} .section-heading {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: {{ section.settings.title_color }};
+    text-transform: none;
+    font-weight: normal;
+  }
+
+  #ContactDetails-{{ section.id }} .paragraph-text {
+    font-size: 11px;
+    letter-spacing: 0px;
+    color: {{ section.settings.text_color }};
+    text-transform: none;
+    font-weight: normal;
+    line-height: 1.8;
+    margin: 0;
+  }
+  
+  #ContactDetails-{{ section.id }} .paragraph-text p {
+    margin: 0;
+  }
+
+  #ContactDetails-{{ section.id }} .overline-text {
+    font-size: 10px;
+    letter-spacing: 0px;
+    color: {{ section.settings.label_color }};
+    text-transform: none;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  #ContactDetails-{{ section.id }} .text-dark {
+    color: {{ section.settings.title_color }};
+  }
+
+  #ContactDetails-{{ section.id }} .italic-note {
+    color: {{ section.settings.label_color }};
+    font-style: italic;
+  }
+
+  /* ------------------- COMPONENTS ------------------- */
+  #ContactDetails-{{ section.id }} .header-divider {
+    width: 48px;
+    height: 1px;
+    background-color: {{ section.settings.title_color }};
+  }
+
+  #ContactDetails-{{ section.id }} .info-card {
+    background-color: {{ section.settings.card_bg_color }};
+    border: 1px solid {{ section.settings.border_color }};
+    padding: 40px;
+    transition: all 0.3s ease;
+  }
+
+  #ContactDetails-{{ section.id }} .info-card:hover {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  #ContactDetails-{{ section.id }} .card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  #ContactDetails-{{ section.id }} .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: {{ section.settings.icon_bg_color }};
+    border: 1px solid {{ section.settings.border_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #ContactDetails-{{ section.id }} .icon-circle svg {
+    width: 16px;
+    height: 16px;
+    color: {{ section.settings.title_color }};
+  }
+
+  #ContactDetails-{{ section.id }} .card-row {
+    border-bottom: 1px solid {{ section.settings.divider_color }};
+    padding-bottom: 24px;
+  }
+
+  #ContactDetails-{{ section.id }} .contact-link {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+    color: {{ section.settings.title_color }};
+  }
+
+  #ContactDetails-{{ section.id }} .contact-link:hover {
+    border-bottom: 1px solid {{ section.settings.title_color }};
+  }
+
+  /* ------------------- GRIDS & UTILS ------------------- */
+  #ContactDetails-{{ section.id }} .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  #ContactDetails-{{ section.id }} .inner-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  #ContactDetails-{{ section.id }} .max-w-lg { max-width: 32rem; }
+  #ContactDetails-{{ section.id }} .mx-auto { margin-left: auto; margin-right: auto; }
+  #ContactDetails-{{ section.id }} .mb-1 { margin-bottom: 0.25rem; }
+  #ContactDetails-{{ section.id }} .mb-2 { margin-bottom: 0.5rem; }
+  #ContactDetails-{{ section.id }} .mb-4 { margin-bottom: 1rem; }
+  #ContactDetails-{{ section.id }} .mb-6 { margin-bottom: 1.5rem; }
+  #ContactDetails-{{ section.id }} .mt-4 { margin-top: 1rem; }
+  #ContactDetails-{{ section.id }} .pt-2 { padding-top: 0.5rem; }
+  #ContactDetails-{{ section.id }} .m-0 { margin: 0; }
+  #ContactDetails-{{ section.id }} .space-y-6 > * + * { margin-top: 1.5rem; }
+
+  /* ------------------- ANIMATIONS ------------------- */
+  @keyframes cd-fadeIn { to { opacity: 1; } }
+  @keyframes cd-slideUp { to { opacity: 1; transform: translateY(0); } }
+
+  #ContactDetails-{{ section.id }} .fade-in { animation: cd-fadeIn 0.8s ease forwards; opacity: 0; }
+  #ContactDetails-{{ section.id }} .slide-up { animation: cd-slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+  
+  #ContactDetails-{{ section.id }} .stagger-1 { animation-delay: 0.1s; }
+  #ContactDetails-{{ section.id }} .stagger-2 { animation-delay: 0.2s; }
+
+  /* ------------------- RESPONSIVE ------------------- */
+  @media (min-width: 768px) {
+    #ContactDetails-{{ section.id }} .grid-2 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    #ContactDetails-{{ section.id }} {
+      padding-top: {{ section.settings.mobile_spacing_above }};
+      padding-bottom: {{ section.settings.mobile_spacing_below }};
+    }
+    #ContactDetails-{{ section.id }} .banner-heading { font-size: 24px; }
+    
+    #ContactDetails-{{ section.id }} .container-custom {
+      {% if section.settings.mobile_full_width %}
+        padding: 0 0;
+      {% else %}
+        padding: 0 24px; 
+      {% endif %}
+    }
+
+    #ContactDetails-{{ section.id }} .info-card {
+      {% if section.settings.mobile_full_width %}
+        border-left: none;
+        border-right: none;
+        padding: 32px 24px;
+      {% else %}
+        padding: 32px 24px;
+      {% endif %}
+    }
+    
+    #ContactDetails-{{ section.id }} .inner-grid-2 {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Details (Kaarten)",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Desktop"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Maximale breedte content",
+      "options": [
+        { "value": "1000px", "label": "Medium" },
+        { "value": "1024px", "label": "Large (Aanbevolen)" },
+        { "value": "1200px", "label": "Extra Large" },
+        { "value": "100%", "label": "Volledige breedte" }
+      ],
+      "default": "1024px"
+    },
+    {
+      "type": "select",
+      "id": "spacing_above",
+      "label": "Marge boven sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "80px"
+    },
+    {
+      "type": "select",
+      "id": "spacing_below",
+      "label": "Marge onder sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "80px"
+    },
+    {
+      "type": "header",
+      "content": "Layout Mobiel"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_width",
+      "label": "Volledige breedte (geen padding zijkant)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_spacing_above",
+      "label": "Marge boven sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "80px"
+    },
+    {
+      "type": "select",
+      "id": "mobile_spacing_below",
+      "label": "Marge onder sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "80px"
+    },
+    {
+      "type": "header",
+      "content": "Kleuren"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Achtergrondkleur Sectie",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Achtergrondkleur Kaarten",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Kleur Buitenste Randen",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Kleur Lijnen Binnenin",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Achtergrondkleur Icoon Cirkel",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Titels & Donkere Tekst",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Normale Tekst",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Kleine Labels",
+      "default": "#888888"
+    },
+    {
+      "type": "header",
+      "content": "1. Introductie (Boven)"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Hoofdtitel",
+      "default": "Contact & Service"
+    },
+    {
+      "type": "textarea",
+      "id": "main_subtitle",
+      "label": "Ondertitel",
+      "default": "We staan klaar om je te helpen met al je vragen over onze collecties, je bestelling of passend stijladvies."
+    },
+    {
+      "type": "header",
+      "content": "2. Linker Kaart (Contact)"
+    },
+    { "type": "text", "id": "col1_title", "label": "Titel", "default": "Contact" },
+    { "type": "text", "id": "col1_email_label", "label": "E-mail Label", "default": "E-mail" },
+    { "type": "text", "id": "col1_email", "label": "E-mailadres", "default": "info@nouvelthelabel.com" },
+    { "type": "text", "id": "col1_wa_label", "label": "WhatsApp Label", "default": "WhatsApp" },
+    { "type": "text", "id": "col1_wa_display", "label": "WhatsApp weergave nummer", "default": "+31 6 22944310" },
+    { "type": "text", "id": "col1_wa_clean", "label": "WhatsApp nummer (Zonder spaties of +)", "default": "31622944310" },
+    { "type": "text", "id": "col1_hours_label", "label": "Openingstijden Label", "default": "Openingstijden klantenservice" },
+    { "type": "richtext", "id": "col1_hours_text", "label": "Openingstijden Tekst", "default": "<p>Maandag t/m vrijdag: 09.00 - 17.00 uur<br>Zaterdag & zondag: Gesloten</p>" },
+    { "type": "text", "id": "col1_hours_note", "label": "Opmerking (Schuingedrukt)", "default": "We streven ernaar om tijdens openingstijden binnen 48 uur op werkdagen te reageren." },
+    {
+      "type": "header",
+      "content": "3. Rechter Kaart (Bedrijf)"
+    },
+    { "type": "text", "id": "col2_title", "label": "Titel", "default": "Bedrijfsgegevens" },
+    { "type": "text", "id": "col2_name1_label", "label": "Naam 1 Label", "default": "Handelsnaam" },
+    { "type": "text", "id": "col2_name1_val", "label": "Naam 1 Waarde", "default": "Nouvél the Label" },
+    { "type": "text", "id": "col2_name2_label", "label": "Naam 2 Label", "default": "Juridische entiteit (KvK)" },
+    { "type": "text", "id": "col2_name2_val", "label": "Naam 2 Waarde", "default": "Care2care" },
+    { "type": "text", "id": "col2_kvk_label", "label": "KVK Label", "default": "KvK-nummer" },
+    { "type": "text", "id": "col2_kvk_val", "label": "KVK Waarde", "default": "57175187" },
+    { "type": "text", "id": "col2_btw_label", "label": "BTW Label", "default": "Btw-id" },
+    { "type": "text", "id": "col2_btw_val", "label": "BTW Waarde", "default": "NL002308813B96" },
+    { "type": "text", "id": "col2_address_label", "label": "Adres Label", "default": "Vestigingsadres / retouradres" },
+    { "type": "richtext", "id": "col2_address_text", "label": "Adres Tekst", "default": "<p>Burgemeester Wilminkhof 4<br>5302 TS Zaltbommel<br>Nederland</p>" },
+    { "type": "text", "id": "col2_address_note", "label": "Opmerking (Schuingedrukt)", "default": "Let op: Dit is geen bezoekadres." }
+  ],
+  "presets": [
+    {
+      "name": "Contact Details (Kaarten)",
+      "category": "Aangepast"
+    }
+  ]
+}
+{% endschema %}

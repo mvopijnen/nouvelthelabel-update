@@ -1,0 +1,121 @@
+<!-- sections/register.liquid -->
+
+{%- liquid
+  assign title_t = 'customer.register.page_title' | t
+  assign first_name_t = 'customer.register.first_name' | t
+  assign last_name_t = 'customer.register.last_name' | t
+  assign email_t = 'customer.register.email' | t
+  assign password_t = 'customer.register.password' | t
+  assign submit_t = 'customer.register.submit' | t
+  assign login_t = 'customer.register.login' | t
+-%}
+
+<div
+  class="customer--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="none"
+  data-container-width="2"
+  data-spacing-above="large"
+  data-spacing-below="large"
+  data-mobile-spacing-above="large"
+  data-mobile-spacing-below="large"
+>
+  <div class="customer--wrapper">
+    <div id="customer_register" class="customer--register">
+      <h1
+        data-item="section-heading"
+        {% unless settings.transitions--text %}
+          data-transition-item="viewport"
+          data-transition-type="slide-in"
+        {% endunless %}
+      >
+        {{- title_t -}}
+      </h1>
+
+      {%- form 'create_customer' -%}
+        {{- form.errors | default_errors -}}
+
+        <div id="first_name">
+          <label for="first_name" class="label" data-item="nav-text">
+            {{- first_name_t -}}
+          </label>
+          <input
+            class="text"
+            type="text"
+            value=""
+            name="customer[first_name]"
+            id="first_name"
+            size="30"
+            required
+          />
+        </div>
+
+        <div id="last_name">
+          <label for="last_name" class="label" data-item="nav-text">
+            {{- last_name_t -}}
+          </label>
+          <input
+            class="text"
+            type="text"
+            value=""
+            name="customer[last_name]"
+            id="last_name"
+            size="30"
+            required
+          />
+        </div>
+
+        <div id="email">
+          <label for="email" class="label" data-item="nav-text">
+            {{- email_t -}}
+          </label>
+          <input
+            class="text"
+            type="email"
+            value=""
+            name="customer[email]"
+            id="email"
+            size="30"
+            required
+          />
+        </div>
+
+        <div id="password">
+          <label for="password" class="label" data-item="nav-text">
+            {{- password_t -}}
+          </label>
+          <input
+            class="password text"
+            type="password"
+            value=""
+            name="customer[password]"
+            id="password"
+            size="30"
+            required
+          />
+        </div>
+
+        <div class="account--button-container">
+          <button
+            class="account--create"
+            data-item="button-1"
+            data-text="{{- submit_t -}}"
+            type="submit"
+            value="{{ submit_t }}"
+          >
+            <span>{{- submit_t -}}</span>
+          </button>
+          <a
+            class="account--login"
+            href="{{ routes.account_login_url }}"
+            data-item="button-3"
+            data-text="{{ login_t }}"
+          >
+            <div>{{ login_t }}</div>
+          </a>
+        </div>
+
+      {%- endform -%}
+    </div>
+  </div>
+</div>

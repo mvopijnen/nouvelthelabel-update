@@ -1,0 +1,680 @@
+<!-- sections/logo-list.liquid -->
+
+{%- liquid
+  assign auto_rotate = section.settings.auto-rotate
+  assign bg_color = section.settings.background-color
+  assign block_heading_type = section.settings.block-heading-type
+  assign border = section.settings.border
+  assign container_width = section.settings.container-width
+  assign button_link = section.settings.button-link
+  assign button_style = section.settings.button-style
+  assign button_text = section.settings.button-text
+  assign heading = section.settings.heading
+  assign heading_type = section.settings.heading-type
+  assign image_height = section.settings.image-height
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign mobile_text_alignment = section.settings.mobile-alignment
+  assign rotate_frequency = section.settings.rotate-frequency
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_color = section.settings.text-color
+  assign text_width = section.settings.text-width
+-%}
+
+{%- for block in section.blocks -%}
+  {%- liquid
+    assign block_heading = block.settings.heading
+    assign image = block.settings.image
+    assign image_aspect_ratio = image.aspect_ratio | default: 2.5
+    assign max_image_width = image_height | times: 8
+    assign image_width = image_height | times: image_aspect_ratio | round | at_most: max_image_width
+    assign sizes = image_width | append: 'px'
+
+    capture image_html
+      if image == blank
+        render 'placeholder', type: 'logo', aspect_ratio: image_aspect_ratio
+      else
+        echo image | image_url: width: image_width | image_tag: width: image_width, loading: 'lazy', sizes: sizes
+      endif
+    endcapture
+  -%}
+
+  {%- capture block_html -%}
+    {{- block_html -}}
+
+    <div
+      class="logo-list--block"
+      data-index="{{ forloop.index0 }}"
+      data-container="block"
+      aria-hidden="true"
+      {{ block.shopify_attributes }}
+    >
+      <h3 class="logo-list--block-heading" data-item="{{ block_heading_type }}">
+        {{- block_heading -}}
+      </h3>
+
+      <div
+        class="logo-list--block-image"
+        data-mq="small"
+        style="--image-width:{{ image_width }}px;"
+      >
+        {{- image_html -}}
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- capture block_image_html -%}
+    {{- block_image_html -}}
+
+    <button
+      class="logo-list--image"
+      data-index="{{ forloop.index0 }}"
+      data-container="block"
+      aria-current="false"
+      style="--image-width:{{ image_width }}px;"
+      {% unless settings.transitions--other %}
+        data-transition-item="{{ section.id }}"
+      {% endunless %}
+    >
+     {{- image_html -}}
+    </button>
+  {%- endcapture -%}
+{%- endfor -%}
+
+<logo-list-element
+  class="logo-list--root"
+  data-section-id="{{ section.id }}"
+  data-auto-rotate="{{ auto_rotate }}"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="{{ container_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-text-color="{{ text_color }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  {% if auto_rotate %}
+    style="--rotate-frequency:{{ rotate_frequency }}s;"
+  {% endif %}
+>
+  <div
+    class="logo-list--wrapper"
+    data-container="section"
+    data-mobile-x-alignment="{{ mobile_text_alignment }}"
+  >
+    {%- unless heading == blank -%}
+      <div class="logo-list--heading-container" data-container="block">
+        <h2 class="logo-list--heading" data-item="{{ heading_type }}">
+          {{- heading | escape -}}
+        </h2>
+      </div>
+    {%- endunless -%}
+
+    <div
+      class="logo-list--blocks"
+      {% if text_width %}
+        data-text-width
+        style="--text-width:{{ text_width }}px;"
+      {% endif %}
+    >
+      {{- block_html -}}
+    </div>
+
+    <div class="logo-list--pagination" data-mq="small">
+      {%- for slide_index in (1..section.blocks.size) -%}
+        <button
+          class="logo-list--pagination-index"
+          data-item="pagination-dot"
+          data-index="{{ forloop.index0 }}"
+          aria-label="{{ slide_index }}"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+        >
+          <div></div>
+        </button>
+      {%- endfor -%}
+    </div>
+
+    <div
+      class="logo-list--images"
+      data-mq="medium-large"
+      {% unless settings.transitions--other %}
+        data-transition-container="{{ section.id }}"
+        data-transition-type="fade-in"
+        data-transition-cascade="horizontal"
+        data-transition-cascade-interval="300"
+      {% endunless %}
+    >
+      {{- block_image_html -}}
+    </div>
+
+    {%- unless button_text == blank -%}
+      <div class="logo-list--button" data-container="block">
+        <a
+          href="{{ button_link }}"
+          data-item="{{ button_style }}"
+          data-text="{{ button_text }}"
+        >
+          <span>{{- button_text -}}</span>
+        </a>
+      </div>
+    {%- endunless -%}
+  </div>
+</logo-list-element>
+
+{% stylesheet %}
+  .logo-list--wrapper {
+    --grid-row-gap: var(--spacing--block);
+
+    @media (min-width: 768px) {
+      justify-content: var(--section--alignment);
+    }
+
+    @media (max-width: 767px) {
+      justify-content: var(--x-alignment);
+    }
+
+    .placeholder--root, img {
+      --image--radius: 0;
+    }
+
+    .placeholder--root svg {
+      scale: 2;
+    }
+  }
+
+  .logo-list--blocks {
+    --text-padding-x: 0px;
+    --text-padding-y: 0px;
+    display: grid;
+    padding-bottom: var(--spacing--item);
+
+    @media (min-width: 768px) {
+      justify-self: var(--section--alignment);
+    }
+
+    @media (max-width: 767px) {
+      justify-self: var(--x-alignment);
+    }
+  }
+
+  .logo-list--block {
+    --transition-duration: 0.6s;
+    grid-area: 1 / -1;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: opacity var(--transition-duration) var(--transition--standard), transform var(--transition-duration) var(--transition--standard);
+
+    @media (min-width: 768px) {
+      align-items: var(--section--alignment);
+    }
+
+    @media (max-width: 767px) {
+      align-items: var(--x-alignment);
+    }
+
+    &[aria-hidden='pending'] {
+      --transition-duration: 0.3s;
+      opacity: 0;
+      transform: translate3d(0, calc(var(--spacing--item) * -1), 0);
+    }
+
+    &[aria-hidden='true'] {
+      opacity: 0;
+      transform: translate3d(0, var(--spacing--item), 0);
+    }
+  }
+
+  .logo-list--images {
+    display: flex;
+    gap: var(--spacing--6);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .logo-list--heading,
+  .logo-list--button {
+    @media (min-width: 768px) {
+      justify-self: var(--section--alignment);
+      text-align: var(--section--text-alignment);
+    }
+
+    @media (max-width: 767px) {
+      justify-self: var(--x-alignment);
+      text-align: var(--text-alignment);
+    }
+  }
+
+  .logo-list--image {
+    padding: 0;
+    width: var(--image-width);
+    height: fit-content;
+
+    > * {
+      opacity: 1;
+      transition: opacity 0.2s var(--transition--standard);
+      pointer-events: none;
+    }
+
+    &[aria-current='false'] > * {
+      opacity: 0.25;
+    }
+
+    &:hover:not([aria-current='true']) > * {
+      opacity: 0.5;
+    }
+  }
+
+  .logo-list--block-image {
+    width: var(--image-width);
+  }
+
+  .logo-list--block-heading {
+    @media (max-width: 767px) {
+      text-align: var(--text-alignment);
+    }
+
+    @media (min-width: 768px) {
+      text-align: var(--section--text-alignment);
+    }
+  }
+
+  .logo-list--pagination {
+    display: flex;
+    gap: var(--spacing--1);
+    justify-content: var(--x-alignment);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Logo list",
+  "class": "section--logo-list",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "container-width",
+      "label": "Maximum container width",
+      "type": "select",
+      "options": [
+        {
+          "label": "Extra small",
+          "value": "1"
+        },
+        {
+          "label": "Small",
+          "value": "2"
+        },
+        {
+          "label": "Medium",
+          "value": "3"
+        },
+        {
+          "label": "Large",
+          "value": "4"
+        },
+        {
+          "label": "Extra large",
+          "value": "5"
+        },
+        {
+          "label": "Full width",
+          "value": "6"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto-rotate",
+      "label": "Auto-rotate logos",
+      "default": false
+    },
+    {
+      "label": "Rotate frequency",
+      "id": "rotate-frequency",
+      "type": "range",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "default": 5,
+      "visible_if": "{{ section.settings.auto-rotate == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "heading",
+      "label": "Section heading",
+      "type": "text"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        { "label": "Featured", "value": "featured-heading" },
+        { "label": "Large", "value": "section-heading" },
+        { "label": "Medium", "value": "block-heading" },
+        { "label": "Small", "value": "paragraph" }
+      ],
+      "default": "block-heading",
+      "visible_if": "{{ section.settings.heading != blank }}"
+    },
+    {
+      "id": "button-text",
+      "label": "Button text",
+      "type": "text"
+    },
+    {
+      "id": "button-link",
+      "label": "Button link",
+      "type": "url"
+    },
+    {
+      "id": "button-style",
+      "label": "Button style",
+      "type": "select",
+      "options": [
+        { "label": "Style 1", "value": "button-1" },
+        { "label": "Style 2", "value": "button-2" },
+        { "label": "Style 3", "value": "button-3" },
+        { "label": "Style 4", "value": "button-4" },
+        { "label": "Link", "value": "block-link" }
+      ],
+      "default": "block-link"
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "block-heading-type",
+      "label": "Block heading type",
+      "type": "select",
+      "options": [
+        { "label": "Featured", "value": "featured-heading" },
+        { "label": "Large", "value": "section-heading" },
+        { "label": "Medium", "value": "block-heading" },
+        { "label": "Small", "value": "paragraph" }
+      ],
+      "default": "section-heading"
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "id": "text-width",
+      "label": "Text width",
+      "type": "range",
+      "min": 300,
+      "max": 900,
+      "step": 25,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Image layout"
+    },
+    {
+      "id": "image-height",
+      "label": "Image max height",
+      "type": "range",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-alignment",
+      "label": "Alignment",
+      "type": "text_alignment",
+      "default": "center"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "id": "heading",
+          "label": "Heading",
+          "type": "richtext",
+          "default": "<p>\"A press quote about your brand, product, or mission.\"</p>"
+        },
+        {
+          "id": "image",
+          "label": "Image",
+          "type": "image_picker"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo list",
+      "category": "Brand Trust",
+      "blocks": [
+        {
+          "type": "logo",
+          "settings": {
+            "heading": "<p>\"A standout release that elevates everyday essentials with exceptional quality and design.\"</p>"
+          }
+        },
+        {
+          "type": "logo",
+          "settings": {
+            "heading": "<p>\"Distinctive details and refined execution make this brand one to watch this season.\"</p>"
+          }
+        },
+        {
+          "type": "logo",
+          "settings": {
+            "heading": "<p>\"Thoughtful craftsmanship, elevated aesthetics, and a clear point of view set this collection apart.\"</p>"
+          }
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["aside"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,1148 @@
+<!-- sections/popup.liquid -->
+
+{%- liquid
+  assign load_consent_tracking = false
+  assign load_popup = false
+  assign limit = section.settings.limit
+
+  capture blocks
+    for block in section.blocks
+      case block.type
+        when 'newsletter'
+          assign load_popup = true
+          render 'newsletter-popup', block: block
+        when 'small-promotion'
+          assign load_popup = true
+          render 'small-promotion', block: block
+        when 'large-promotion'
+          assign load_popup = true
+          render 'large-promotion', block: block
+        when 'consent-tracking'
+          assign load_consent_tracking = true
+          render 'consent-tracking', block: block
+      endcase
+    endfor
+  endcapture
+-%}
+
+<div
+  class="popup--root"
+  data-consent-tracking="{{ load_consent_tracking }}"
+  data-limit="{{ limit }}"
+  data-size="{{ section.blocks.size }}"
+>
+  {{ blocks }}
+</div>
+
+{% stylesheet %}
+  .popup--root {
+    position: relative;
+  }
+
+  .popup--block--root[data-block-id] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing--item);
+    position: fixed;
+    text-align: center;
+    z-index: 10;
+    user-select: none;
+    opacity: 0;
+    visibility: hidden;
+    scale: 0.9;
+    transition:
+      opacity 0.2s var(--transition--standard),
+      scale 0.2s var(--transition--standard),
+      visibility 0.2s var(--transition--standard);
+
+    .layout--close {
+      &:before,
+      &:after {
+        background-color: var(--color);
+      }
+    }
+
+    .layout--viewport[data-drop-shadows='true'] & {
+      box-shadow: var(--box-shadow--center);
+    }
+
+    .layout--viewport[data-drop-shadows='false'] & {
+      border: var(--border--dark);
+    }
+
+    &[data-type='small-promotion'] {
+      width: fit-content;
+      border-radius: var(--spacing--block);
+      padding: var(--spacing--item) var(--spacing--block);
+
+      @media (min-width: 768px) {
+        max-width: calc(100% - 2 * var(--spacing--block));
+
+        &[data-scroll-text='true'] {
+          max-width: 380px;
+        }
+      }
+
+      .layout--close {
+        --cross-size: var(--spacing--item);
+      }
+    }
+
+    &:not([data-type='small-promotion']) {
+      border-radius: 4px;
+
+      .layout--close {
+        --cross-size: 20px;
+        position: absolute;
+        right: var(--spacing--2);
+        top: var(--spacing--2);
+      }
+    }
+
+    &[data-position='left'] {
+      @media (max-width: 767px) {
+        left: var(--spacing--item);
+      }
+
+      @media (min-width: 768px) {
+        left: var(--spacing--block);
+        transform-origin: bottom left;
+      }
+    }
+
+    &[data-position='right'] {
+      @media (max-width: 767px) {
+        right: var(--spacing--item);
+      }
+
+      @media (min-width: 768px) {
+        right: var(--spacing--block);
+        transform-origin: bottom right;
+      }
+    }
+
+    &:not([data-position='bottom']) {
+      &:not([data-type='small-promotion']) {
+        padding: var(--spacing--block);
+
+        @media (min-width: 768px) {
+          width: calc(100% - 2 * var(--spacing--block));
+          max-width: 500px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        width: calc(100% - 2 * var(--spacing--item));
+        bottom: var(--spacing--item);
+      }
+
+      @media (min-width: 768px) {
+        bottom: var(--spacing--block);
+      }
+    }
+
+    &[data-position='bottom'] {
+      left: var(--spacing--item);
+      right: var(--spacing--item);
+      bottom: var(--spacing--item);
+      width: calc(100% - 2 * var(--spacing--item));
+
+      @media (max-width: 767px) {
+        padding: var(--spacing--block);
+      }
+
+      @media (min-width: 768px) {
+        padding: var(--spacing--item) var(--spacing--block);
+      }
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+
+    &[aria-expanded='true'] {
+      opacity: 1;
+      visibility: visible;
+      scale: 1;
+    }
+
+    .social-media--root:empty {
+      display: none;
+    }
+  }
+
+  .popup--block--container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--item);
+    align-items: var(--x-alignment);
+    text-align: var(--text-alignment);
+
+    @media (min-width: 768px) {
+      .popup--block--root[data-position='bottom'] & {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .popup--block--wrapper {
+    .popup--block--root[data-type='small-promotion'] & {
+      white-space: nowrap;
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 768px) {
+      .popup--block--root[data-type='small-promotion'][data-scroll-text='true'] & {
+        mask-image: linear-gradient(to right, #000 95%, transparent);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .popup--block--root[data-type='small-promotion'][data-mobile-scroll-text='true'] & {
+        mask-image: linear-gradient(to right, #000 95%, transparent);
+      }
+    }
+  }
+
+  .popup--block--heading {
+    > * {
+      animation-play-state: running;
+    }
+
+    @media (min-width: 768px) {
+      .popup--block--root[data-type='small-promotion'][data-scroll-text='true'] & {
+        /* maps 1-10 value in settings to 20-5s for animation speed */
+        --animation-speed: calc(
+          ((10 - var(--popup--animation-speed)) * (20 - 5) / (10 - 1) + 5) * 1s
+        );
+        display: flex;
+        gap: var(--spacing--item);
+        mask-image: linear-gradient(to left, #000 95%, transparent);
+        /* override typography */
+        transform: none;
+        margin: 0;
+        line-height: 1;
+
+        > * {
+          animation: scrolling-content-mobile var(--animation-speed) linear infinite;
+        }
+      }
+    }
+
+    @media (max-width: 767px) {
+      .popup--block--root[data-type='small-promotion'][data-mobile-scroll-text='true'] & {
+        /* maps 1-10 value in settings to 20-5s for animation speed */
+        --mobile-animation-speed: calc(
+          ((10 - var(--popup--mobile-animation-speed)) * (20 - 5) / (10 - 1) + 5) * 1s
+        );
+        display: flex;
+        gap: var(--spacing--item);
+        mask-image: linear-gradient(to left, #000 95%, transparent);
+        transform: none; /* override typography */
+
+        > * {
+          animation: scrolling-content-mobile var(--mobile-animation-speed) linear infinite;
+          transform: translateZ(0); /* Force hardware acceleration */
+          backface-visibility: hidden; /* Help with performance */
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      .popup--block--root[data-position='bottom'] & {
+        display: none;
+      }
+    }
+  }
+
+  .popup--button {
+    @media (min-width: 768px) {
+      .popup--block--root[data-x-alignment='center'] & {
+        justify-content: center;
+      }
+
+      .popup--block--root[data-x-alignment='right'] & {
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .popup--button--container {
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
+
+  .popup--block--button-container {
+    display: flex;
+    gap: var(--spacing--item);
+    text-transform: capitalize;
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      width: 100%;
+
+      > * {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .popup--block--root[data-x-alignment='center'] & {
+        justify-content: center;
+      }
+
+      .popup--block--root[data-x-alignment='right'] & {
+        justify-content: flex-end;
+      }
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Popups",
+    "class": "section--popup",
+    "tag": "aside",
+    "limit": 1,
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Add/edit/hide each popup in this section's block settings."
+      },
+      {
+        "id": "limit",
+        "label": "Limit to one popup per page load",
+        "type": "checkbox",
+        "default": true,
+        "info": "Cookie consent popup will always take priority. When disabled popups will be shown one after another."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "newsletter",
+        "name": "Newsletter",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Sign up and save"
+          },
+          {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p>Describe the benefits of the newsletter – dazzling discounts, sneak peeks, limited-edition treats, exclusive deals, fashion tips.</p>"
+          },
+          {
+            "type": "text",
+            "id": "social-title",
+            "label": "Social media title",
+            "default": "Follow us"
+          },
+          {
+            "type": "header",
+            "content": "General layout"
+          },
+          {
+            "id": "background-color",
+            "label": "Background color",
+            "type": "select",
+            "options": [
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "dark"
+          },
+          {
+            "id": "translucent",
+            "label": "Translucent background",
+            "type": "checkbox",
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Features"
+          },
+          {
+            "id": "position",
+            "label": "Desktop position",
+            "type": "select",
+            "options": [
+              {
+                "label": "Left",
+                "value": "left"
+              },
+              {
+                "label": "Right",
+                "value": "right"
+              }
+            ],
+            "default": "right"
+          },
+          {
+            "type": "checkbox",
+            "id": "social-enabled",
+            "label": "Show social icons",
+            "default": true
+          },
+          {
+            "id": "delay",
+            "label": "Popup delay",
+            "type": "range",
+            "unit": "s",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 5
+          },
+          {
+            "type": "checkbox",
+            "id": "show-at-bottom",
+            "label": "Show popup at bottom of page",
+            "default": true,
+            "info": "If the popup hasn't opened yet, it will open when the user reaches the bottom of the page."
+          },
+          {
+            "label": "Show again after",
+            "id": "days-range",
+            "type": "range",
+            "unit": "day",
+            "min": 1,
+            "max": 30,
+            "step": 1,
+            "default": 7,
+            "info": "Independent to each browser and device."
+          },
+          {
+            "type": "checkbox",
+            "id": "referrer-enabled",
+            "label": "Limit to specific referrer path",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "referrer-url",
+            "label": "Targeted referrer",
+            "visible_if": "{{ block.settings.referrer-enabled }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "page-enabled",
+            "label": "Limit to specific page",
+            "default": false
+          },
+          {
+            "type": "url",
+            "id": "page-url",
+            "label": "Targeted page",
+            "visible_if": "{{ block.settings.page-enabled }}"
+          },
+          {
+            "type": "header",
+            "content": "Text layout"
+          },
+          {
+            "id": "text-color",
+            "label": "Text color",
+            "type": "select",
+            "options": [
+              {
+                "label": "Light",
+                "value": "white"
+              },
+              {
+                "label": "Dark",
+                "value": "body"
+              }
+            ],
+            "default": "white"
+          },
+          {
+            "id": "text-alignment",
+            "label": "Text alignment",
+            "type": "text_alignment",
+            "default": "center"
+          }
+        ]
+      },
+      {
+        "type": "small-promotion",
+        "name": "Small promotion",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Description",
+            "default": "10% off your first order"
+          },
+          {
+            "type": "header",
+            "content": "General layout"
+          },
+          {
+            "id": "background-color",
+            "label": "Background color",
+            "type": "select",
+            "options": [
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "dark"
+          },
+          {
+            "id": "translucent",
+            "label": "Translucent background",
+            "type": "checkbox",
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Features"
+          },
+          {
+            "id": "position",
+            "label": "Desktop position",
+            "type": "select",
+            "options": [
+              {
+                "label": "Left",
+                "value": "left"
+              },
+              {
+                "label": "Right",
+                "value": "right"
+              }
+            ],
+            "default": "left"
+          },
+          {
+            "id": "delay",
+            "label": "Popup delay",
+            "type": "range",
+            "unit": "s",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 3
+          },
+          {
+            "type": "checkbox",
+            "id": "show-at-bottom",
+            "label": "Show popup at bottom of page",
+            "default": true,
+            "info": "If the popup hasn't opened yet, it will open when the user reaches the bottom of the page."
+          },
+          {
+            "label": "Show again after",
+            "id": "days-range",
+            "type": "range",
+            "unit": "day",
+            "min": 1,
+            "max": 30,
+            "step": 1,
+            "default": 7,
+            "info": "Independent to each browser and device."
+          },
+          {
+            "type": "checkbox",
+            "id": "referrer-enabled",
+            "label": "Limit to specific referrer path",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "referrer-url",
+            "label": "Targeted referrer",
+            "visible_if": "{{ block.settings.referrer-enabled }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "page-enabled",
+            "label": "Limit to specific page",
+            "default": false
+          },
+          {
+            "type": "url",
+            "id": "page-url",
+            "label": "Targeted page",
+            "visible_if": "{{ block.settings.page-enabled }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "scroll-text",
+            "label": "Scroll text",
+            "default": true
+          },
+          {
+            "id": "animation-speed",
+            "label": "Scroll speed",
+            "type": "range",
+            "min": 1,
+            "max": 10,
+            "step": 0.5,
+            "default": 7.5,
+            "visible_if": "{{ block.settings.scroll-text }}"
+          },
+          {
+            "type": "header",
+            "content": "Text layout"
+          },
+          {
+            "id": "text-color",
+            "label": "Text color",
+            "type": "select",
+            "options": [
+              {
+                "label": "Light",
+                "value": "white"
+              },
+              {
+                "label": "Dark",
+                "value": "body"
+              }
+            ],
+            "default": "white"
+          },
+          {
+            "id": "heading-type",
+            "label": "Heading type",
+            "type": "select",
+            "options": [
+              { "label": "Medium", "value": "block-heading" },
+              { "label": "Small", "value": "paragraph" }
+            ],
+            "default": "paragraph"
+          },
+          {
+            "type": "header",
+            "content": "Mobile"
+          },
+          {
+            "type": "checkbox",
+            "id": "mobile-scroll-text",
+            "label": "Scroll text",
+            "default": true
+          },
+          {
+            "id": "mobile-animation-speed",
+            "label": "Scroll speed",
+            "type": "range",
+            "min": 1,
+            "max": 10,
+            "step": 0.5,
+            "default": 7.5,
+            "visible_if": "{{ block.settings.mobile-scroll-text }}"
+          }
+        ]
+      },
+      {
+        "type": "large-promotion",
+        "name": "Large promotion",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Up to 40% off"
+          },
+          {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p></p>"
+          },
+          {
+            "id": "button-text",
+            "label": "Button text",
+            "type": "text",
+            "default": "Button"
+          },
+          {
+            "id": "button-link",
+            "label": "Button link",
+            "type": "url"
+          },
+          {
+            "id": "button-style",
+            "label": "Button style",
+            "type": "select",
+            "options": [
+              {
+                "label": "Style 1",
+                "value": "button-1"
+              },
+              {
+                "label": "Style 2",
+                "value": "button-2"
+              },
+              {
+                "label": "Style 3",
+                "value": "button-3"
+              },
+              {
+                "label": "Style 4",
+                "value": "button-4"
+              },
+              {
+                "label": "Link",
+                "value": "block-link"
+              }
+            ],
+            "default": "button-2"
+          },
+          {
+            "type": "header",
+            "content": "General layout"
+          },
+          {
+            "id": "background-color",
+            "label": "Background color",
+            "type": "select",
+            "options": [
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "dark"
+          },
+          {
+            "id": "translucent",
+            "label": "Translucent background",
+            "type": "checkbox",
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Features"
+          },
+          {
+            "id": "position",
+            "label": "Desktop position",
+            "type": "select",
+            "options": [
+              {
+                "label": "Left",
+                "value": "left"
+              },
+              {
+                "label": "Right",
+                "value": "right"
+              }
+            ],
+            "default": "left"
+          },
+          {
+            "id": "delay",
+            "label": "Popup delay",
+            "type": "range",
+            "unit": "s",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 3
+          },
+          {
+            "type": "checkbox",
+            "id": "show-at-bottom",
+            "label": "Show popup at bottom of page",
+            "default": true,
+            "info": "If the popup hasn't opened yet, it will open when the user reaches the bottom of the page."
+          },
+          {
+            "label": "Show again after",
+            "id": "days-range",
+            "type": "range",
+            "unit": "day",
+            "min": 1,
+            "max": 30,
+            "step": 1,
+            "default": 7,
+            "info": "Independent to each browser and device."
+          },
+          {
+            "type": "checkbox",
+            "id": "referrer-enabled",
+            "label": "Limit to specific referrer path",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "referrer-url",
+            "label": "Targeted referrer",
+            "visible_if": "{{ block.settings.referrer-enabled }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "page-enabled",
+            "label": "Limit to specific page",
+            "default": false
+          },
+          {
+            "type": "url",
+            "id": "page-url",
+            "label": "Targeted page",
+            "visible_if": "{{ block.settings.page-enabled }}"
+          },
+          {
+            "type": "header",
+            "content": "Countdown features",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "type": "checkbox",
+            "id": "countdown-enabled",
+            "label": "Enable countdown",
+            "default": true
+          },
+          {
+            "id": "timer-bg-color",
+            "label": "Timer background color",
+            "type": "select",
+            "options": [
+              { "label": "None", "value": "none" },
+              { "label": "Light", "value": "light" },
+              { "label": "Dark", "value": "dark" }
+            ],
+            "default": "dark",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "id": "number-color",
+            "label": "Number color",
+            "type": "select",
+            "options": [
+              { "label": "Light", "value": "white" },
+              { "label": "Dark", "value": "body" }
+            ],
+            "default": "white",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "id": "expiry-date",
+            "label": "Expiry date",
+            "type": "text",
+            "default": "DD-MM-YYYY",
+            "info": "DD-MM-YYYY",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "label": "Expiry hours",
+            "id": "expiry-hours",
+            "type": "range",
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "default": 0,
+            "info": "Represents the hour in UTC standard time",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "label": "Expiry minutes",
+            "id": "expiry-minutes",
+            "type": "range",
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "default": 0,
+            "info": "Represents the minutes in UTC standard time",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "id": "hide-when-expired",
+            "label": "Hide popup when countdown expires",
+            "type": "checkbox",
+            "default": true,
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "type": "select",
+            "id": "show-button-when",
+            "label": "Show button when",
+            "options": [
+              { "label": "Timer is active", "value": "active" },
+              { "label": "Timer reaches zero", "value": "finished" },
+              { "label": "Always", "value": "always" }
+            ],
+            "default": "always",
+            "visible_if": "{{ block.settings.countdown-enabled }}"
+          },
+          {
+            "type": "header",
+            "content": "Text layout"
+          },
+          {
+            "id": "text-color",
+            "label": "Text color",
+            "type": "select",
+            "options": [
+              {
+                "label": "Light",
+                "value": "white"
+              },
+              {
+                "label": "Dark",
+                "value": "body"
+              }
+            ],
+            "default": "white"
+          },
+          {
+            "id": "text-alignment",
+            "label": "Text alignment",
+            "type": "text_alignment",
+            "default": "center"
+          }
+        ]
+      },
+      {
+        "type": "consent-tracking",
+        "name": "Cookie consent",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This feature uses the Shopify [consent tracking API](https://shopify.dev/docs/api/consent-tracking) and will not show in all regions. Customer privacy tracking limits must be enabled in your [online store settings](/admin/online_store/preferences)."
+          },
+          {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Cookie consent"
+          },
+          {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p>We use cookies and similar technologies to provide the best experience on our website. Refer to our Privacy Policy for more information.</p>"
+          },
+          {
+            "type": "header",
+            "content": "General layout"
+          },
+          {
+            "id": "background-color",
+            "label": "Background color",
+            "type": "select",
+            "options": [
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "Light",
+                "value": "light"
+              },
+              {
+                "label": "Dark",
+                "value": "dark"
+              },
+              {
+                "label": "Accent 1",
+                "value": "accent-1"
+              },
+              {
+                "label": "Accent 2",
+                "value": "accent-2"
+              },
+              {
+                "label": "Accent 3",
+                "value": "accent-3"
+              }
+            ],
+            "default": "dark"
+          },
+          {
+            "id": "translucent",
+            "label": "Translucent background",
+            "type": "checkbox",
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Features"
+          },
+          {
+            "id": "position",
+            "label": "Position",
+            "type": "select",
+            "options": [
+              {
+                "label": "Left",
+                "value": "left"
+              },
+              {
+                "label": "Bottom",
+                "value": "bottom"
+              },
+              {
+                "label": "Right",
+                "value": "right"
+              }
+            ],
+            "default": "left"
+          },
+          {
+            "type": "header",
+            "content": "Text layout"
+          },
+          {
+            "id": "text-color",
+            "label": "Text color",
+            "type": "select",
+            "options": [
+              {
+                "label": "Light",
+                "value": "white"
+              },
+              {
+                "label": "Dark",
+                "value": "body"
+              }
+            ],
+            "default": "white"
+          },
+          {
+            "id": "text-alignment",
+            "label": "Text alignment",
+            "type": "text_alignment",
+            "default": "center"
+          },
+          {
+            "id": "accept-button-style",
+            "label": "Accept button style",
+            "type": "select",
+            "options": [
+              { "label": "Style 1", "value": "button-1" },
+              { "label": "Style 2", "value": "button-2" },
+              { "label": "Style 3", "value": "button-3" },
+              { "label": "Style 4", "value": "button-4" },
+              { "label": "Link", "value": "block-link" }
+            ],
+            "default": "button-2"
+          },
+          {
+            "id": "decline-button-style",
+            "label": "Decline button style",
+            "type": "select",
+            "options": [
+              { "label": "Style 1", "value": "button-1" },
+              { "label": "Style 2", "value": "button-2" },
+              { "label": "Style 3", "value": "button-3" },
+              { "label": "Style 4", "value": "button-4" },
+              { "label": "Link", "value": "block-link" }
+            ],
+            "default": "button-4"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Popup",
+        "blocks": [
+          {
+            "type": "newsletter"
+          },
+          {
+            "type": "small-promotion"
+          },
+          {
+            "type": "large-promotion"
+          },
+          {
+            "type": "consent-tracking"
+          }
+        ]
+      }
+    ],
+    "enabled_on": {
+      "groups": ["aside"]
+    }
+  }
+{% endschema %}

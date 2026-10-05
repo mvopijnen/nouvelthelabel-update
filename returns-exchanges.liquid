@@ -1,0 +1,649 @@
+<div id="ReturnsSection-{{ section.id }}" class="returns-wrapper">
+
+  <!-- Hero Section -->
+  <header class="section-padding bg-secondary text-center">
+    <div class="container-custom">
+      <h1 class="custom-title fade-in stagger-1">{{ section.settings.hero_title }}</h1>
+      <p class="custom-subtitle font-italic text-muted fade-in stagger-2 mb-6">{{ section.settings.hero_subtitle }}</p>
+      <div class="divider mx-auto fade-in stagger-3 mb-6"></div>
+      <p class="custom-text text-muted max-w-2xl mx-auto fade-in stagger-4">
+        {{ section.settings.hero_text }}
+      </p>
+    </div>
+  </header>
+
+  <!-- USPs Section -->
+  <section class="section-padding bg-primary">
+    <div class="container-custom">
+      <div class="grid-3 gap-6">
+        <!-- USP 1 -->
+        <div class="text-center p-6 slide-up stagger-1">
+          <div class="icon-circle mx-auto mb-4 bg-dark text-light">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="custom-block-title mb-1">{{ section.settings.usp1_title }}</h3>
+          <p class="custom-text text-muted">{{ section.settings.usp1_text }}</p>
+        </div>
+        <!-- USP 2 -->
+        <div class="text-center p-6 slide-up stagger-2">
+          <div class="icon-circle mx-auto mb-4 bg-dark text-light">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="custom-block-title mb-1">{{ section.settings.usp2_title }}</h3>
+          <p class="custom-text text-muted">{{ section.settings.usp2_text }}</p>
+        </div>
+        <!-- USP 3 -->
+        <div class="text-center p-6 slide-up stagger-3">
+          <div class="icon-circle mx-auto mb-4 bg-dark text-light">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="custom-block-title mb-1">{{ section.settings.usp3_title }}</h3>
+          <p class="custom-text text-muted">{{ section.settings.usp3_text }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA 1 Section -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="custom-title mb-6">{{ section.settings.cta1_title }}</h2>
+      <div class="flex-center gap-4 flex-col-mobile">
+        {% if section.settings.cta1_btn1_text != blank %}
+          <a href="{{ section.settings.cta1_btn1_link }}" class="custom-btn btn-dark slide-up stagger-1">
+            {{ section.settings.cta1_btn1_text }}
+          </a>
+        {% endif %}
+        {% if section.settings.cta1_btn2_text != blank %}
+          <a href="{{ section.settings.cta1_btn2_link }}" class="custom-btn btn-outline slide-up stagger-2">
+            {{ section.settings.cta1_btn2_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps Section -->
+  <section class="section-padding bg-primary">
+    <div class="container-custom">
+      <div class="text-center mb-12">
+        <p class="custom-text tracking-widest uppercase text-muted mb-2">{{ section.settings.steps_super }}</p>
+        <h2 class="custom-title">{{ section.settings.steps_title }}</h2>
+        <p class="custom-text tracking-wide uppercase text-muted mt-2">{{ section.settings.steps_sub }}</p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto space-y-10">
+        <!-- Step 1 -->
+        <div class="slide-up stagger-1 flex-start gap-6">
+          <div class="flex-shrink-0">
+            <div class="step-circle bg-dark text-light flex-center">
+              <span class="step-number">1</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="custom-block-title mb-1">{{ section.settings.step1_title }}</h3>
+            <p class="custom-text text-muted">{{ section.settings.step1_text }}</p>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="slide-up stagger-2 flex-start gap-6">
+          <div class="flex-shrink-0">
+            <div class="step-circle bg-dark text-light flex-center">
+              <span class="step-number">2</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="custom-block-title mb-1">{{ section.settings.step2_title }}</h3>
+            <p class="custom-text text-muted">{{ section.settings.step2_text }}</p>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="slide-up stagger-3 flex-start gap-6">
+          <div class="flex-shrink-0">
+            <div class="step-circle bg-dark text-light flex-center">
+              <span class="step-number">3</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="custom-block-title mb-1">{{ section.settings.step3_title }}</h3>
+            <p class="custom-text text-muted">{{ section.settings.step3_text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Policy Details -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom">
+      <div class="text-center mb-12">
+        <p class="custom-text tracking-widest uppercase text-muted mb-2">{{ section.settings.policy_super }}</p>
+        <h2 class="custom-title">{{ section.settings.policy_title }}</h2>
+      </div>
+      <div class="grid-2 gap-6">
+        <div class="bg-primary p-6 shadow-sm slide-up stagger-1">
+          <h3 class="custom-block-title mb-2">{{ section.settings.policy1_title }}</h3>
+          <p class="custom-text text-muted">{{ section.settings.policy1_text }}</p>
+        </div>
+        <div class="bg-primary p-6 shadow-sm slide-up stagger-2">
+          <h3 class="custom-block-title mb-2">{{ section.settings.policy2_title }}</h3>
+          <p class="custom-text text-muted">{{ section.settings.policy2_text }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Processing & Exchange -->
+  <section class="section-padding bg-primary">
+    <div class="container-custom">
+      <div class="grid-2 gap-10">
+        <!-- Verwerking -->
+        <div class="slide-up stagger-1">
+          <h2 class="custom-title mb-6">{{ section.settings.process_title }}</h2>
+          <div class="space-y-6">
+            <div>
+              <h3 class="custom-block-title mb-1">{{ section.settings.process1_title }}</h3>
+              <p class="custom-text text-muted">{{ section.settings.process1_text }}</p>
+            </div>
+            <div>
+              <h3 class="custom-block-title mb-1">{{ section.settings.process2_title }}</h3>
+              <p class="custom-text text-muted">{{ section.settings.process2_text }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- Omruilen -->
+        <div class="slide-up stagger-2">
+          <h2 class="custom-title mb-6">{{ section.settings.exchange_title }}</h2>
+          <div class="space-y-6">
+            <div>
+              <h3 class="custom-block-title mb-1">{{ section.settings.exchange1_title }}</h3>
+              <p class="custom-text text-muted">{{ section.settings.exchange1_text }}</p>
+            </div>
+            <div>
+              <h3 class="custom-block-title mb-1">{{ section.settings.exchange2_title }}</h3>
+              <p class="custom-text text-muted">{{ section.settings.exchange2_text }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dark Service Section -->
+  <section class="section-padding bg-dark text-light">
+    <div class="container-custom max-w-4xl">
+      <div class="grid-2 gap-10 align-center">
+        <div class="slide-up stagger-1">
+          <p class="custom-text tracking-widest uppercase text-dark-muted mb-2">{{ section.settings.service_super }}</p>
+          <h2 class="custom-title mb-4">{{ section.settings.service_title }}</h2>
+          <p class="custom-subtitle font-italic text-dark-muted mb-4">{{ section.settings.service_sub }}</p>
+          <p class="custom-text text-dark-muted">{{ section.settings.service_text }}</p>
+        </div>
+        <div class="slide-up stagger-2 space-y-4">
+          <div class="bg-dark-light p-6">
+            <h3 class="custom-block-title mb-2">Email</h3>
+            <a href="mailto:{{ section.settings.service_email }}" class="custom-text text-dark-muted hover-text-light break-all transition-colors">
+              {{ section.settings.service_email }}
+            </a>
+          </div>
+          <div class="bg-dark-light p-6">
+            <h3 class="custom-block-title mb-2">WhatsApp</h3>
+            <a href="https://wa.me/{{ section.settings.service_wa_clean }}" target="_blank" rel="noopener noreferrer" class="custom-text text-dark-muted hover-text-light transition-colors">
+              {{ section.settings.service_wa_display }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section-padding bg-secondary">
+    <div class="container-custom max-w-3xl text-center">
+      <p class="custom-text tracking-widest uppercase text-muted mb-2">{{ section.settings.cta2_super }}</p>
+      <h2 class="custom-title mb-8">{{ section.settings.cta2_title }}</h2>
+      <div class="flex-center gap-4 flex-col-mobile">
+        {% if section.settings.cta2_btn1_text != blank %}
+          <a href="{{ section.settings.cta2_btn1_link }}" class="custom-btn btn-dark slide-up stagger-1">
+            {{ section.settings.cta2_btn1_text }}
+          </a>
+        {% endif %}
+        {% if section.settings.cta2_btn2_text != blank %}
+          <a href="{{ section.settings.cta2_btn2_link }}" class="custom-btn btn-outline slide-up stagger-2">
+            {{ section.settings.cta2_btn2_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* ------------------- GLOBALS & LAYOUT ------------------- */
+  #ReturnsSection-{{ section.id }} {
+    color: {{ section.settings.text_color }};
+    margin-top: {{ section.settings.spacing_above }};
+    margin-bottom: {{ section.settings.spacing_below }};
+  }
+
+  /* Colors */
+  #ReturnsSection-{{ section.id }} .bg-primary { background-color: {{ section.settings.bg_primary }}; }
+  #ReturnsSection-{{ section.id }} .bg-secondary { background-color: {{ section.settings.bg_secondary }}; }
+  #ReturnsSection-{{ section.id }} .bg-dark { background-color: {{ section.settings.bg_dark }}; color: {{ section.settings.text_light }}; }
+  #ReturnsSection-{{ section.id }} .bg-dark-light { background-color: {{ section.settings.bg_dark_light }}; }
+  
+  #ReturnsSection-{{ section.id }} .text-light { color: {{ section.settings.text_light }}; }
+  #ReturnsSection-{{ section.id }} .text-muted { color: {{ section.settings.text_muted }}; }
+  #ReturnsSection-{{ section.id }} .text-dark-muted { color: {{ section.settings.text_dark_muted }}; }
+  
+  #ReturnsSection-{{ section.id }} .hover-text-light:hover { color: {{ section.settings.text_light }}; }
+
+  /* Containers & Padding */
+  #ReturnsSection-{{ section.id }} .container-custom {
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+    max-width: {{ section.settings.container_width }};
+  }
+  #ReturnsSection-{{ section.id }} .max-w-2xl { max-width: 42rem; }
+  #ReturnsSection-{{ section.id }} .max-w-3xl { max-width: 48rem; }
+  #ReturnsSection-{{ section.id }} .max-w-4xl { max-width: 56rem; }
+  
+  #ReturnsSection-{{ section.id }} .section-padding { padding: 64px 0; }
+
+  /* ------------------- TYPOGRAPHY ------------------- */
+  
+  /* Hoofdtitels (Normaal gewicht, Hoofdletters) */
+  #ReturnsSection-{{ section.id }} .custom-title {
+    font-size: 24px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.3;
+    margin: 0;
+  }
+  
+  /* Sub-kopjes en Tussenkopjes (Normaal gewicht, Hoofdletters) */
+  #ReturnsSection-{{ section.id }} .custom-block-title {
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  
+  /* Voor overige (schuingedrukte) zinnetjes */
+  #ReturnsSection-{{ section.id }} .custom-subtitle {
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: normal;
+    margin: 0;
+  }
+  
+  #ReturnsSection-{{ section.id }} .custom-text {
+    font-size: 11px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  #ReturnsSection-{{ section.id }} .step-number {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  /* Modifiers */
+  #ReturnsSection-{{ section.id }} .font-italic { font-style: italic; }
+  #ReturnsSection-{{ section.id }} .uppercase { text-transform: uppercase; }
+  #ReturnsSection-{{ section.id }} .tracking-widest { letter-spacing: 0.1em; }
+  #ReturnsSection-{{ section.id }} .tracking-wide { letter-spacing: 0.05em; }
+  #ReturnsSection-{{ section.id }} .text-center { text-align: center; }
+  #ReturnsSection-{{ section.id }} .break-all { word-break: break-all; }
+
+  #ReturnsSection-{{ section.id }} .mb-1 { margin-bottom: 0.25rem; }
+  #ReturnsSection-{{ section.id }} .mb-2 { margin-bottom: 0.5rem; }
+  #ReturnsSection-{{ section.id }} .mb-4 { margin-bottom: 1rem; }
+  #ReturnsSection-{{ section.id }} .mb-6 { margin-bottom: 1.5rem; }
+  #ReturnsSection-{{ section.id }} .mb-8 { margin-bottom: 2rem; }
+  #ReturnsSection-{{ section.id }} .mb-12 { margin-bottom: 3rem; }
+  #ReturnsSection-{{ section.id }} .mt-2 { margin-top: 0.5rem; }
+  #ReturnsSection-{{ section.id }} .mx-auto { margin-left: auto; margin-right: auto; }
+
+  /* ------------------- COMPONENTS ------------------- */
+  #ReturnsSection-{{ section.id }} .divider {
+    width: 48px;
+    height: 1px;
+    background-color: {{ section.settings.text_color }};
+  }
+
+  #ReturnsSection-{{ section.id }} .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #ReturnsSection-{{ section.id }} .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+  }
+
+  /* Buttons */
+  #ReturnsSection-{{ section.id }} .custom-btn {
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 12px 24px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+  
+  #ReturnsSection-{{ section.id }} .btn-dark {
+    background-color: {{ section.settings.bg_dark }};
+    color: {{ section.settings.text_light }};
+    border: 1px solid {{ section.settings.bg_dark }};
+  }
+  #ReturnsSection-{{ section.id }} .btn-dark:hover { opacity: 0.9; }
+
+  #ReturnsSection-{{ section.id }} .btn-outline {
+    background-color: {{ section.settings.bg_primary }};
+    color: {{ section.settings.text_color }};
+    border: 1px solid {{ section.settings.text_color }};
+  }
+  #ReturnsSection-{{ section.id }} .btn-outline:hover { background-color: {{ section.settings.bg_secondary }}; }
+
+  #ReturnsSection-{{ section.id }} .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+  #ReturnsSection-{{ section.id }} .p-6 { padding: 1.5rem; }
+
+  /* ------------------- LAYOUT GRIDS ------------------- */
+  #ReturnsSection-{{ section.id }} .grid-3 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  #ReturnsSection-{{ section.id }} .grid-2 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  
+  #ReturnsSection-{{ section.id }} .flex-center { display: flex; justify-content: center; align-items: center; }
+  #ReturnsSection-{{ section.id }} .flex-start { display: flex; justify-content: flex-start; align-items: flex-start; }
+  #ReturnsSection-{{ section.id }} .flex-shrink-0 { flex-shrink: 0; }
+  #ReturnsSection-{{ section.id }} .align-center { align-items: center; }
+  #ReturnsSection-{{ section.id }} .gap-4 { gap: 16px; }
+  #ReturnsSection-{{ section.id }} .gap-6 { gap: 24px; }
+  #ReturnsSection-{{ section.id }} .gap-10 { gap: 40px; }
+  #ReturnsSection-{{ section.id }} .space-y-4 > * + * { margin-top: 16px; }
+  #ReturnsSection-{{ section.id }} .space-y-6 > * + * { margin-top: 24px; }
+  #ReturnsSection-{{ section.id }} .space-y-10 > * + * { margin-top: 40px; }
+
+  /* ------------------- ANIMATIONS ------------------- */
+  @keyframes returnsFadeIn { to { opacity: 1; } }
+  @keyframes returnsSlideUp { to { opacity: 1; transform: translateY(0); } }
+
+  #ReturnsSection-{{ section.id }} .fade-in { animation: returnsFadeIn 0.6s ease forwards; opacity: 0; }
+  #ReturnsSection-{{ section.id }} .slide-up { animation: returnsSlideUp 0.5s ease forwards; opacity: 0; transform: translateY(12px); }
+  
+  #ReturnsSection-{{ section.id }} .stagger-1 { animation-delay: 0.05s; }
+  #ReturnsSection-{{ section.id }} .stagger-2 { animation-delay: 0.1s; }
+  #ReturnsSection-{{ section.id }} .stagger-3 { animation-delay: 0.15s; }
+  #ReturnsSection-{{ section.id }} .stagger-4 { animation-delay: 0.2s; }
+
+  /* Hover effect for steps */
+  #ReturnsSection-{{ section.id }} .flex-start:hover .step-circle { transform: scale(1.1); }
+
+  /* ------------------- RESPONSIVE ------------------- */
+  @media (min-width: 768px) {
+    #ReturnsSection-{{ section.id }} .section-padding { padding: 96px 0; }
+    #ReturnsSection-{{ section.id }} .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    #ReturnsSection-{{ section.id }} .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 767px) {
+    #ReturnsSection-{{ section.id }} {
+      margin-top: {{ section.settings.mobile_spacing_above }};
+      margin-bottom: {{ section.settings.mobile_spacing_below }};
+    }
+    #ReturnsSection-{{ section.id }} .custom-title { font-size: 20px; }
+    #ReturnsSection-{{ section.id }} .custom-block-title { font-size: 12px; }
+    #ReturnsSection-{{ section.id }} .custom-btn { font-size: 11px; width: 100%; }
+    #ReturnsSection-{{ section.id }} .flex-col-mobile { flex-direction: column; width: 100%; }
+    
+    #ReturnsSection-{{ section.id }} .container-custom {
+      {% if section.settings.mobile_full_width %}
+        padding: 0 0;
+      {% else %}
+        padding: 0 24px; 
+      {% endif %}
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Retourneren & Omruilen",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Desktop"
+    },
+    {
+      "type": "select",
+      "id": "container_width",
+      "label": "Maximale breedte content",
+      "options": [
+        { "value": "1000px", "label": "Medium" },
+        { "value": "1024px", "label": "Large (Aanbevolen)" },
+        { "value": "100%", "label": "Volledige breedte" }
+      ],
+      "default": "1024px"
+    },
+    {
+      "type": "select",
+      "id": "spacing_above",
+      "label": "Marge boven sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "0px"
+    },
+    {
+      "type": "select",
+      "id": "spacing_below",
+      "label": "Marge onder sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "40px", "label": "Klein" },
+        { "value": "80px", "label": "Normaal" }
+      ],
+      "default": "0px"
+    },
+    {
+      "type": "header",
+      "content": "Layout Mobiel"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_width",
+      "label": "Volledige breedte (geen padding zijkant)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_spacing_above",
+      "label": "Marge boven sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "30px", "label": "Klein" },
+        { "value": "60px", "label": "Normaal" }
+      ],
+      "default": "0px"
+    },
+    {
+      "type": "select",
+      "id": "mobile_spacing_below",
+      "label": "Marge onder sectie",
+      "options": [
+        { "value": "0px", "label": "Geen" },
+        { "value": "30px", "label": "Klein" },
+        { "value": "60px", "label": "Normaal" }
+      ],
+      "default": "0px"
+    },
+    {
+      "type": "header",
+      "content": "Kleuren Lichte Secties"
+    },
+    {
+      "type": "color",
+      "id": "bg_primary",
+      "label": "Achtergrond 1 (Wit)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bg_secondary",
+      "label": "Achtergrond 2 (Lichtgrijs)",
+      "default": "#f5f5f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Titel Kleur (Zwart)",
+      "default": "#1c1917"
+    },
+    {
+      "type": "color",
+      "id": "text_muted",
+      "label": "Subtekst Kleur (Grijs)",
+      "default": "#57534e"
+    },
+    {
+      "type": "header",
+      "content": "Kleuren Donkere Secties"
+    },
+    {
+      "type": "color",
+      "id": "bg_dark",
+      "label": "Achtergrond Donker",
+      "default": "#1c1917"
+    },
+    {
+      "type": "color",
+      "id": "bg_dark_light",
+      "label": "Achtergrond Donkere Box",
+      "default": "#292524"
+    },
+    {
+      "type": "color",
+      "id": "text_light",
+      "label": "Tekstkleur op Donker (Wit)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_dark_muted",
+      "label": "Subtekst op Donker (Lichtgrijs)",
+      "default": "#a8a29e"
+    },
+    {
+      "type": "header",
+      "content": "1. Hero Sectie"
+    },
+    { "type": "text", "id": "hero_title", "label": "Titel", "default": "RETOURNEREN & OMRUILEN" },
+    { "type": "text", "id": "hero_subtitle", "label": "Subtitel", "default": "Niet tevreden? Geen probleem." },
+    { "type": "textarea", "id": "hero_text", "label": "Tekst", "default": "Wij maken het makkelijk voor je. Gratis retourneren, snelle terugbetaling en persoonlijke hulp. Jouw tevredenheid is onze prioriteit." },
+    {
+      "type": "header",
+      "content": "2. USP's (Voordelen)"
+    },
+    { "type": "text", "id": "usp1_title", "label": "Voordeel 1 Titel", "default": "GRATIS RETOUR" },
+    { "type": "text", "id": "usp1_text", "label": "Voordeel 1 Tekst", "default": "Altijd gratis retourneren binnen Nederland & België" },
+    { "type": "text", "id": "usp2_title", "label": "Voordeel 2 Titel", "default": "SNELLE VERWERKING" },
+    { "type": "text", "id": "usp2_text", "label": "Voordeel 2 Tekst", "default": "Geld terug binnen 3-10 werkdagen" },
+    { "type": "text", "id": "usp3_title", "label": "Voordeel 3 Titel", "default": "30 DAGEN BEDENKTIJD" },
+    { "type": "text", "id": "usp3_text", "label": "Voordeel 3 Tekst", "default": "Ruim de tijd om te beslissen" },
+    {
+      "type": "header",
+      "content": "3. Knoppen Sectie 1"
+    },
+    { "type": "text", "id": "cta1_title", "label": "Titel", "default": "Wil je direct een retour aanmelden?" },
+    { "type": "text", "id": "cta1_btn1_text", "label": "Knop 1 Tekst (Zwart)", "default": "RETOUR AANMELDEN" },
+    { "type": "url", "id": "cta1_btn1_link", "label": "Knop 1 Link" },
+    { "type": "text", "id": "cta1_btn2_text", "label": "Knop 2 Tekst (Wit)", "default": "WHATSAPP HULP" },
+    { "type": "url", "id": "cta1_btn2_link", "label": "Knop 2 Link" },
+    {
+      "type": "header",
+      "content": "4. Het Retourproces"
+    },
+    { "type": "text", "id": "steps_super", "label": "Kleine Boven Titel", "default": "Het Retourproces" },
+    { "type": "text", "id": "steps_title", "label": "Titel", "default": "Zo makkelijk retourneer je" },
+    { "type": "text", "id": "steps_sub", "label": "Ondertitel", "default": "In 3 simpele stappen" },
+    { "type": "text", "id": "step1_title", "label": "Stap 1 Titel", "default": "STUUR ONS EEN BERICHTJE" },
+    { "type": "textarea", "id": "step1_text", "label": "Stap 1 Tekst", "default": "Geef je bestelnummer door via email of WhatsApp. Wij regelen de rest en sturen je een gratis retourlabel toe." },
+    { "type": "text", "id": "step2_title", "label": "Stap 2 Titel", "default": "VERPAK HET ARTIKEL" },
+    { "type": "textarea", "id": "step2_text", "label": "Stap 2 Tekst", "default": "Zorg ervoor dat het artikel ongedragen is met labels er nog aan. Verpak het terug in de originele doos - dat is alles wat we vragen." },
+    { "type": "text", "id": "step3_title", "label": "Stap 3 Titel", "default": "BRENG HET NAAR POST NL" },
+    { "type": "textarea", "id": "step3_text", "label": "Stap 3 Tekst", "default": "Gebruik het gratis retourlabel en breng het pakket naar PostNL. Volledig gratis, geen kosten voor jou." },
+    {
+      "type": "header",
+      "content": "5. Retourbeleid"
+    },
+    { "type": "text", "id": "policy_super", "label": "Kleine Boven Titel", "default": "Ons Retourbeleid" },
+    { "type": "text", "id": "policy_title", "label": "Titel", "default": "Wat je moet weten.." },
+    { "type": "text", "id": "policy1_title", "label": "Beleid 1 Titel", "default": "RUIME BEDENKTIJD" },
+    { "type": "textarea", "id": "policy1_text", "label": "Beleid 1 Tekst", "default": "Je hebt volledige 30 dagen om te beslissen of je tevreden bent met je aankoop. Geen haast, geen stress." },
+    { "type": "text", "id": "policy2_title", "label": "Beleid 2 Titel", "default": "EENVOUDIGE VOORWAARDEN" },
+    { "type": "textarea", "id": "policy2_text", "label": "Beleid 2 Tekst", "default": "Zorg ervoor dat artikelen ongedragen zijn met labels er nog aan. Dat is alles!" },
+    {
+      "type": "header",
+      "content": "6. Verwerking & Omruilen"
+    },
+    { "type": "text", "id": "process_title", "label": "Titel Verwerking", "default": "VERWERKING" },
+    { "type": "text", "id": "process1_title", "label": "Kopje 1", "default": "Verwerkingstijd" },
+    { "type": "textarea", "id": "process1_text", "label": "Tekst 1", "default": "Zodra wij je retour ontvangen, controleren wij de artikelen binnen 2 werkdagen." },
+    { "type": "text", "id": "process2_title", "label": "Kopje 2", "default": "Terugbetaling" },
+    { "type": "textarea", "id": "process2_text", "label": "Tekst 2", "default": "Na goedkeuring wordt het bedrag binnen 3-10 werkdagen teruggestort." },
+    { "type": "text", "id": "exchange_title", "label": "Titel Omruilen", "default": "OMRUILEN" },
+    { "type": "text", "id": "exchange1_title", "label": "Kopje 1", "default": "Andere maat/kleur" },
+    { "type": "textarea", "id": "exchange1_text", "label": "Tekst 1", "default": "Volg het retourproces en plaats tegelijkertijd een nieuwe bestelling." },
+    { "type": "text", "id": "exchange2_title", "label": "Kopje 2", "default": "Snelle omruil" },
+    { "type": "textarea", "id": "exchange2_text", "label": "Tekst 2", "default": "Voor een snellere omruil kun je contact opnemen via WhatsApp." },
+    {
+      "type": "header",
+      "content": "7. Klantenservice (Donkere Sectie)"
+    },
+    { "type": "text", "id": "service_super", "label": "Kleine Boven Titel", "default": "Onze Service" },
+    { "type": "text", "id": "service_title", "label": "Titel", "default": "Wij zijn er voor je" },
+    { "type": "text", "id": "service_sub", "label": "Subtitel (Italic)", "default": "Persoonlijke hulp altijd beschikbaar." },
+    { "type": "textarea", "id": "service_text", "label": "Tekst", "default": "Twijfel je nog of heb je vragen? Stuur ons een berichtje via email of WhatsApp." },
+    { "type": "text", "id": "service_email", "label": "E-mailadres", "default": "info@nouvelthelabel.com" },
+    { "type": "text", "id": "service_wa_display", "label": "WhatsApp weergave nummer", "default": "+31 6 22344310" },
+    { "type": "text", "id": "service_wa_clean", "label": "WhatsApp nummer (Zonder spaties of +)", "default": "31622344310" },
+    {
+      "type": "header",
+      "content": "8. Knoppen Sectie 2 (Onderaan)"
+    },
+    { "type": "text", "id": "cta2_super", "label": "Kleine Boven Titel", "default": "Klaar?" },
+    { "type": "text", "id": "cta2_title", "label": "Titel", "default": "Klaar om zorgeloos te shoppen?" },
+    { "type": "text", "id": "cta2_btn1_text", "label": "Knop 1 Tekst (Zwart)", "default": "BEKIJK COLLECTIE" },
+    { "type": "url", "id": "cta2_btn1_link", "label": "Knop 1 Link" },
+    { "type": "text", "id": "cta2_btn2_text", "label": "Knop 2 Tekst (Wit)", "default": "STEL EEN VRAAG" },
+    { "type": "url", "id": "cta2_btn2_link", "label": "Knop 2 Link" }
+  ],
+  "presets": [
+    {
+      "name": "Retourneren & Omruilen",
+      "category": "Aangepast"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,188 @@
+<!-- sections/login.liquid -->
+
+{%- liquid
+  assign reset_instructions_t = 'customer.login.reset_instructions_html' | t
+  assign title_t = 'customer.login.page_title' | t
+  assign email_t = 'customer.login.email' | t
+  assign password_t = 'customer.login.password' | t
+  assign forgot_password_t = 'customer.login.forgot_password' | t
+  assign sign_in_t = 'customer.login.sign_in' | t
+  assign new_account_t = 'customer.login.new_account' | t
+  assign reset_password_t = 'customer.login.reset_password' | t
+  assign guest_title_t = 'customer.login.guest_title' | t
+  assign guest_continue_t = 'customer.login.guest_continue' | t
+  assign submit_t = 'customer.login.submit' | t
+  assign cancel_t = 'customer.login.cancel' | t
+-%}
+
+<div
+  class="customer--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="none"
+  data-container-width="2"
+  data-spacing-above="large"
+  data-spacing-below="large"
+  data-mobile-spacing-above="large"
+  data-mobile-spacing-below="large"
+>
+  <div class="customer--wrapper">
+    <div class="customer--login">
+      <p class="account--reset" data-item="paragraph">
+        {{- reset_instructions_t -}}
+      </p>
+      <h1
+        data-item="section-heading"
+        {% unless settings.transitions--text %}
+          data-transition-item="viewport"
+          data-transition-type="slide-in"
+        {% endunless %}
+      >
+        {{- title_t -}}
+      </h1>
+
+      {%- form 'customer_login' -%}
+        {{- form.errors | default_errors -}}
+
+        <label for="customer_email" class="label" data-item="nav-text">
+          {{- email_t -}}
+        </label>
+        <input
+          class="text"
+          type="email"
+          value=""
+          name="customer[email]"
+          id="customer_email"
+          autocomplete="email"
+          required
+        />
+
+        {%- if form.password_needed -%}
+          <label for="customer_password" class="label" data-item="nav-text">
+            {{- password_t -}}
+          </label>
+          <input
+            class="text"
+            type="password"
+            value=""
+            name="customer[password]"
+            id="customer_password"
+            size="16"
+            autocomplete="current-password"
+            required
+          />
+          <p class="account--forgot-password" data-item="block-link">
+            <a href="#" onclick="showRecoverForm(true);return false;">
+              {{- forgot_password_t -}}
+            </a>
+          </p>
+        {%- endif -%}
+
+        <div class="account--button-container">
+          <button
+            class="account--sign-in"
+            data-item="button-1"
+            data-text="{{- sign_in_t -}}"
+            value="{{ sign_in_t }}"
+            type="submit"
+          >
+            <span>{{- sign_in_t -}}</span>
+          </button>
+          <a
+            class="account--register"
+            href="{{ routes.account_register_url }}"
+            data-item="button-3"
+            data-text="{{ new_account_t }}"
+          >
+            <div>{{ new_account_t }}</div>
+          </a>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <div class="account--recover-password" style="display:none;">
+      <h1
+        data-item="section-heading"
+        {% unless settings.transitions--text %}
+          data-transition-item="viewport"
+          data-transition-type="slide-in"
+        {% endunless %}
+      >
+        {{- reset_password_t -}}
+      </h1>
+      <p class="account--reset-instructions" data-item="paragraph">
+        {{- reset_instructions_t -}}
+      </p>
+
+      {%- form 'recover_customer_password' -%}
+        {{- form.errors | default_errors -}}
+
+        <label for="email" class="label" data-item="nav-text">
+          {{- email_t -}}
+        </label>
+        <input
+          class="text"
+          type="email"
+          value=""
+          size="30"
+          name="email"
+          id="recover-email"
+          required
+        />
+
+        <div class="account--password-buttons">
+          <button
+            class="account--submit"
+            type="submit"
+            data-item="button-1"
+            data-text="{{- submit_t -}}"
+            value="{{ submit_t }}"
+          >
+            <span>{{- submit_t -}}</span>
+          </button>
+          <a
+            data-item="block-link"
+            class="account--cancel"
+            href="#"
+            onclick="showRecoverForm(false);return false;"
+          >
+            <span>{{- cancel_t -}}</span>
+          </a>
+        </div>
+
+        {%- if form.posted_successfully? -%}
+          <script>window.location.hash = '#recover-successful';</script>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    {%- if shop.checkout.guest_login -%}
+      <div id="guest" class="columns">
+        <h1
+          data-item="section-heading"
+          {% unless settings.transitions--text %}
+            data-transition-item="viewport"
+            data-transition-type="slide-in"
+          {% endunless %}
+        >
+          {{ guest_title_t }}
+        </h1>
+
+        {%- form 'guest_login' -%}
+          <input class="button-1" type="submit" value="{{ guest_continue_t }}" />
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script type="text/javascript">
+  showRecoverForm = (toggle) => {
+    document.querySelector('.account--recover-password').style.display = toggle ? 'block' : 'none';
+    document.querySelector('.customer--login').style.display = toggle ? 'none' : 'block';
+  }
+
+  if (window.location.hash === '#recover')
+    showRecoverForm(true);
+  else if (window.location.hash === '#recover-successful')
+    document.querySelector('.account--reset').style.display = 'block';
+</script>

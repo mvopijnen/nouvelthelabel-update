@@ -1,0 +1,667 @@
+{% comment %}
+  Nouvel Editorial Collection Section - FULLY OPTIMIZED
+  Inspired by Nouvel Brand Language Codex v1.0
+  Layout: Staggered Editorial Grid (Products 01-04+)
+{% endcomment %}
+
+{% unless section.settings.use_theme_fonts %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+{% endunless %}
+
+<style>
+  .nouvel-collection-{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color }};
+    --title-color: {{ section.settings.title_color }};
+    --desc-color: {{ section.settings.desc_color }};
+    --active-color: {{ section.settings.active_color }};
+    --line-color: {{ section.settings.line_color }};
+    
+    --section-title-size: {{ section.settings.section_title_size }}px;
+    --section-desc-size: {{ section.settings.section_desc_size }}px;
+    --prod-title-size: {{ section.settings.prod_title_size }}px;
+    --prod-body-size: {{ section.settings.prod_body_size }}px;
+    --meta-size: {{ section.settings.meta_size }}px;
+    --price-size: {{ section.settings.price_size }}px;
+    --button-size: {{ section.settings.button_size }}px;
+    --badge-title-size: {{ section.settings.badge_title_size }}px;
+    --badge-value-size: {{ section.settings.badge_value_size }}px;
+    
+    background-color: var(--bg-color);
+    padding: {{ section.settings.padding_vertical }}px 20px;
+    overflow: hidden;
+    
+    /* Performance: Browser optimization for rendering large sections */
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 1000px;
+    
+    {% unless section.settings.use_theme_fonts %}
+      font-family: Arial, sans-serif;
+    {% endunless %}
+  }
+
+  .nouvel-collection-container {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+
+  /* Section Header */
+  .nouvel-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 120px;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-section-header {
+      flex-direction: row;
+      gap: 80px;
+      align-items: flex-start;
+    }
+  }
+
+  .nouvel-vertical-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: var(--meta-size);
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: var(--desc-color);
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  .nouvel-header-content {
+    max-width: 800px;
+  }
+
+  .nouvel-section-title {
+    font-size: calc(var(--section-title-size) * 0.7);
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 0 32px 0;
+    color: var(--title-color);
+    {% unless section.settings.use_theme_fonts %}
+      font-family: "Playfair Display", serif;
+    {% endunless %}
+  }
+
+  .nouvel-section-title em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-section-title {
+      font-size: var(--section-title-size);
+    }
+  }
+
+  .nouvel-section-desc {
+    font-size: var(--section-desc-size);
+    line-height: 1.6;
+    font-weight: 300;
+    color: var(--desc-color);
+    max-width: 500px;
+  }
+
+  /* Product List */
+  .nouvel-product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-product-list {
+      gap: 200px;
+    }
+  }
+
+  .nouvel-product-item {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-product-item {
+      flex-direction: row;
+      align-items: center;
+      gap: 100px;
+    }
+    .nouvel-product-item.is-reversed {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .nouvel-prod-image-wrapper {
+    flex: 1;
+    position: relative;
+  }
+
+  .nouvel-prod-image-container {
+    aspect-ratio: {{ section.settings.aspect_ratio }};
+    overflow: hidden;
+    background-color: #f0f0f0;
+  }
+
+  .nouvel-prod-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.2, 1, 0.3, 1);
+    display: block;
+  }
+
+  .nouvel-prod-image-wrapper:hover img {
+    transform: scale(1.08);
+  }
+
+  /* Material Badge */
+  .nouvel-prod-badge {
+    position: absolute;
+    bottom: -10px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 15px 20px;
+    z-index: 2;
+    min-width: 140px;
+  }
+
+  .nouvel-product-item:not(.is-reversed) .nouvel-prod-badge {
+    right: 0;
+  }
+  .nouvel-product-item.is-reversed .nouvel-prod-badge {
+    left: 0;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-prod-badge {
+      bottom: 20px;
+      padding: 25px 35px;
+      min-width: 200px;
+    }
+    .nouvel-product-item:not(.is-reversed) .nouvel-prod-badge {
+      right: -40px;
+    }
+    .nouvel-product-item.is-reversed .nouvel-prod-badge {
+      left: -40px;
+    }
+  }
+
+  .nouvel-badge-label {
+    font-size: calc(var(--badge-title-size) * 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 4px;
+    opacity: 0.8;
+    font-weight: 700;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-badge-label {
+      font-size: var(--badge-title-size);
+      margin-bottom: 8px;
+    }
+  }
+
+  .nouvel-badge-value {
+    font-size: calc(var(--badge-value-size) * 0.8);
+    font-weight: 300;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-badge-value {
+      font-size: var(--badge-value-size);
+    }
+  }
+
+  /* Product Content */
+  .nouvel-prod-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-prod-content {
+      gap: 32px;
+    }
+    .nouvel-product-item:not(.is-reversed) .nouvel-prod-content {
+      padding-right: 50px;
+    }
+    .nouvel-product-item.is-reversed .nouvel-prod-content {
+      padding-left: 50px;
+    }
+  }
+
+  .nouvel-prod-meta {
+    font-size: var(--meta-size);
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: var(--desc-color);
+    opacity: 0.7;
+  }
+
+  .nouvel-prod-title {
+    font-size: calc(var(--prod-title-size) * 0.8);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+    color: var(--title-color);
+    {% unless section.settings.use_theme_fonts %}
+      font-family: "Playfair Display", serif;
+    {% endunless %}
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-prod-title {
+      font-size: var(--prod-title-size);
+    }
+  }
+
+  .nouvel-prod-desc {
+    font-size: calc(var(--prod-body-size) * 0.9);
+    line-height: 1.6;
+    font-weight: 300;
+    color: var(--desc-color);
+    max-width: 500px;
+  }
+
+  @media (min-width: 768px) {
+    .nouvel-prod-desc {
+      font-size: var(--prod-body-size);
+    }
+  }
+
+  .nouvel-prod-footer {
+    padding-top: 32px;
+    border-top: 1px solid var(--line-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .nouvel-prod-price {
+    font-size: var(--price-size);
+    font-weight: 300;
+    color: var(--title-color);
+  }
+
+  .nouvel-prod-cta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: var(--title-color);
+    text-transform: uppercase;
+    font-size: var(--button-size);
+    letter-spacing: 0.4em;
+    transition: opacity 0.3s ease;
+  }
+
+  .nouvel-prod-cta:hover {
+    opacity: 0.7;
+  }
+
+  .nouvel-plus-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--active-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+
+  .nouvel-prod-cta:hover .nouvel-plus-circle {
+    background-color: var(--active-color);
+    color: var(--bg-color);
+    transform: rotate(90deg);
+  }
+</style>
+
+{%- capture sizes -%}
+  (min-width: 1800px) 800px, (min-width: 768px) 50vw, 100vw
+{%- endcapture -%}
+
+<section class="nouvel-collection-{{ section.id }}">
+  <div class="nouvel-collection-container">
+    
+    <!-- Header -->
+    <div class="nouvel-section-header">
+      <div class="nouvel-vertical-label">
+        {{ section.settings.vertical_label }}
+      </div>
+      <div class="nouvel-header-content">
+        <h2 class="nouvel-section-title">
+          {{ section.settings.title | replace: '*', '<em>' | replace: '#', '</em>' }}
+        </h2>
+        <div class="nouvel-section-desc">
+          {{ section.settings.description }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="nouvel-product-list">
+      {% for block in section.blocks %}
+        {% assign is_reversed = false %}
+        {% assign mod = forloop.index | modulo: 2 %}
+        {% if mod == 0 %}
+          {% assign is_reversed = true %}
+        {% endif %}
+
+        <div class="nouvel-product-item {% if is_reversed %}is-reversed{% endif %}" {{ block.shopify_attributes }}>
+          
+          <!-- Image Part -->
+          <div class="nouvel-prod-image-wrapper">
+            <div class="nouvel-prod-image-container">
+              {% if block.settings.image != blank %}
+                {%- assign loading_attr = 'lazy' -%}
+                {%- assign priority_attr = 'auto' -%}
+                {%- if forloop.first -%}
+                  {%- assign loading_attr = 'eager' -%}
+                  {%- assign priority_attr = 'high' -%}
+                {%- endif -%}
+
+                {{ block.settings.image | image_url: width: 1500 | image_tag:
+                  widths: '375, 550, 750, 1100, 1500',
+                  sizes: sizes,
+                  loading: loading_attr,
+                  fetchpriority: priority_attr,
+                  alt: block.settings.title,
+                  class: 'nouvel-optimized-img'
+                }}
+              {% else %}
+                {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+            
+            {% if block.settings.material != blank %}
+              <div class="nouvel-prod-badge">
+                <div class="nouvel-badge-label">Materiaal</div>
+                <div class="nouvel-badge-value">{{ block.settings.material }}</div>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Content Part -->
+          <div class="nouvel-prod-content">
+            <div class="nouvel-prod-meta">
+              0{{ forloop.index }} / Product
+            </div>
+            
+            <h3 class="nouvel-prod-title">
+              {{ block.settings.title }}
+            </h3>
+
+            <div class="nouvel-prod-desc">
+              {{ block.settings.description }}
+            </div>
+
+            <div class="nouvel-prod-footer">
+              <div class="nouvel-prod-price">{{ block.settings.price }}</div>
+              <a href="{{ block.settings.link }}" class="nouvel-prod-cta">
+                <span>Toevoegen</span>
+                <div class="nouvel-plus-circle">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Nouvel Editorial Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Sectie Header"
+    },
+    {
+      "type": "text",
+      "id": "vertical_label",
+      "label": "Verticale Label",
+      "default": "01 / COLLECTIE"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Sectie Titel",
+      "info": "Gebruik *tekst# voor cursief (bijv. Minder, maar *beter#)",
+      "default": "Minder, maar *beter#."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Sectie Beschrijving",
+      "default": "Een fundament van investment pieces voor vrouwen die weinig kopen, maar goed kopen."
+    },
+    {
+      "type": "header",
+      "content": "Typografie Groottes"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_theme_fonts",
+      "label": "Gebruik Thema Lettertypes",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "min": 40,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "label": "Sectie Titel grootte",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_desc_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Sectie Beschrijving grootte",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "prod_title_size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Product Titel grootte",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "prod_body_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Product Body grootte",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "meta_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Meta/Label grootte",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Prijs grootte",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Knop tekst grootte",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_title_size",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Materiaal Label grootte",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_value_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Materiaal Waarde grootte",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Lay-out & Kleuren"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Beeldverhouding Producten",
+      "options": [
+        { "value": "4/5", "label": "4:5 (Portret)" },
+        { "value": "1/1", "label": "1:1 (Vierkant)" }
+      ],
+      "default": "4/5"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Achtergrondkleur",
+      "default": "#FAFAF9"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Titel kleur",
+      "default": "#1C1917"
+    },
+    {
+      "type": "color",
+      "id": "desc_color",
+      "label": "Tekst kleur",
+      "default": "#57534E"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Accent kleur (Knop/Lijnen)",
+      "default": "#1C1917"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Lijn kleur",
+      "default": "#E7E5E4"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Verticale Spatiëring",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product Afbeelding"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Product Naam"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Beschrijving",
+          "default": "Korte beschrijving van het product."
+        },
+        {
+          "type": "text",
+          "id": "material",
+          "label": "Materiaal",
+          "default": "High-Performance Crêpe"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Prijs",
+          "default": "€420"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Product Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nouvel Editorial Grid",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

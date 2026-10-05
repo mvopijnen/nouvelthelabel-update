@@ -1,0 +1,622 @@
+<!-- sections/footer.liquid -->
+
+{%- liquid
+  assign navigation_t = 'layout.footer.navigation' | t
+
+  assign bg_color = section.settings.background-color
+  assign border = section.settings.border
+  assign heading_type = section.settings.heading-type
+  assign nav_font_size = section.settings.nav-font-size
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign mobile_text_alignment = section.settings.mobile-text-alignment
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign text_color = section.settings.text-color
+-%}
+
+<div
+  class="footer--root"
+  data-section-id="{{ section.id }}"
+  data-section-type="footer"
+  data-background-color="{{ bg_color }}"
+  data-border="{{ border }}"
+  data-container-width="5"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-mobile-x-alignment="{{ mobile_text_alignment }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  data-text-color="{{ text_color }}"
+  style="--font--nav--size:{{ nav_font_size }}px;"
+>
+  <div class="footer--wrapper">
+    {%- for block in section.blocks -%}
+      <div
+        class="footer--block"
+        data-block-type="{{ block.type }}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="footer--block--container" data-container="block">
+          {%- case block.type -%}
+            {%- when 'about' -%}
+              {%- unless block.settings.about-title == blank -%}
+                <div class="footer--block--heading" data-item="{{ heading_type }}">
+                  {{- block.settings.about-title | escape -}}
+                </div>
+              {%- endunless -%}
+
+              {%- unless block.settings.text == blank -%}
+                <div class="footer--about-text" data-item="rte-content">
+                  {%- assign current_year = 'now' | date: '%Y' -%}
+                  {{- block.settings.text | replace: '[current_year]', current_year -}}
+                </div>
+              {%- endunless -%}
+
+              {%- liquid
+                if section.settings.enable-follow-on-shop
+                  echo shop | login_button: action: 'follow'
+                endif
+              -%}
+
+            {%- when 'menu' -%}
+              {%- liquid
+                assign collapsible_row_enabled = block.settings.collapsible-row-enabled
+                assign linklist = linklists[block.settings.menu]
+                assign show_policy_links = block.settings.show-policy-links
+              -%}
+
+              {%- unless block.settings.menu-title == blank -%}
+                <div
+                  class="footer--block--heading"
+                  data-item="{{ heading_type }}"
+                  {% if collapsible_row_enabled %}
+                    data-mq="medium-large"
+                  {% endif %}
+                >
+                  {{- block.settings.menu-title | escape -}}
+                </div>
+              {%- endunless -%}
+
+              {%- capture block_list -%}
+                {%- if linklist.links.size > 0 or show_policy_links -%}
+                  <ul class="footer--menu" aria-label="{{ navigation_t }}">
+                    {%- for link in linklist.links -%}
+                      <li>
+                        {%- if link.url == routes.search_url -%}
+                          <div
+                            data-drawer-open="top"
+                            data-drawer-view="search"
+                            tabindex="0"
+                            data-item="sub-nav-text"
+                          >
+                            {{- link.title -}}
+                          </div>
+                        {%- else -%}
+                          <a href="{{ link.url }}" data-item="sub-nav-text">
+                            {{- link.title -}}
+                          </a>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+
+                    {%- if show_policy_links -%}
+                      {%- for policy in shop.policies -%}
+                        {%- unless policy == blank -%}
+                          <li>
+                            <a href="{{ policy.url }}" data-item="sub-nav-text">
+                              {{- policy.title -}}
+                            </a>
+                          </li>
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    {%- endif -%}
+                  </ul>
+                {%- endif -%}
+              {%- endcapture -%}
+
+              <div
+                class="footer--menu-container"
+                {% if collapsible_row_enabled %}
+                  data-mq="medium-large"
+                {% endif %}
+              >
+                {{- block_list -}}
+              </div>
+
+              {%- if collapsible_row_enabled -%}
+                <div class="footer--menu-container" data-mq="small">
+                  {%- assign heading = block.settings.menu-title | default: linklist.title -%}
+                  {%-
+                    render 'collapsible-row',
+                    description: block_list,
+                    description_type: 'sub-nav-text',
+                    heading: heading,
+                    id: block.id,
+                    text_color: text_color
+                  -%}
+                </div>
+              {%- endif -%}
+
+            {%- when 'subscribe' -%}
+              {%- unless block.settings.heading == blank -%}
+                <div class="footer--block--heading" data-item="{{ heading_type }}">
+                  {{ block.settings.heading }}
+                </div>
+              {%- endunless -%}
+
+              {%- unless block.settings.description == blank -%}
+                <div class="footer--subscribe-info" data-item="rte-content">
+                  {{- block.settings.description -}}
+                </div>
+              {%- endunless -%}
+
+              {%- liquid
+                render 'subscribe-form', id: 'footer', button_style: block.settings.button-style
+
+                if block.settings.show-social-icons
+                  render 'social-media', type: 'follow', alignment: 'left', mobile_alignment: mobile_text_alignment
+                endif
+              -%}
+
+            {%- when 'liquid' -%}
+              {{- block.settings.custom-liquid -}}
+
+          {%- endcase -%}
+        </div>
+      </div>
+    {%- endfor -%}
+
+    {%- if section.blocks.size == 0 -%}
+      <div class="footer--noblocks">
+        {{- 'sections.onboarding.no_content' | t -}}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer--wrapper {
+    display: flex;
+    gap: var(--spacing--block);
+    justify-content: space-between;
+
+    @media (max-width: 767px) {
+      flex-wrap: wrap;
+    }
+
+    .social-media--root {
+      padding-top: var(--spacing--item);
+    }
+  }
+
+  .footer--block {
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 767px) {
+      flex: 1 1 100%;
+      text-align: var(--text-alignment);
+      align-items: var(--x-alignment);
+
+      &[data-block-type='menu']:has(.collapsible-row--root)
+        + &[data-block-type='menu']:has(.collapsible-row--root) {
+        margin-top: var(--spacing--neg-block);
+      }
+    }
+
+    @media (min-width: 768px) {
+      &[data-block-type='subscribe'] {
+        min-width: 280px;
+      }
+
+      &[data-block-type='about'] {
+        max-width: 400px;
+      }
+
+      &:not(:last-child) {
+        flex: 0 1 auto;
+      }
+
+      &:last-child {
+        flex: 0 3 auto;
+        align-items: flex-end;
+      }
+    }
+  }
+
+  .footer--block--container {
+    .footer--block[data-block-type='subscribe'] & {
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .footer--block[data-block-type='subscribe'] & {
+        max-width: 320px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .footer--block[data-block-type='menu'] & {
+        width: 100%;
+      }
+    }
+  }
+
+  .footer--menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing--1);
+  }
+
+  .footer--block--heading[data-item='nav-text'] {
+    --font--size: var(--font--button--size);
+  }
+
+  [data-item='sub-nav-text'],
+  [data-item='rte-content'] {
+    --font--size: var(--font--nav--size);
+  }
+
+  .footer--noblocks {
+    width: 100%;
+    padding: var(--spacing--item);
+
+    @media (max-width: 767px) {
+      text-align: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section--footer",
+  "tag": "footer",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "border",
+      "label": "Border",
+      "type": "select",
+      "options": [
+        {
+          "label": "Top",
+          "value": "top"
+        },
+        {
+          "label": "Bottom",
+          "value": "bottom"
+        },
+        {
+          "label": "Both",
+          "value": "both"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "background-color",
+      "label": "Background color",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "accent-1"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable-follow-on-shop",
+      "label": "Enable Follow on Shop",
+      "default": true,
+      "info": "To allow customers to follow your store on the Shop app from your storefront, Shop Pay must be enabled. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/customizing-themes\/follow-on-shop)."
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        { "label": "Medium", "value": "block-heading" },
+        { "label": "Small", "value": "nav-text" }
+      ],
+      "default": "block-heading"
+    },
+    {
+      "id": "nav-font-size",
+      "label": "Navigation font size",
+      "type": "range",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "id": "text-color",
+      "label": "Text color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "mobile-text-alignment",
+      "label": "Text alignment",
+      "type": "text_alignment",
+      "default": "left"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "about",
+      "name": "About and copyright",
+      "settings": [
+        {
+          "type": "text",
+          "id": "about-title",
+          "label": "Title",
+          "default": "About the store"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description and copyright",
+          "default": "<p>[current_year] © Your brand name here.<br><br>A brief store summary, tagline, or vision statement.<p>",
+          "info": "Inserting the text '[current_year]' will automatically insert the current year."
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu-title",
+          "label": "Title",
+          "default": "Quick links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer",
+          "info": "This menu won't show submenu items."
+        },
+        {
+          "type": "checkbox",
+          "id": "show-policy-links",
+          "label": "Show policy links",
+          "default": true,
+          "info": "To add store policies, go to your [policy settings](\/admin\/settings\/legal)."
+        },
+        {
+          "type": "header",
+          "content": "Mobile"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible-row-enabled",
+          "label": "Show as collapsible row",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "subscribe",
+      "name": "Subscribe",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "heading",
+          "label": "Newsletter heading",
+          "type": "text",
+          "default": "Newsletter"
+        },
+        {
+          "id": "description",
+          "label": "Newsletter information",
+          "type": "richtext",
+          "default": "<p>Be the first to receive updates on new arrivals, special promos and sales.</p>"
+        },
+        {
+          "id": "button-style",
+          "label": "Button style",
+          "type": "select",
+          "options": [
+            { "label": "Style 1", "value": "button-1" },
+            { "label": "Style 2", "value": "button-2" },
+            { "label": "Style 3", "value": "button-3" },
+            { "label": "Style 4", "value": "button-4" }
+          ],
+          "default": "button-1"
+        },
+        {
+          "type": "checkbox",
+          "id": "show-social-icons",
+          "label": "Show social icons",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "liquid",
+      "name": "Custom liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom-liquid",
+          "label": "Custom Liquid",
+          "info": "Add app snippets or other Liquid code to create advanced customizations."
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

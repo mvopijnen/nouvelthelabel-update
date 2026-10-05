@@ -1,0 +1,454 @@
+<!-- sections/main-article.liquid -->
+
+{%- liquid
+  assign written_by_t = 'blog.article.written_by' | t
+  assign tagged_in_t = 'blog.article.tagged_in' | t
+  assign share_t = 'general.social.share' | t
+
+  assign container_width = section.settings.container-width
+  assign email_enabled = section.settings.email-enabled
+  assign facebook_enabled = section.settings.facebook-enabled
+  assign heading_alignment = section.settings.heading-alignment
+  assign heading_type = section.settings.heading-type
+  assign hidden_tags = settings.hide-tags | split: ','
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign number_of_tags = 0
+  assign pinterest_enabled = section.settings.pinterest-enabled
+  assign show_date = section.settings.show-date
+  assign show_author = section.settings.show-author
+  assign show_tags = section.settings.show-tags
+  assign show_title = section.settings.show-title
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign url_enabled = section.settings.url-enabled
+  assign x_enabled = section.settings.x-enabled
+
+  assign show_share = false
+  if facebook_enabled or x_enabled or pinterest_enabled or email_enabled or url_enabled
+    assign show_share = true
+  endif
+-%}
+
+{%- capture render_tags -%}
+  {%- for tag in article.tags -%}
+    {%- liquid
+      assign temp_tag = tag | downcase | escape
+      assign skip = false
+
+      for hidden_tag in hidden_tags
+        assign formatted_hidden_tag = hidden_tag | downcase | escape | strip
+        if temp_tag == formatted_hidden_tag
+          assign skip = true
+          break
+        endif
+      endfor
+
+      if skip
+        continue
+      endif
+
+      assign number_of_tags = number_of_tags | plus: 1
+    -%}
+
+    <li class="article--tag">
+      <a href="{{ blog.url }}/tagged/{{ tag | handle }}">
+        {{- tag | capitalize -}}
+      </a>
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- liquid
+  if number_of_tags == 0
+    assign show_tags = false
+  endif
+-%}
+
+<article
+  class="article--root"
+  data-section-id="{{ section.id }}"
+  data-background-color="none"
+  data-container-width="{{ container_width }}"
+  data-mobile-spacing-above="{{ mobile_spacing_above }}"
+  data-mobile-spacing-below="{{ mobile_spacing_below }}"
+  data-spacing-above="{{ spacing_above }}"
+  data-spacing-below="{{ spacing_below }}"
+  data-show-author="{{ show_author }}"
+  data-show-date="{{ show_date }}"
+>
+  <div class="article--wrapper" data-container="section">
+    {%- if show_title or show_date or show_author -%}
+      <div
+        class="article--heading"
+        data-container="block"
+        data-x-alignment="{{ heading_alignment }}"
+        {% unless settings.transitions--text %}
+          data-transition-container="{{ section.id }}"
+          data-transition-type="slide-in"
+          data-transition-cascade="vertical"
+          data-transition-cascade-interval="500"
+        {% endunless %}
+      >
+        {%- if show_title -%}
+          <div class="article--header--info" data-container="block">
+            <h1
+              class="article--title"
+              data-item="{{ heading_type }}"
+              {% unless settings.transitions--text %}
+                data-transition-item="{{ section.id }}"
+              {% endunless %}
+            >
+              {{- article.title -}}
+            </h1>
+          </div>
+        {%- endif -%}
+
+        {%- if show_date or show_author -%}
+          <div
+            class="article--info"
+            {% unless settings.transitions--text %}
+              data-transition-item="{{ section.id }}"
+            {% endunless %}
+          >
+            {%- if show_date -%}
+              <div class="article--timesince" data-item="nav-text" data-text-color="gray">
+                {%- render 'utils', name: 'timesince', created_at: article.published_at -%}
+              </div>
+            {%- endif -%}
+
+            {%- if show_date and show_author -%}
+              <span class="article--dot" data-mq="medium-large">&CenterDot;</span>
+            {%- endif -%}
+
+            {%- if show_author -%}
+              <div class="article--author" data-item="caption">
+                {{- written_by_t }} {{ article.author -}}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if article.content.size > 0 -%}
+      <div class="article--content" data-container="block" data-item="rte-content">
+        {{- article.content -}}
+      </div>
+    {%- endif -%}
+
+    {%- if show_share or show_tags -%}
+      <div class="article--navigation" >
+        {%- if show_tags -%}
+          <div class="article--tag-info" data-container="block">
+            <h3 class="article--tagged-in" data-item="nav-text">
+              {{- tagged_in_t -}}
+            </h3>
+
+            <ul class="article--tags" data-item="paragraph">
+              {{- render_tags -}}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- if show_share -%}
+          <div class="article--share">
+            {%-
+              render 'social-media',
+              type: 'share',
+              alignment: 'right',
+              mobile_alignment: 'right',
+              heading: share_t,
+              social_settings: section.settings
+            -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .article--heading {
+    width: 100%;
+  }
+
+  .article--header--info {
+    width: 100%;
+  }
+
+  .article--info {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing--1);
+    align-items: center;
+
+    @media (max-width: 767px) {
+      order: 1;
+      flex-direction: column;
+    }
+  }
+
+  .article--navigation {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    &:has(> .article--share:only-child) {
+      justify-content: flex-end;
+    }
+  }
+
+  .article--tagged-in {
+    margin: 0;
+  }
+
+  .article--tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    column-gap: var(--spacing--1);
+    row-gap: var(--spacing--0);
+    line-height: 1;
+
+    /* nested for selector weight */
+    .article--tag a {
+      text-decoration: underline;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article",
+  "class": "section--article",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "container-width",
+      "label": "Maximum container width",
+      "type": "select",
+      "options": [
+        { "label": "Extra small", "value": "1" },
+        { "label": "Small", "value": "2" },
+        { "label": "Medium", "value": "3" },
+        { "label": "Large", "value": "4" },
+        { "label": "Extra large", "value": "5" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "id": "show-tags",
+      "label": "Show article tags",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "facebook-enabled",
+      "label": "Enable Facebook sharing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "x-enabled",
+      "label": "Enable 𝕏 sharing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "pinterest-enabled",
+      "label": "Enable Pinterest sharing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "email-enabled",
+      "label": "Enable email sharing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "url-enabled",
+      "label": "Enable link sharing",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text layout"
+    },
+    {
+      "id": "show-title",
+      "label": "Show title",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "heading-type",
+      "label": "Heading type",
+      "type": "select",
+      "options": [
+        {
+          "label": "Banner",
+          "value": "banner-heading"
+        },
+        {
+          "label": "Featured",
+          "value": "featured-heading"
+        },
+        {
+          "label": "Large",
+          "value": "section-heading"
+        },
+        {
+          "label": "Medium",
+          "value": "block-heading"
+        }
+      ],
+      "default": "section-heading",
+      "visible_if": "{{ section.settings.show-title == true }}"
+    },
+    {
+      "id": "heading-alignment",
+      "label": "Heading alignment",
+      "type": "text_alignment",
+      "default": "center",
+      "visible_if": "{{ section.settings.show-title == true or section.settings.show-date == true or section.settings.show-author == true }}"
+    },
+    {
+      "id": "show-date",
+      "label": "Show article date",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "id": "show-author",
+      "label": "Show author",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}

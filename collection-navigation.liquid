@@ -1,0 +1,283 @@
+<!-- sections/collection-navigation.liquid -->
+
+{%- liquid
+  assign mobile_spacing_above = section.settings.mobile-spacing-above
+  assign mobile_spacing_below = section.settings.mobile-spacing-below
+  assign filter_enabled = section.settings.filter-enabled
+  assign sort_enabled = section.settings.sort-enabled
+  assign spacing_above = section.settings.spacing-above
+  assign spacing_below = section.settings.spacing-below
+  assign tag_bg_color = section.settings.tag-background
+  assign tag_color = section.settings.tag-color
+  assign tag_shape = section.settings.tag-shape
+-%}
+
+{%-
+  render 'navigation',
+  mobile_spacing_above: mobile_spacing_above,
+  mobile_spacing_below: mobile_spacing_below,
+  filter_enabled: filter_enabled,
+  layout_enabled: section.settings.layout-enabled,
+  results_string: false,
+  show_search_link: section.settings.show-search-link,
+  sort_by: collection.sort_by,
+  sort_enabled: sort_enabled,
+  sort_options: collection.sort_options,
+  spacing_above: spacing_above,
+  spacing_below: spacing_below,
+  tag_bg_color: tag_bg_color,
+  tag_color: tag_color,
+  tag_shape: tag_shape
+-%}
+
+{%- if filter_enabled -%}
+  <element-relocator data-move-into=".drawer--container[data-view='filter']" data-mq="none">
+    {%-
+      render 'filter',
+      filters: collection.filters,
+      default_view: section.settings.default-view,
+      show_search_link: section.settings.show-search-link,
+      tag_bg_color: tag_bg_color,
+      tag_color: tag_color,
+      tag_shape: tag_shape
+    -%}
+  </element-relocator>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection navigation",
+  "class": "section--collection-navigation",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General layout"
+    },
+    {
+      "id": "spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "content": "Features",
+      "type": "header"
+    },
+    {
+      "label": "Enable filtering",
+      "id": "filter-enabled",
+      "type": "checkbox",
+      "default": true,
+      "info": "Manage filters in [Search & Discovery](https://help.shopify.com/manual/online-store/search-and-discovery/filters)"
+    },
+    {
+      "label": "Enable sorting",
+      "id": "sort-enabled",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "label": "Enable layout switcher",
+      "id": "layout-enabled",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "content": "Filter tags",
+      "type": "header",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "type": "select",
+      "id": "tag-shape",
+      "label": "Shape",
+      "options": [
+        { "label": "Round", "value": "round" },
+        { "label": "Square", "value": "square" }
+      ],
+      "default": "round",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "id": "tag-background",
+      "label": "Background",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "light"
+        },
+        {
+          "label": "Dark",
+          "value": "dark"
+        },
+        {
+          "label": "Accent 1",
+          "value": "accent-1"
+        },
+        {
+          "label": "Accent 2",
+          "value": "accent-2"
+        },
+        {
+          "label": "Accent 3",
+          "value": "accent-3"
+        }
+      ],
+      "default": "light",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "id": "tag-color",
+      "label": "Color",
+      "type": "select",
+      "options": [
+        {
+          "label": "Light",
+          "value": "white"
+        },
+        {
+          "label": "Dark",
+          "value": "body"
+        }
+      ],
+      "default": "body",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "content": "Filter menu",
+      "type": "header",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "type": "select",
+      "id": "default-view",
+      "label": "Default view",
+      "options": [
+        { "label": "All menus open", "value": "all-open" },
+        { "label": "All menus closed", "value": "all-closed" },
+        { "label": "First menu open", "value": "first-open" }
+      ],
+      "default": "all-closed",
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "label": "Show search link",
+      "id": "show-search-link",
+      "type": "checkbox",
+      "default": true,
+      "visible_if": "{{ section.settings.filter-enabled == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "id": "mobile-spacing-above",
+      "label": "Spacing above",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "id": "mobile-spacing-below",
+      "label": "Spacing below",
+      "type": "select",
+      "options": [
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        },
+        {
+          "label": "Extra large",
+          "value": "x-large"
+        }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}
