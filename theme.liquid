@@ -167,22 +167,22 @@
           '[aria-label*="verified"] svg',
           '[title*="verified"] svg'
         ].join(',');
+        var reviewNameParents = new WeakSet();
 
         function forEachMatch(root, selector, callback) {
           if (root.matches && root.matches(selector)) callback(root);
           root.querySelectorAll(selector).forEach(callback);
         }
 
-        function hideNativeReviewArtifacts(el) {
-          var parent = el.parentElement;
-          if (!parent) return;
-
-          forEachMatch(parent, nativeIconSelector, function(icon) {
+        function hideNativeReviewIcons(root) {
+          forEachMatch(root, nativeIconSelector, function(icon) {
             icon.style.display = 'none';
           });
+        }
 
-          parent.querySelectorAll('p, span, div').forEach(function(node) {
-            if (node !== el &&
+        function hideNativeReviewText(root) {
+          forEachMatch(root, 'p, span, div', function(node) {
+            if (!node.matches(reviewNameSelector) &&
                 !node.classList.contains('custom-verified-badge') &&
                 (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
               node.style.display = 'none';
@@ -190,39 +190,84 @@
           });
         }
 
-        function processReviewName(el) {
-          hideNativeReviewArtifacts(el);
-          if (el.querySelector('.custom-verified-badge')) return;
-          var badge = document.createElement('span');
-          badge.className = 'custom-verified-badge';
-          badge.textContent = 'Geverifieerd';
-          el.appendChild(badge);
+        function collectReviewNames(root, names) {
+          if (root.nodeType !== Node.ELEMENT_NODE) return;
+          forEachMatch(root, reviewNameSelector, function(name) {
+            names.push(name);
+          });
         }
 
-        function processReviewContent(node) {
-          if (node.nodeType !== Node.ELEMENT_NODE) return;
-          forEachMatch(node, reviewNameSelector, processReviewName);
+        function processReviewRoots(roots) {
+          var names = [];
+          roots.forEach(function(root) {
+            collectReviewNames(root, names);
+          });
+
+          var namesByParent = new Map();
+          names.forEach(function(name) {
+            if (!name.parentElement) return;
+            if (!namesByParent.has(name.parentElement)) namesByParent.set(name.parentElement, []);
+            namesByParent.get(name.parentElement).push(name);
+          });
+
+          namesByParent.forEach(function(reviewNames, parent) {
+            reviewNameParents.add(parent);
+            hideNativeReviewIcons(parent);
+            hideNativeReviewText(parent);
+          });
+
+          names.forEach(function(name) {
+            if (name.querySelector('.custom-verified-badge')) return;
+            var badge = document.createElement('span');
+            badge.className = 'custom-verified-badge';
+            badge.textContent = 'Geverifieerd';
+            name.appendChild(badge);
+          });
+        }
+
+        function processAddedReviewContent(nodes) {
+          var roots = [];
+          nodes.forEach(function(node) {
+            if (node.nodeType !== Node.ELEMENT_NODE ||
+                node.classList.contains('custom-verified-badge')) return;
+            roots.push(node);
+            hideNativeReviewIcons(node);
+            hideNativeReviewText(node);
+          });
+          processReviewRoots(roots);
         }
 
         function startVerifiedBadgeScript() {
-          processReviewContent(document.body);
+          processReviewRoots([document.body]);
 
           var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-              var onlyBadges = mutation.addedNodes.length > 0;
-              mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType !== Node.ELEMENT_NODE) {
-                  onlyBadges = false;
-                  return;
-                }
-                if (node.classList.contains('custom-verified-badge')) return;
-                onlyBadges = false;
-                processReviewContent(node);
+              if (mutation.type !== 'childList') return;
+              var addedNodes = Array.prototype.slice.call(mutation.addedNodes);
+              var onlyBadges = addedNodes.length > 0 && addedNodes.every(function(node) {
+                return node.nodeType === Node.ELEMENT_NODE &&
+                  node.classList.contains('custom-verified-badge');
               });
               if (onlyBadges) return;
+
+              var addedReviewContent = Array.prototype.filter.call(
+                addedNodes,
+                function(node) {
+                  return node.nodeType === Node.ELEMENT_NODE &&
+                    !node.classList.contains('custom-verified-badge');
+                }
+              );
+              processAddedReviewContent(addedReviewContent);
+
               if (mutation.target.nodeType === Node.ELEMENT_NODE) {
                 var name = mutation.target.closest(reviewNameSelector);
-                if (name) processReviewName(name);
+                if (name && !name.querySelector('.custom-verified-badge')) {
+                  processReviewRoots([name]);
+                } else if (!addedReviewContent.length && mutation.addedNodes.length &&
+                    (reviewNameParents.has(mutation.target) ||
+                     reviewNameParents.has(mutation.target.parentElement))) {
+                  processReviewRoots([mutation.target.parentElement || mutation.target]);
+                }
               }
             });
           });
@@ -243,7 +288,7 @@
           document.addEventListener(eventName, function(event) {
             var section = event.target;
             if (!section || section.nodeType !== Node.ELEMENT_NODE) section = document.body;
-            processReviewContent(section);
+            processReviewRoots([section]);
           });
         });
       })();
