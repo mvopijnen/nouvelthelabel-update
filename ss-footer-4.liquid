@@ -876,11 +876,13 @@
   <div class="section-{{ section.id }}-settings">
     <div class="footer-second-top-{{ section.id }} footer-four-top-{{ section.id }}">
       <div class="footer-second-top-item-{{ section.id }}">
-        <a href="/" class="footer-logo-{{ section.id }}">
+        <a href="{{ routes.root_url }}" class="footer-logo-{{ section.id }}">
           {% if logo != blank %}
             <img
-              src="{{ logo | image_url }}"
-              alt="{{ logo.alt }}"
+              src="{{ logo | image_url: width: 600 }}"
+              width="{{ logo.width }}"
+              height="{{ logo.height }}"
+              alt="{{ logo.alt | escape }}"
               {% if lazy %}
                 loading="lazy"
               {% endif %}
@@ -965,7 +967,7 @@
                   {% unless block.settings.icon_hide %}
                     <div class="footer-tab-toggle-icon-{{ section.id }}">
                     {% if block.settings.image != blank %}
-                      <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
+                      {{ block.settings.image | image_url: width: 1600 | image_tag: widths: '200, 400, 600, 800, 1200, 1600', sizes: '(min-width: 1024px) 33vw, 100vw', loading: 'lazy' }}
                     {% else %}
                       {% case block.settings.icon %}
                         {% when 'atc' %}
@@ -1117,23 +1119,26 @@
 </div>
 
 <script>
+  (() => {
+  const root = document.querySelector('.footer-{{ section.id }}');
+  if (!root || root.dataset.tabsInitialized === 'true') return;
+  root.dataset.tabsInitialized = 'true';
+  const controller = new AbortController();
+  const signal = controller.signal;
   function initFooterTabs() {
     const answerPaddingTop = 10;
     const answerPaddingBottom = 10;
 
-    const faqs = document.querySelectorAll(
-      '.footer-tab-{{ section.id }}'
-    );
-    const buttons = document.querySelectorAll(
+    const buttons = root.querySelectorAll(
       '.footer-tab-toggle-{{ section.id }}'
     );
-    const answers = document.querySelectorAll(
+    const answers = root.querySelectorAll(
       '.footer-tab-text-{{ section.id }}'
     );
-    const answersHeightCalElements = document.querySelectorAll(
+    const answersHeightCalElements = root.querySelectorAll(
       '.footer-tab-height-cal-{{ section.id }}'
     );
-    const icons = document.querySelectorAll(
+    const icons = root.querySelectorAll(
       '.footer-tab-toggle-arrow-{{ section.id }}'
     );
 
@@ -1144,6 +1149,7 @@
 
       answers[index].style.display = 'block';
       setTimeout(() => {
+        if (activeIndex !== index || !root.isConnected) return;
         answers[index].style.paddingTop = `${answerPaddingTop}px`;
         answers[index].style.paddingBottom = `${answerPaddingBottom}px`;
         answers[index].style.height = `${height + 30}px`;
@@ -1157,11 +1163,11 @@
       icons[index].style.setProperty('--rotate', '0deg');
 
       setTimeout(() => {
-        answers[index].style.display = 'none';
+        if (activeIndex !== index) answers[index].style.display = 'none';
       }, 300);
     }
     function toggleAnswer(index) {
-      if (answers[index].style.display === 'none') {
+      if (activeIndex !== index) {
         openAnswer(index);
         activeIndex = index;
       } else {
@@ -1182,7 +1188,7 @@
       button.addEventListener('click', () => {
         toggleAnswer(index);
         closeAllAnswerBut(index);
-      });
+      }, { signal });
     });
 
     // When the window is resized, debounce the answer's height:
@@ -1192,18 +1198,19 @@
       resizeTimer = setTimeout(() => {
         if (activeIndex !== -1) {
           const height = answersHeightCalElements[activeIndex].offsetHeight;
-          answers[activeIndex].style.height = `${height}px`;
+          answers[activeIndex].style.height = `${height + 30}px`;
         }
       }, 250);
-    });
+    }, { signal });
   }
 
-  document.addEventListener('DOMContentLoaded', initFooterTabs);
-
-  if (Shopify.designMode) {
-     document.addEventListener('shopify:section:unload', initFooterTabs);
-     document.addEventListener('shopify:section:load', initFooterTabs);
-  }
+  initFooterTabs();
+  document.addEventListener('shopify:section:unload', (event) => {
+    if (!event.target.contains(root)) return;
+    controller.abort();
+    delete root.dataset.tabsInitialized;
+  }, { signal });
+  })();
 </script>
 
 {% schema %}
