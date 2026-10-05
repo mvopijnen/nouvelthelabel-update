@@ -213,11 +213,11 @@ test('Restored password and gift-card pages render their controls and retain rea
  assert.match(passwordLayout,/id="main_content"/);assert.match(passwordLayout,/Private preview/);
 });
 
-test('Price formatting is the only change to main theme JavaScript calculations',()=>{
+test('Price formatting and batched transition reads are the only main JavaScript changes',()=>{
  const {execFileSync}=require('node:child_process');
  const base=execFileSync('git',['show','8ff750c037e6f376efb739415c44190db2c1ac6d:theme.js'],{cwd:root,encoding:'utf8'});
  const actual=fs.readFileSync(path.join(root,'assets/theme.js'),'utf8');
  const previous='static formatMoney(t,e=!1){const i=this.money_format,s=e||i.includes("no_decimals")?0:2,';
  const current='static formatMoney(t){const i=this.money_format,s=2,';
- assert.equal(actual.replace(current,previous),base);
+ assert.equal(require('./js-allowed-changes.cjs').restoreTransitionReads(actual).replace(current,previous),base);
 });

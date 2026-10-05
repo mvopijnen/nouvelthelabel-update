@@ -33,7 +33,7 @@ test('Price changes alter only presentation filters and the formatter precision,
   assert.equal(fs.readFileSync(path.join(root,name),'utf8'),expected,name);
  }
  const main=execFileSync('git',['show','6f885d4243d368c14a74e963158337d37488f349:assets/theme.js'],{cwd:root,encoding:'utf8'});
- assert.equal(fs.readFileSync(path.join(root,'assets/theme.js'),'utf8'),main.replace('static formatMoney(t){const i=this.money_format,s=0,','static formatMoney(t){const i=this.money_format,s=2,'));
+ assert.equal(require('./js-allowed-changes.cjs').restoreTransitionReads(fs.readFileSync(path.join(root,'assets/theme.js'),'utf8')),main.replace('static formatMoney(t){const i=this.money_format,s=0,','static formatMoney(t){const i=this.money_format,s=2,'));
 });
 
 test('Quick add uses the same real-price component; original and compare prices retain cents',async()=>{
