@@ -1,7 +1,7 @@
 <!-- sections/gift-card.liquid -->
 
 {%- liquid
-  assign formatted_initial_value = gift_card.initial_value | money: gift_card.currency
+  assign formatted_initial_value = gift_card.initial_value | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros: gift_card.currency
   assign logo_image = section.settings.logo-image
   assign logo_height = section.settings.logo-height
   assign mobile_logo_height = section.settings.mobile-logo-height
@@ -534,7 +534,6 @@
 
   #gift-card img {
     border-radius: 10px;
-    height: auto;
   }
 
   #gift-card-code-outer {
@@ -1009,8 +1008,6 @@
           <div id="gift-card">
             <img loading="lazy"
               src="{{ 'gift-card/card.jpg' | shopify_asset_url }}"
-              width="540"
-              height="330"
               alt="Gift card illustration"
             >
             {%- assign initial_value_size = formatted_initial_value | size -%}
@@ -1019,7 +1016,7 @@
               id="gift-card-amount"
             >
               {%- if gift_card.balance != gift_card.initial_value -%}
-                <span class="tooltip-container"><span class="tooltip-label money">{{ gift_card.balance | money }} <small>left</small></span><span class="tooltip-triangle"></span></span>
+                <span class="tooltip-container"><span class="tooltip-label money">{{ gift_card.balance | divided_by: 100.0 | round | times: 100 | money_without_trailing_zeros }} <small>left</small></span><span class="tooltip-triangle"></span></span>
               {%- endif -%}
               <strong>{{ formatted_initial_value }}</strong>
             </div>

@@ -20,7 +20,6 @@ function engine(){
  liquid.registerFilter('asset_url',name=>'/assets/'+name);
  liquid.registerFilter('font_url',font=>font?.system?'':font?.url||'');
  liquid.registerFilter('money',value=>'€'+Intl.NumberFormat('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(value/100));
- liquid.registerFilter('money_with_currency',value=>'€'+Intl.NumberFormat('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2}).format(value/100)+' EUR');
  liquid.registerFilter('money_without_trailing_zeros',value=>'€'+Intl.NumberFormat('nl-NL',{maximumFractionDigits:2}).format(value/100));
  const images=new Map();
  const args=list=>Object.fromEntries(list.filter(Array.isArray));
