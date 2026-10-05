@@ -239,7 +239,7 @@
     <div class="nouvel-image-wrapper">
       <div class="nouvel-image-container">
         {% if section.settings.image != blank %}
-          <img src="{{ section.settings.image | img_url: '1200x' }}" alt="{{ section.settings.title }}" loading="lazy">
+          {{ section.settings.image | image_url: width: 1200 | image_tag: widths: '300, 600, 900, 1200', sizes: '(min-width: 768px) 50vw, 100vw', alt: section.settings.title, loading: 'lazy' }}
         {% else %}
           {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
         {% endif %}
