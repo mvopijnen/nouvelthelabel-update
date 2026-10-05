@@ -1,0 +1,373 @@
+{
+  "kind": "lab baseline, public unmodified storefront",
+  "after": null,
+  "profiles": {
+    "mobile": {
+      "lighthouseVersion": "13.0.1",
+      "configuration": {
+        "output": "json",
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "node",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance"
+        ],
+        "skipAudits": null
+      },
+      "runs": [
+        {
+          "run": 1,
+          "fetchTime": "2026-10-05T11:50:02.991Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 43.0,
+          "FCP_ms": 3557.955499999999,
+          "LCP_ms": 6738.0155,
+          "TBT_ms": 1073,
+          "CLS": 0,
+          "SpeedIndex_ms": 5456.371133146787,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 367.4289999997616,
+            "resourceLoadDelay": 28.74700000023842,
+            "resourceLoadDuration": 202.26600000023842,
+            "elementRenderDelay": 1948.2759999997616
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65815,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56853,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 40910,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "run": 2,
+          "fetchTime": "2026-10-05T11:51:02.960Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 73.0,
+          "FCP_ms": 1378.3139999999999,
+          "LCP_ms": 2792.2970000000005,
+          "TBT_ms": 1060.999999999999,
+          "CLS": 0,
+          "SpeedIndex_ms": 2015.6181096906312,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 251.513,
+            "resourceLoadDelay": 19.696,
+            "resourceLoadDuration": 112.754,
+            "elementRenderDelay": 90.715
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65736,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56826,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 40863,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "run": 3,
+          "fetchTime": "2026-10-05T11:55:50.287Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 39.0,
+          "FCP_ms": 3515.4315000000006,
+          "LCP_ms": 8884.514499999997,
+          "TBT_ms": 1334.6385000000028,
+          "CLS": 0,
+          "SpeedIndex_ms": 5377.464835158546,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 338.061,
+            "resourceLoadDelay": 22.954,
+            "resourceLoadDuration": 98.203,
+            "elementRenderDelay": 2050.978
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65739,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56779,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 41070,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        }
+      ],
+      "median": {
+        "score": 43.0,
+        "FCP_ms": 3515.4315000000006,
+        "LCP_ms": 6738.0155,
+        "TBT_ms": 1073,
+        "CLS": 0,
+        "SpeedIndex_ms": 5377.464835158546
+      }
+    },
+    "desktop": {
+      "lighthouseVersion": "13.0.1",
+      "configuration": {
+        "output": "json",
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "node",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance"
+        ],
+        "skipAudits": null
+      },
+      "runs": [
+        {
+          "run": 1,
+          "fetchTime": "2026-10-05T11:56:21.930Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 50.0,
+          "FCP_ms": 2966.1565,
+          "LCP_ms": 6157.334500000001,
+          "TBT_ms": 990.4999999999982,
+          "CLS": 0,
+          "SpeedIndex_ms": 3640.5508251537453,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 286.074,
+            "resourceLoadDelay": 17.193,
+            "resourceLoadDuration": 63.92,
+            "elementRenderDelay": 1119.073
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65876,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56935,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 40862,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "run": 2,
+          "fetchTime": "2026-10-05T11:57:49.656Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 75.0,
+          "FCP_ms": 1392.4299999999998,
+          "LCP_ms": 2894.139999999999,
+          "TBT_ms": 850,
+          "CLS": 0,
+          "SpeedIndex_ms": 2690.8838628089834,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 836.237,
+            "resourceLoadDelay": 18.612,
+            "resourceLoadDuration": 75.491,
+            "elementRenderDelay": 122.198
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65753,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56937,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 40864,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "run": 3,
+          "fetchTime": "2026-10-05T11:59:01.114Z",
+          "url": "https://nouvelthelabel.com/",
+          "score": 53.0,
+          "FCP_ms": 2909.22875,
+          "LCP_ms": 6856.4805000000015,
+          "TBT_ms": 752,
+          "CLS": 0,
+          "SpeedIndex_ms": 3476.947187711209,
+          "lcpSubparts_ms": {
+            "timeToFirstByte": 155.853,
+            "resourceLoadDelay": 19.963,
+            "resourceLoadDuration": 143.672,
+            "elementRenderDelay": 1049.093
+          },
+          "heroTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=2000",
+              "transferSize": 65767,
+              "statusCode": 200,
+              "isLinkPreload": true
+            },
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Atelier_sieraden_1_new.webp?v=1784120681&width=1400",
+              "transferSize": 56836,
+              "statusCode": 200,
+              "isLinkPreload": null
+            }
+          ],
+          "hiddenMobileImageTransfers": [
+            {
+              "url": "https://nouvelthelabel.com/cdn/shop/files/Minimalist_Essentials_homepage_new_2_nieuw.webp?v=1784120600&width=1400",
+              "transferSize": 40916,
+              "statusCode": 200
+            }
+          ],
+          "warnings": []
+        }
+      ],
+      "median": {
+        "score": 53.0,
+        "FCP_ms": 2909.22875,
+        "LCP_ms": 6157.334500000001,
+        "TBT_ms": 850,
+        "CLS": 0,
+        "SpeedIndex_ms": 3476.947187711209
+      }
+    }
+  },
+  "limitations": "Cloud proxy, restricted analytics hosts, no field data or changed Shopify preview. These are exploratory baseline results, not a PageSpeed reproduction or a before/after improvement."
+}

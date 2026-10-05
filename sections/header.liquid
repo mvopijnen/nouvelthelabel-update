@@ -465,6 +465,25 @@
   </modal-element>
 {%- endunless -%}
 
+{% stylesheet %}
+  .header--root :is(.header--search, .header--cart) {
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 8px;
+  }
+
+  .header--root .header--secondary-nav {
+    column-gap: max(var(--spacing--1), 8px);
+  }
+
+  .header--root :is(.header--search, .header--cart):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "Header",
