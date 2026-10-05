@@ -173,22 +173,25 @@
           root.querySelectorAll(selector).forEach(callback);
         }
 
-        function processReviewName(el) {
+        function hideNativeReviewArtifacts(el) {
           var parent = el.parentElement;
-          if (parent) {
-            forEachMatch(parent, nativeIconSelector, function(icon) {
-              icon.style.display = 'none';
-            });
+          if (!parent) return;
 
-            parent.querySelectorAll('p, span, div').forEach(function(node) {
-              if (node !== el &&
-                  !node.classList.contains('custom-verified-badge') &&
-                  (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
-                node.style.display = 'none';
-              }
-            });
-          }
+          forEachMatch(parent, nativeIconSelector, function(icon) {
+            icon.style.display = 'none';
+          });
 
+          parent.querySelectorAll('p, span, div').forEach(function(node) {
+            if (node !== el &&
+                !node.classList.contains('custom-verified-badge') &&
+                (node.textContent || '').trim().toLowerCase() === 'geverifieerd') {
+              node.style.display = 'none';
+            }
+          });
+        }
+
+        function processReviewName(el) {
+          hideNativeReviewArtifacts(el);
           if (el.querySelector('.custom-verified-badge')) return;
           var badge = document.createElement('span');
           badge.className = 'custom-verified-badge';
@@ -206,15 +209,17 @@
 
           var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
-              var addedReviewContent = false;
-              mutation.addedNodes.forEach(processReviewContent);
+              var onlyBadges = mutation.addedNodes.length > 0;
               mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType !== Node.ELEMENT_NODE ||
-                    !node.classList.contains('custom-verified-badge')) {
-                  addedReviewContent = true;
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                  onlyBadges = false;
+                  return;
                 }
+                if (node.classList.contains('custom-verified-badge')) return;
+                onlyBadges = false;
+                processReviewContent(node);
               });
-              if (!addedReviewContent && mutation.addedNodes.length) return;
+              if (onlyBadges) return;
               if (mutation.target.nodeType === Node.ELEMENT_NODE) {
                 var name = mutation.target.closest(reviewNameSelector);
                 if (name) processReviewName(name);
