@@ -206,7 +206,15 @@
 
           var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
+              var addedReviewContent = false;
               mutation.addedNodes.forEach(processReviewContent);
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType !== Node.ELEMENT_NODE ||
+                    !node.classList.contains('custom-verified-badge')) {
+                  addedReviewContent = true;
+                }
+              });
+              if (!addedReviewContent && mutation.addedNodes.length) return;
               if (mutation.target.nodeType === Node.ELEMENT_NODE) {
                 var name = mutation.target.closest(reviewNameSelector);
                 if (name) processReviewName(name);
@@ -228,7 +236,9 @@
 
         ['shopify:section:load', 'shopify:section:reorder', 'shopify:section:select'].forEach(function(eventName) {
           document.addEventListener(eventName, function(event) {
-            processReviewContent(event.target);
+            var section = event.target;
+            if (!section || section.nodeType !== Node.ELEMENT_NODE) section = document.body;
+            processReviewContent(section);
           });
         });
       })();
