@@ -181,8 +181,8 @@
         }
 
         function hideNativeReviewText(root) {
-          forEachMatch(root, 'p, span, div', function(node) {
-            if (node !== root && isNativeVerifiedText(node)) {
+          root.querySelectorAll('p, span, div').forEach(function(node) {
+            if (isNativeVerifiedText(node)) {
               node.style.display = 'none';
             }
           });
@@ -268,6 +268,7 @@
             var roots = [];
             mutations.forEach(function(mutation) {
               if (mutation.type !== 'childList') return;
+              // Ignore self-generated badge additions to avoid reprocessing them.
               collectMutationRoots(mutation, roots);
             });
             processReviewRoots(roots);
