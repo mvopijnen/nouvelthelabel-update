@@ -169,6 +169,8 @@
         ].join(',');
         var reviewNameParents = new WeakSet();
 
+        // Discover review names locally, sweep each name parent once, and clean later additions only inside known review containers.
+        // Badge-only mutations are ignored because this script creates those nodes itself.
         function forEachMatch(root, selector, callback) {
           if (root.matches && root.matches(selector)) callback(root);
           root.querySelectorAll(selector).forEach(callback);
@@ -328,7 +330,10 @@
           document.addEventListener(eventName, function(event) {
             var section = event.target;
             if (!section || section.nodeType !== Node.ELEMENT_NODE) section = document.body;
+            var hasReviewNames = section.matches(reviewNameSelector) ||
+              section.querySelector(reviewNameSelector);
             processReviewRoots([section]);
+            if (hasReviewNames) processNativeReviewArtifacts(section);
           });
         });
       })();
