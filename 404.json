@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "main": {
+      "type": "featured-text",
+      "settings": {
+        "background-color": "light",
+        "outer-background": false,
+        "container-width": "1"
+      },
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading-type": "section-heading",
+            "title": "Page not found"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "description": "<p>We're sorry, but the page you're looking for could not be found.</p>"
+          }
+        },
+        "button-1": {
+          "type": "button",
+          "settings": {
+            "text": "Return home",
+            "link": "/",
+            "style": "button-1"
+          }
+        },
+        "button-2": {
+          "type": "button",
+          "settings": {
+            "text": "Shop products",
+            "link": "/collections/all",
+            "style": "button-3"
+          }
+        }
+      },
+      "block_order": ["heading", "description", "button-1", "button-2"]
+    }
+  },
+  "order": ["main"]
+}
