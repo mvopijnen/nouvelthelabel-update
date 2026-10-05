@@ -3,9 +3,10 @@
   Toegevoegd: Keuze tussen Luxe Fonts (Cormorant/Inter) of je eigen Thema Fonts.
 {% endcomment %}
 
+{% unless section.settings.use_theme_fonts %}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&amp;family=Inter:wght@300;400;500&amp;display=swap">
+{% endunless %}
 <style>
-  /* Laden van de luxe fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
 
   .ch-wrapper-{{ section.id }} {
     background-color: {{ section.settings.bg_color }};
@@ -16,8 +17,8 @@
     
     /* Font Keuze Logica */
     {% if section.settings.use_theme_fonts %}
-      --ch-font-title: var(--font-heading-family);
-      --ch-font-body: var(--font-body-family);
+      --ch-font-title: var(--font--heading--family);
+      --ch-font-body: var(--font--paragraph--family);
     {% else %}
       --ch-font-title: 'Cormorant Garamond', serif;
       --ch-font-body: 'Inter', sans-serif;
@@ -173,11 +174,15 @@
           {% for block in section.blocks %}
             {% if block.settings.image != blank %}
               <img 
-                src="{{ block.settings.image | img_url: '1000x' }}" 
+                src="{{ block.settings.image | image_url: width: 1000 }}"
+                srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 700 }} 700w, {{ block.settings.image | image_url: width: 1000 }} 1000w"
+                sizes="(min-width: 990px) 50vw, 100vw"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}" 
                 class="ch-img {% if forloop.first %}is-active{% endif %}" 
                 data-idx="{{ forloop.index0 }}"
-                alt="{{ block.settings.title }}"
-                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                alt="{{ block.settings.title | escape }}"
+                loading="{% if forloop.first and section.index <= 2 %}eager{% else %}lazy{% endif %}"
               >
             {% else %}
               <div class="ch-img {% if forloop.first %}is-active{% endif %}" style="background: #eee;"></div>
@@ -240,11 +245,12 @@
               });
               item.addEventListener('click', (e) => {
                 if (window.innerWidth < 990 && "{{ section.settings.mobile_layout }}" === "interactive") {
-                  e.preventDefault();
+                  if (e.target.closest('a')) return;
                   updateActive(index);
                 }
               });
             });
+            observer.disconnect();
           }
         });
       }, { threshold: 0.1 });
@@ -252,7 +258,11 @@
       observer.observe(wrapper);
     };
 
-    document.addEventListener('DOMContentLoaded', init);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
     document.addEventListener('shopify:section:load', init);
   })();
 </script>
