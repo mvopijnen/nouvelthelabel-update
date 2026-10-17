@@ -1,5 +1,7 @@
 # Nouvél the Label — afronding PR #2
 
+> Historisch verslag van PR #2. De actuele opdracht en resultaten staan in [production-readiness-round-2.md](production-readiness-round-2.md). De hieronder vermelde 72 errors zijn inmiddels opgelost en prijsafronding is op nieuw verzoek verwijderd. De oude desktopmeting was verkeerd geconfigureerd en is ongeldig; gebruik de gecorrigeerde round-2-baseline. Dit historische document bewijst geen huidige performancewinst of productieacceptatie.
+
 Datum: 5 oktober 2026. Branch: `fix/slideshow-performance-and-metadata`.
 Bron voor beschermde code: `8ff750c037e6f376efb739415c44190db2c1ac6d`.
 Bestaande concept-PR: https://github.com/mvopijnen/nouvelthelabel-update/pull/2.

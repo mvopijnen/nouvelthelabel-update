@@ -1,0 +1,2780 @@
+{
+  "source": "26213f783566432a25b4915c1ec900e52f8f3c1b",
+  "base": "35f8113759b2e7b5a33357c276ba17d46b51ec05",
+  "status": "PASS",
+  "files_verified": 346,
+  "allowed_documentation_additions": [
+    "docs/restore-verification.json",
+    "docs/restore-verification.md"
+  ],
+  "files": [
+    {
+      "file": ".github/workflows/shopify-preview.yml",
+      "old_PR4_status": "d0f86abcaf47d29ded18299dcc7ca05b89bebda8",
+      "restored_status": "d0f86abcaf47d29ded18299dcc7ca05b89bebda8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": ".github/workflows/theme-validation.yml",
+      "old_PR4_status": "9fecd0744eb66a5fb3f9a071f738bcddfd15368f",
+      "restored_status": "9fecd0744eb66a5fb3f9a071f738bcddfd15368f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": ".gitignore",
+      "old_PR4_status": "3204843194dea62b77bdfda42eb4403b18635f0b",
+      "restored_status": "3204843194dea62b77bdfda42eb4403b18635f0b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": ".theme-check.yml",
+      "old_PR4_status": "54e2d3b3b14b5fc1cc99a599e991cca4c39441fe",
+      "restored_status": "54e2d3b3b14b5fc1cc99a599e991cca4c39441fe",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "README.md",
+      "old_PR4_status": "f5775e0efb51adde7f4fd113ca5cd2add5173fd3",
+      "restored_status": "f5775e0efb51adde7f4fd113ca5cd2add5173fd3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/addresses.min-backup.js",
+      "old_PR4_status": "8035db67b3ecf8ee39d31ef7b224bea55851602e",
+      "restored_status": "8035db67b3ecf8ee39d31ef7b224bea55851602e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/addresses.min.js",
+      "old_PR4_status": "bb301ad9c64e56a04c1c47f6c3414ae28159fdec",
+      "restored_status": "bb301ad9c64e56a04c1c47f6c3414ae28159fdec",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/masonry.min-backup.js",
+      "old_PR4_status": "7545a5778ad22bd1867ab6d28d0279eafd2e875c",
+      "restored_status": "7545a5778ad22bd1867ab6d28d0279eafd2e875c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/masonry.min.js",
+      "old_PR4_status": "51f4e5c2ca28b4497be5e1cc8f37a3763dc1bc89",
+      "restored_status": "51f4e5c2ca28b4497be5e1cc8f37a3763dc1bc89",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/password-page-background.jpg",
+      "old_PR4_status": "1546fefab699fc64a982a477820fed840a2e97e8",
+      "restored_status": "1546fefab699fc64a982a477820fed840a2e97e8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/swipe-listener.min-backup.js",
+      "old_PR4_status": "843f48d72479ca69667be9ab05d74002857f03fc",
+      "restored_status": "843f48d72479ca69667be9ab05d74002857f03fc",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/swipe-listener.min.js",
+      "old_PR4_status": "77a13fe62b76baab8093532a1653460793a35e8e",
+      "restored_status": "77a13fe62b76baab8093532a1653460793a35e8e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-async-backup.js",
+      "old_PR4_status": "3a658be48747ebd4c6c00a029af8faa78743e64f",
+      "restored_status": "3a658be48747ebd4c6c00a029af8faa78743e64f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-async.js",
+      "old_PR4_status": "66b45d6f6040b8d8520f5ca7431afc97e1c98ab4",
+      "restored_status": "66b45d6f6040b8d8520f5ca7431afc97e1c98ab4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-backup.css",
+      "old_PR4_status": "e13b87fc3338667c124e4e670df7698d53e2923a",
+      "restored_status": "e13b87fc3338667c124e4e670df7698d53e2923a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-backup.js",
+      "old_PR4_status": "b86f51d656950017a38ff9bccb63649fa8651662",
+      "restored_status": "b86f51d656950017a38ff9bccb63649fa8651662",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-editor.min-backup.js",
+      "old_PR4_status": "a073266cfe23e2195cf885d04a14d47fc495681b",
+      "restored_status": "a073266cfe23e2195cf885d04a14d47fc495681b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme-editor.min.js",
+      "old_PR4_status": "5d5d1860776f184c1676416acc1df7a263594902",
+      "restored_status": "5d5d1860776f184c1676416acc1df7a263594902",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme.css",
+      "old_PR4_status": "3b3e8a252e5bc1bc7e0e570f39dc724a2aa0e9dc",
+      "restored_status": "3b3e8a252e5bc1bc7e0e570f39dc724a2aa0e9dc",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "assets/theme.js",
+      "old_PR4_status": "578f29e13280854d061eca9c83a959fed541ff7b",
+      "restored_status": "578f29e13280854d061eca9c83a959fed541ff7b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "config/markets.json",
+      "old_PR4_status": "cb7dbc77119e36dc33e9b24423b88ba5bb712bbb",
+      "restored_status": "cb7dbc77119e36dc33e9b24423b88ba5bb712bbb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "config/settings_data.json",
+      "old_PR4_status": "3850ad0d59394248adca2953ae89970735939c7b",
+      "restored_status": "3850ad0d59394248adca2953ae89970735939c7b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "config/settings_schema.json",
+      "old_PR4_status": "15f7a866d64e0da7203bf325cd95b032b59f5de1",
+      "restored_status": "15f7a866d64e0da7203bf325cd95b032b59f5de1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/codeaudit-2026-10-05.md",
+      "old_PR4_status": "3566950575e836bed14a349aae46ccc9fedf4e4d",
+      "restored_status": "3566950575e836bed14a349aae46ccc9fedf4e4d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/css-sources.json",
+      "old_PR4_status": "abc2aaa54d3151813741088605ed650a9aa8e077",
+      "restored_status": "abc2aaa54d3151813741088605ed650a9aa8e077",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/lab-baseline-2026-10-05.json",
+      "old_PR4_status": "d0569e9aaf575c5c8016bc2763c4074457220af9",
+      "restored_status": "d0569e9aaf575c5c8016bc2763c4074457220af9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/lab-baseline-round-2-2026-10-05.json",
+      "old_PR4_status": "b1f5cb824f9260a2afbba296951c9a401f77ee77",
+      "restored_status": "b1f5cb824f9260a2afbba296951c9a401f77ee77",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/pr-2-description.md",
+      "old_PR4_status": "152a1b8c5c81cef85e06c53215fc241186e4290e",
+      "restored_status": "152a1b8c5c81cef85e06c53215fc241186e4290e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/production-readiness-round-2.md",
+      "old_PR4_status": "d84c16ad3731068d80f7b7140dc94fde9726de52",
+      "restored_status": "d84c16ad3731068d80f7b7140dc94fde9726de52",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/review-observer-work.json",
+      "old_PR4_status": "78080a261ae52c60aeb2e3a72e8ba2024b01c6c2",
+      "restored_status": "78080a261ae52c60aeb2e3a72e8ba2024b01c6c2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/shopify-preview-ci.md",
+      "old_PR4_status": "9e9c0cc51562a8a1dbef0ce636e5c4a04b3388a8",
+      "restored_status": "9e9c0cc51562a8a1dbef0ce636e5c4a04b3388a8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/theme-check-known-errors.json",
+      "old_PR4_status": "3eaae4246a5e451ffef0d77f336cecf70b3b4222",
+      "restored_status": "3eaae4246a5e451ffef0d77f336cecf70b3b4222",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/theme-path-mapping.json",
+      "old_PR4_status": "b7ddb4bf53898f0358525928e0a72888edf37836",
+      "restored_status": "b7ddb4bf53898f0358525928e0a72888edf37836",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "docs/transition-benchmark.json",
+      "old_PR4_status": "378db2300c60828147208f07a9d937bd97565cd3",
+      "restored_status": "378db2300c60828147208f07a9d937bd97565cd3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "layout/gift-card.liquid",
+      "old_PR4_status": "6b06d288684dbb98d2d2200fb0bc493d447b905b",
+      "restored_status": "6b06d288684dbb98d2d2200fb0bc493d447b905b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "layout/password.liquid",
+      "old_PR4_status": "815d41e817c621003fa6fd48c2c8f5a0ed7696ee",
+      "restored_status": "815d41e817c621003fa6fd48c2c8f5a0ed7696ee",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "layout/theme.liquid",
+      "old_PR4_status": "da97f0d2e979f2185f9f3395d28a1e6d4cbc2603",
+      "restored_status": "da97f0d2e979f2185f9f3395d28a1e6d4cbc2603",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/de.json",
+      "old_PR4_status": "e119b36189816589827d320a699dff8ee36f1d02",
+      "restored_status": "e119b36189816589827d320a699dff8ee36f1d02",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/en.default.json",
+      "old_PR4_status": "b0d30ab79c165ffbf70e7c1758a589e111905ab3",
+      "restored_status": "b0d30ab79c165ffbf70e7c1758a589e111905ab3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/es.json",
+      "old_PR4_status": "a54eb19f7411ef7e70c60a0cb5a39465b7ab9d1c",
+      "restored_status": "a54eb19f7411ef7e70c60a0cb5a39465b7ab9d1c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/fr.json",
+      "old_PR4_status": "c1ce24473a28d265c3a343d69b50b763a0407bd3",
+      "restored_status": "c1ce24473a28d265c3a343d69b50b763a0407bd3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/it.json",
+      "old_PR4_status": "217936cfaa1f4501e24f4b11f241d35d0d8cba44",
+      "restored_status": "217936cfaa1f4501e24f4b11f241d35d0d8cba44",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "locales/nl.json",
+      "old_PR4_status": "00d32dc80bca6acb4a328377f88469c69ed0ef6a",
+      "restored_status": "00d32dc80bca6acb4a328377f88469c69ed0ef6a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "package-lock.json",
+      "old_PR4_status": "442367d22a211e68006e79c7d8763a4339bd6260",
+      "restored_status": "442367d22a211e68006e79c7d8763a4339bd6260",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "package.json",
+      "old_PR4_status": "3073f6775cae99add28e69faeb11a6659ebe6e18",
+      "restored_status": "3073f6775cae99add28e69faeb11a6659ebe6e18",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "playwright.config.mjs",
+      "old_PR4_status": "76bd1aae5d3c9bf2cf6a16383bfb54b9f4e9182c",
+      "restored_status": "76bd1aae5d3c9bf2cf6a16383bfb54b9f4e9182c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/benchmark-transitions.cjs",
+      "old_PR4_status": "f90a2d881a44553c27c3258ba93fd49b13ed550a",
+      "restored_status": "f90a2d881a44553c27c3258ba93fd49b13ed550a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/browser-regression.cjs",
+      "old_PR4_status": "be054fb521331c0b618d386d82766451ce132722",
+      "restored_status": "be054fb521331c0b618d386d82766451ce132722",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/compare-performance.mjs",
+      "old_PR4_status": "63c35c21aba6817baa64febd42b6f5826add8896",
+      "restored_status": "63c35c21aba6817baa64febd42b6f5826add8896",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/inspect-storefront.cjs",
+      "old_PR4_status": "00bf4228da1d2267360c805ab4c580ab53eca68a",
+      "restored_status": "00bf4228da1d2267360c805ab4c580ab53eca68a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/measure-performance.mjs",
+      "old_PR4_status": "cb5390e7e2174611a1480b344f2af82debac3557",
+      "restored_status": "cb5390e7e2174611a1480b344f2af82debac3557",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/package-theme.py",
+      "old_PR4_status": "05900443969436071622eae8d17dbd665ec0f460",
+      "restored_status": "05900443969436071622eae8d17dbd665ec0f460",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/performance-acceptance.mjs",
+      "old_PR4_status": "9ca0a674a8caade8816ad959a262ff2432cd92af",
+      "restored_status": "9ca0a674a8caade8816ad959a262ff2432cd92af",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/performance-profile.mjs",
+      "old_PR4_status": "0338b191eab5d21bfa55ec6faea1aaa1f40bb814",
+      "restored_status": "0338b191eab5d21bfa55ec6faea1aaa1f40bb814",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/performance-profiles.json",
+      "old_PR4_status": "4eaaac999dd2daaa1d89a1f3bbc3f50232d4c309",
+      "restored_status": "4eaaac999dd2daaa1d89a1f3bbc3f50232d4c309",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/preview-browser.mjs",
+      "old_PR4_status": "9f698ea9207679022e211d5a9cd07b2e5b94197c",
+      "restored_status": "9f698ea9207679022e211d5a9cd07b2e5b94197c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/preview-performance.mjs",
+      "old_PR4_status": "1f619dbd81dd4a3d7a704169affc648c4d77ed41",
+      "restored_status": "1f619dbd81dd4a3d7a704169affc648c4d77ed41",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/shopify-preview.mjs",
+      "old_PR4_status": "68c9fc9d2628fbdde3b3d6dbd041fe724cabc3c4",
+      "restored_status": "68c9fc9d2628fbdde3b3d6dbd041fe724cabc3c4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/summarize-performance.py",
+      "old_PR4_status": "54bbcd3f5692de7fe3bc6d03aea703e3915f7498",
+      "restored_status": "54bbcd3f5692de7fe3bc6d03aea703e3915f7498",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/theme-check.mjs",
+      "old_PR4_status": "043b596c5f11446da50d1fed5a666c8035766a92",
+      "restored_status": "043b596c5f11446da50d1fed5a666c8035766a92",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "scripts/validate-theme.py",
+      "old_PR4_status": "182fde6a535d5b9a0060e56bdf8e21fd6b9afbcd",
+      "restored_status": "182fde6a535d5b9a0060e56bdf8e21fd6b9afbcd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/about-nouvel.liquid",
+      "old_PR4_status": "792bf0fe30aaa990da61fbf57ed8a7183f38a3c8",
+      "restored_status": "792bf0fe30aaa990da61fbf57ed8a7183f38a3c8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/account.liquid",
+      "old_PR4_status": "d80ee9f5f6caad7464db85e2f61a4c95bf12d173",
+      "restored_status": "d80ee9f5f6caad7464db85e2f61a4c95bf12d173",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/activate-account.liquid",
+      "old_PR4_status": "32802db8c4a9ba649d8b13a4e0cf73e8203d65ec",
+      "restored_status": "32802db8c4a9ba649d8b13a4e0cf73e8203d65ec",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/addresses.liquid",
+      "old_PR4_status": "7a19fb0376ada6821b945d25c6b72ab28c62f1db",
+      "restored_status": "7a19fb0376ada6821b945d25c6b72ab28c62f1db",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/age-verification.liquid",
+      "old_PR4_status": "eb94ba869fb0024ccb2d0c2b22ae6286870c8865",
+      "restored_status": "eb94ba869fb0024ccb2d0c2b22ae6286870c8865",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/announcement.liquid",
+      "old_PR4_status": "ade4c70c87158677e26b1c02af6f37eca84f8d2a",
+      "restored_status": "ade4c70c87158677e26b1c02af6f37eca84f8d2a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/appointments.liquid",
+      "old_PR4_status": "0fbb6312ed9b19dc413582547c7c00a78c23fa16",
+      "restored_status": "0fbb6312ed9b19dc413582547c7c00a78c23fa16",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/apps.liquid",
+      "old_PR4_status": "916c1302f200de1602b16baaac88002cc5767fd4",
+      "restored_status": "916c1302f200de1602b16baaac88002cc5767fd4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/article-comments.liquid",
+      "old_PR4_status": "cce3c0dfc37b0352f31edf0260091e998fbbbe56",
+      "restored_status": "cce3c0dfc37b0352f31edf0260091e998fbbbe56",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/article-recents.liquid",
+      "old_PR4_status": "5f9918c43672e65747c7f25a5364aaa900c3afa1",
+      "restored_status": "5f9918c43672e65747c7f25a5364aaa900c3afa1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/cart-desktop.liquid",
+      "old_PR4_status": "a70b65128214b8ff06ac68bd2e482e11a9cd1054",
+      "restored_status": "a70b65128214b8ff06ac68bd2e482e11a9cd1054",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/cart-drawer.liquid",
+      "old_PR4_status": "75fdea4e7bb7cd4537a653698c1f2d99f50126dc",
+      "restored_status": "75fdea4e7bb7cd4537a653698c1f2d99f50126dc",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/cart-mobile.liquid",
+      "old_PR4_status": "940c28247028cccb495bf13194eb3de6f87ee218",
+      "restored_status": "940c28247028cccb495bf13194eb3de6f87ee218",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/cart.liquid",
+      "old_PR4_status": "f5d929dacdecb47eefff90b96bcb7032c3513d77",
+      "restored_status": "f5d929dacdecb47eefff90b96bcb7032c3513d77",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/collapsible-rows.liquid",
+      "old_PR4_status": "3e64741eefd98870914e992ae7989cec94e28e6f",
+      "restored_status": "3e64741eefd98870914e992ae7989cec94e28e6f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/collectie-hoogtepunten.liquid",
+      "old_PR4_status": "ac6d7a4f8efc950c5a29d268e184ead6ee4be6d2",
+      "restored_status": "ac6d7a4f8efc950c5a29d268e184ead6ee4be6d2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/collection-header.liquid",
+      "old_PR4_status": "221921ffc9e00f4a03453f94484591ac36fcb586",
+      "restored_status": "221921ffc9e00f4a03453f94484591ac36fcb586",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/collection-navigation.liquid",
+      "old_PR4_status": "a12f1a6e3ebefedaab08004f84711707ab6e8b21",
+      "restored_status": "a12f1a6e3ebefedaab08004f84711707ab6e8b21",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/collection-with-highlight.liquid",
+      "old_PR4_status": "8837a2c55801fd9cdcaff6f53138e4fd64d142cb",
+      "restored_status": "8837a2c55801fd9cdcaff6f53138e4fd64d142cb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/complementary-products.liquid",
+      "old_PR4_status": "639e8d4ef5a2565e792d63c56e7cf50137157763",
+      "restored_status": "639e8d4ef5a2565e792d63c56e7cf50137157763",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/contact-details.liquid",
+      "old_PR4_status": "4496332610e066eb0752dab1f39349c6f07c8f04",
+      "restored_status": "4496332610e066eb0752dab1f39349c6f07c8f04",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/contact-section.liquid",
+      "old_PR4_status": "43b1e48a261a9ab023de693cbbf80d1d0f6d5bad",
+      "restored_status": "43b1e48a261a9ab023de693cbbf80d1d0f6d5bad",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/contact.liquid",
+      "old_PR4_status": "4ac2d6d9040351bab6adce93531941f435a96b5f",
+      "restored_status": "4ac2d6d9040351bab6adce93531941f435a96b5f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/countdown.liquid",
+      "old_PR4_status": "9fae77ce6a21e03457654a8815e0965e3479fb54",
+      "restored_status": "9fae77ce6a21e03457654a8815e0965e3479fb54",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/custom-content.liquid",
+      "old_PR4_status": "ea68ef3ec16ddcbdd89f09c5967a3b3661b08c72",
+      "restored_status": "ea68ef3ec16ddcbdd89f09c5967a3b3661b08c72",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/custom-liquid.liquid",
+      "old_PR4_status": "82c7de5e4df47a866cdf387a9d48d2d5f807a6cf",
+      "restored_status": "82c7de5e4df47a866cdf387a9d48d2d5f807a6cf",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/divider.liquid",
+      "old_PR4_status": "ff30ec038205b1b109db60bb5ed231e1e1fb2348",
+      "restored_status": "ff30ec038205b1b109db60bb5ed231e1e1fb2348",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/faq-section.liquid",
+      "old_PR4_status": "16fd8a1eca9d431f06fc88c2b4d39ad32594129f",
+      "restored_status": "16fd8a1eca9d431f06fc88c2b4d39ad32594129f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-blog.liquid",
+      "old_PR4_status": "dd30c17347162c2a733c5c86ad29816541205cdb",
+      "restored_status": "dd30c17347162c2a733c5c86ad29816541205cdb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-collection.liquid",
+      "old_PR4_status": "9eee990bbb32dfeebcc323cb6249b43d27ed9afd",
+      "restored_status": "9eee990bbb32dfeebcc323cb6249b43d27ed9afd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-collections.liquid",
+      "old_PR4_status": "dc8c281297f6df6d890ec0c377efa57c21a4b3be",
+      "restored_status": "dc8c281297f6df6d890ec0c377efa57c21a4b3be",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-images.liquid",
+      "old_PR4_status": "d66506f7669d0d597073c53b025917fa14df18d6",
+      "restored_status": "d66506f7669d0d597073c53b025917fa14df18d6",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-product.liquid",
+      "old_PR4_status": "0e6f192479c4bd4e1d09d5d529f1865d76cc42a2",
+      "restored_status": "0e6f192479c4bd4e1d09d5d529f1865d76cc42a2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-products.liquid",
+      "old_PR4_status": "19963d0e29f289268bf7e047c537380c97e79745",
+      "restored_status": "19963d0e29f289268bf7e047c537380c97e79745",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-text.liquid",
+      "old_PR4_status": "ab90167e65aea7f1f6071111cbb4764b685bc6ba",
+      "restored_status": "ab90167e65aea7f1f6071111cbb4764b685bc6ba",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/featured-video.liquid",
+      "old_PR4_status": "20651c7a16d7007a13c2cf6ac6265a2d9919d7e8",
+      "restored_status": "20651c7a16d7007a13c2cf6ac6265a2d9919d7e8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/footer-bar.liquid",
+      "old_PR4_status": "84ddc26f66a5ca7936cf554fe5fd3383702caffa",
+      "restored_status": "84ddc26f66a5ca7936cf554fe5fd3383702caffa",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/footer-group.json",
+      "old_PR4_status": "68766238d5e9134bfd7e5bab7cbaba1676901b4e",
+      "restored_status": "68766238d5e9134bfd7e5bab7cbaba1676901b4e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/footer.liquid",
+      "old_PR4_status": "d388f78ffd98f073321bb326ab7d43e53e0e76f1",
+      "restored_status": "d388f78ffd98f073321bb326ab7d43e53e0e76f1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/gift-card.liquid",
+      "old_PR4_status": "b594de177b19d0818b99de3c763d1f285b564b3e",
+      "restored_status": "b594de177b19d0818b99de3c763d1f285b564b3e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/gifts.liquid",
+      "old_PR4_status": "9bd8e240d4b79a75a46ddaa53b66b5153468f638",
+      "restored_status": "9bd8e240d4b79a75a46ddaa53b66b5153468f638",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/grid-with-overlay.liquid",
+      "old_PR4_status": "ecfca64bfb6eea53e2e1437267cd9ace0054dfe1",
+      "restored_status": "ecfca64bfb6eea53e2e1437267cd9ace0054dfe1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/header-group.context.nl.json",
+      "old_PR4_status": "cdaecff8d054d1446180f77bc2a7f44e4dc62e70",
+      "restored_status": "cdaecff8d054d1446180f77bc2a7f44e4dc62e70",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/header-group.json",
+      "old_PR4_status": "9d0c9b46cb9de8993af33668b2a1b56723b7d790",
+      "restored_status": "9d0c9b46cb9de8993af33668b2a1b56723b7d790",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/header.liquid",
+      "old_PR4_status": "5f7665573c3530ec1c6828f9cb210573b095cb25",
+      "restored_status": "5f7665573c3530ec1c6828f9cb210573b095cb25",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/icons-row.liquid",
+      "old_PR4_status": "90739b6f2874761d3c312df564af114e6f3053a1",
+      "restored_status": "90739b6f2874761d3c312df564af114e6f3053a1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/image-comparison.liquid",
+      "old_PR4_status": "2f16e0757637a936b4ba2063e3299fd2c07a2960",
+      "restored_status": "2f16e0757637a936b4ba2063e3299fd2c07a2960",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/image-with-text-below.liquid",
+      "old_PR4_status": "a6158e01aa84ef75f36985732f02fb6b53b6766c",
+      "restored_status": "a6158e01aa84ef75f36985732f02fb6b53b6766c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/image-with-text-overlay.liquid",
+      "old_PR4_status": "9b72912faa12b07dea1b40bc758f36fe5659661e",
+      "restored_status": "9b72912faa12b07dea1b40bc758f36fe5659661e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/image-with-text.liquid",
+      "old_PR4_status": "70b57d09dd28b4840ee039945ce447c94340d61c",
+      "restored_status": "70b57d09dd28b4840ee039945ce447c94340d61c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/login.liquid",
+      "old_PR4_status": "080ee1e1bc2f2d6138b1a0891cf11755dd7231f9",
+      "restored_status": "080ee1e1bc2f2d6138b1a0891cf11755dd7231f9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/logo-list.liquid",
+      "old_PR4_status": "5747944b7cea8dcc612fa13e63fc0a74684cc671",
+      "restored_status": "5747944b7cea8dcc612fa13e63fc0a74684cc671",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/logo.liquid",
+      "old_PR4_status": "df5eb414a3ede7be2aada883491b10bd224a0051",
+      "restored_status": "df5eb414a3ede7be2aada883491b10bd224a0051",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-article.liquid",
+      "old_PR4_status": "fff0648c0d0618e00cfe12e4de3a44d36b67b425",
+      "restored_status": "fff0648c0d0618e00cfe12e4de3a44d36b67b425",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-blog.liquid",
+      "old_PR4_status": "66af856e011221b32a4eca01bb53093ab2573c4b",
+      "restored_status": "66af856e011221b32a4eca01bb53093ab2573c4b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-collection.liquid",
+      "old_PR4_status": "d52e9d758b7eeb3c0a1db1c125d60e753efa659a",
+      "restored_status": "d52e9d758b7eeb3c0a1db1c125d60e753efa659a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-list-collections.liquid",
+      "old_PR4_status": "dca5ee869211a40253da50e750338ef7728a9105",
+      "restored_status": "dca5ee869211a40253da50e750338ef7728a9105",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-page.liquid",
+      "old_PR4_status": "572bec554a8012467ee00b1af2069f5f2fac55f2",
+      "restored_status": "572bec554a8012467ee00b1af2069f5f2fac55f2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/main-product.liquid",
+      "old_PR4_status": "daf7444911d140d3a44f533ca9745b631e135e87",
+      "restored_status": "daf7444911d140d3a44f533ca9745b631e135e87",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/map.liquid",
+      "old_PR4_status": "6cc02a751d303dab02fcd8176eb7c75a586017f4",
+      "restored_status": "6cc02a751d303dab02fcd8176eb7c75a586017f4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/materials-craftsmanship.liquid",
+      "old_PR4_status": "13504b23f8bbc902c5fce88ffce52265b6404dd3",
+      "restored_status": "13504b23f8bbc902c5fce88ffce52265b6404dd3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/media-overlay-columns.liquid",
+      "old_PR4_status": "aab97ab9a38e4267d43a486488da3b07d0991a6c",
+      "restored_status": "aab97ab9a38e4267d43a486488da3b07d0991a6c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/media-with-highlight.liquid",
+      "old_PR4_status": "caa89646d19e8f1fcaaff9d73e22165ca881349a",
+      "restored_status": "caa89646d19e8f1fcaaff9d73e22165ca881349a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/newsletter.liquid",
+      "old_PR4_status": "2398d4787ed858884f803f35dadc9f537a40c255",
+      "restored_status": "2398d4787ed858884f803f35dadc9f537a40c255",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/nouvel-editorial-collection.liquid",
+      "old_PR4_status": "57ee4e3c19fae4431c9b0aaea9da40f59198ec20",
+      "restored_status": "57ee4e3c19fae4431c9b0aaea9da40f59198ec20",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/nouvel-editorial-product.liquid",
+      "old_PR4_status": "4dcfd42b1b2ef91abd97971f35f942108922b3a7",
+      "restored_status": "4dcfd42b1b2ef91abd97971f35f942108922b3a7",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/order.liquid",
+      "old_PR4_status": "84c5d6a46561d9194523f3cb79da2a10e51ebe09",
+      "restored_status": "84c5d6a46561d9194523f3cb79da2a10e51ebe09",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/overlapping-media.liquid",
+      "old_PR4_status": "eb6a404b2a16edeb7131625ffde48529a12d7778",
+      "restored_status": "eb6a404b2a16edeb7131625ffde48529a12d7778",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/overlay-group.json",
+      "old_PR4_status": "b82a2ea0ec45f99b5a9bb00f46ff1a1964c6eb9b",
+      "restored_status": "b82a2ea0ec45f99b5a9bb00f46ff1a1964c6eb9b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/password.liquid",
+      "old_PR4_status": "91bc215cded38081c2e25a19751e06bb97f7744d",
+      "restored_status": "91bc215cded38081c2e25a19751e06bb97f7744d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/pickup.liquid",
+      "old_PR4_status": "73b0c8d709bf4dda22f6c7844b5e885895250c6d",
+      "restored_status": "73b0c8d709bf4dda22f6c7844b5e885895250c6d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/popup.liquid",
+      "old_PR4_status": "84f073f9edb05bdd273d268728bdd3f2480cbbea",
+      "restored_status": "84f073f9edb05bdd273d268728bdd3f2480cbbea",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/predictive-search.liquid",
+      "old_PR4_status": "e88472f896ad7fa31c32dee73d05b39f97005714",
+      "restored_status": "e88472f896ad7fa31c32dee73d05b39f97005714",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/product-card.liquid",
+      "old_PR4_status": "f2e4ff27035f0a62ada0f8f3e23a4fa2097f1114",
+      "restored_status": "f2e4ff27035f0a62ada0f8f3e23a4fa2097f1114",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/product-quick-add--form.liquid",
+      "old_PR4_status": "6d131c06ffba73b313ea068ccc7f038879153e76",
+      "restored_status": "6d131c06ffba73b313ea068ccc7f038879153e76",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/recent-products.liquid",
+      "old_PR4_status": "4a4930a60218c5f26d786b689165b0c19b9060dd",
+      "restored_status": "4a4930a60218c5f26d786b689165b0c19b9060dd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/register.liquid",
+      "old_PR4_status": "1cd270b3f2856cc59d3b0dc0f912a2fd85198fda",
+      "restored_status": "1cd270b3f2856cc59d3b0dc0f912a2fd85198fda",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/related-products.liquid",
+      "old_PR4_status": "5dad155fc7aff1d7f5e3597954e4287772ffedbb",
+      "restored_status": "5dad155fc7aff1d7f5e3597954e4287772ffedbb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/reset-password.liquid",
+      "old_PR4_status": "c8a7c79bb5280e2381d99866d3fdbe8abad6b2ba",
+      "restored_status": "c8a7c79bb5280e2381d99866d3fdbe8abad6b2ba",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/returns-exchanges.liquid",
+      "old_PR4_status": "7794a9f9a823fae85564426b56260b250356cd5e",
+      "restored_status": "7794a9f9a823fae85564426b56260b250356cd5e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/scrolling-content.liquid",
+      "old_PR4_status": "c57be3010ac0a3d8661c30bbc0e940533bb81d2a",
+      "restored_status": "c57be3010ac0a3d8661c30bbc0e940533bb81d2a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/scrolling-text-on-image.liquid",
+      "old_PR4_status": "bc72ce70b7877e17aeb0f646d8f51a05c1c8376e",
+      "restored_status": "bc72ce70b7877e17aeb0f646d8f51a05c1c8376e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/search-navigation.liquid",
+      "old_PR4_status": "6e4373688bc2514ebcaa0d6b22ea18d5219a32a3",
+      "restored_status": "6e4373688bc2514ebcaa0d6b22ea18d5219a32a3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/search-results.liquid",
+      "old_PR4_status": "04a9211ea71d69ddb7ebc6b86cfaa472130cf0ea",
+      "restored_status": "04a9211ea71d69ddb7ebc6b86cfaa472130cf0ea",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/service-list.liquid",
+      "old_PR4_status": "a4595864d6ab8555c54effa281374fd569090359",
+      "restored_status": "a4595864d6ab8555c54effa281374fd569090359",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/shipping-delevery.liquid",
+      "old_PR4_status": "d3e4c4e83b722138e7d61f3274f2b411e05f543e",
+      "restored_status": "d3e4c4e83b722138e7d61f3274f2b411e05f543e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/shop-the-banner.liquid",
+      "old_PR4_status": "02420ee28dcdc9597f6b902ba01ab9d67ec98792",
+      "restored_status": "02420ee28dcdc9597f6b902ba01ab9d67ec98792",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/shop-the-look.liquid",
+      "old_PR4_status": "1941329b38f09f1886790b1d3de4d06c1751f603",
+      "restored_status": "1941329b38f09f1886790b1d3de4d06c1751f603",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/slideshow.liquid",
+      "old_PR4_status": "9865a3b2281688985aa1f645f3f6a8ed774c4e66",
+      "restored_status": "9865a3b2281688985aa1f645f3f6a8ed774c4e66",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/split-announcements.liquid",
+      "old_PR4_status": "2a7aad49e366e00f217539343dff3f98e223231d",
+      "restored_status": "2a7aad49e366e00f217539343dff3f98e223231d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/ss-footer-4.liquid",
+      "old_PR4_status": "c52049b294e4e3e6446cfd7be62aa12796f33adb",
+      "restored_status": "c52049b294e4e3e6446cfd7be62aa12796f33adb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/testimonials.liquid",
+      "old_PR4_status": "07f9892c89a1b76fe6117bda15d4fecaefc1f0d4",
+      "restored_status": "07f9892c89a1b76fe6117bda15d4fecaefc1f0d4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/text-columns.liquid",
+      "old_PR4_status": "620d868388f7f97a2acef07f60354192a6c3c430",
+      "restored_status": "620d868388f7f97a2acef07f60354192a6c3c430",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "sections/transparency-page.liquid",
+      "old_PR4_status": "4c74f875409b7943ba3d18ff8668f862e4765e5c",
+      "restored_status": "4c74f875409b7943ba3d18ff8668f862e4765e5c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/article-card.liquid",
+      "old_PR4_status": "a0e0021dcb36ca3b27404583c0d20b8cc9838caa",
+      "restored_status": "a0e0021dcb36ca3b27404583c0d20b8cc9838caa",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/blog-grid.liquid",
+      "old_PR4_status": "4c26c419ced7b9e848452a289922c5bfd915988c",
+      "restored_status": "4c26c419ced7b9e848452a289922c5bfd915988c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/breadcrumbs.liquid",
+      "old_PR4_status": "9c821377eb8c88405ee612b3e0ee179271af7b10",
+      "restored_status": "9c821377eb8c88405ee612b3e0ee179271af7b10",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/card-carousel.liquid",
+      "old_PR4_status": "fe5283474f02640201cad589d11e0e95cd10573b",
+      "restored_status": "fe5283474f02640201cad589d11e0e95cd10573b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/carousel-nav-arrow.liquid",
+      "old_PR4_status": "a875a8327d8b6418d9cf526077e22b9f4cbc972d",
+      "restored_status": "a875a8327d8b6418d9cf526077e22b9f4cbc972d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/cart.liquid",
+      "old_PR4_status": "b5e98b98544382664ac5b223b35e0e0c4f945286",
+      "restored_status": "b5e98b98544382664ac5b223b35e0e0c4f945286",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/collapsible-row.liquid",
+      "old_PR4_status": "6ba7575acc3e43a1e9f8b4e0ab7f4a6c9d8495da",
+      "restored_status": "6ba7575acc3e43a1e9f8b4e0ab7f4a6c9d8495da",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/collection-promo.liquid",
+      "old_PR4_status": "29dfb2db5f8e034af8f8c12f540ab413319d39c1",
+      "restored_status": "29dfb2db5f8e034af8f8c12f540ab413319d39c1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/complementary-products.liquid",
+      "old_PR4_status": "fb1af7c18e3395a8c525046a41fa7d110539d63e",
+      "restored_status": "fb1af7c18e3395a8c525046a41fa7d110539d63e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/consent-tracking.liquid",
+      "old_PR4_status": "2f94d0d9cbd9eff64ebd03adf8680341aab0eb17",
+      "restored_status": "2f94d0d9cbd9eff64ebd03adf8680341aab0eb17",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/countdown-timer.liquid",
+      "old_PR4_status": "d025d523500c07594477a4fdda621d24844cc7c8",
+      "restored_status": "d025d523500c07594477a4fdda621d24844cc7c8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/css-typography.liquid",
+      "old_PR4_status": "ce6316588d15cfbe2e1916054c2b095627a65746",
+      "restored_status": "ce6316588d15cfbe2e1916054c2b095627a65746",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/css-variables.liquid",
+      "old_PR4_status": "193e5bdb7f8deafcc84d6baff11bdf0becbeae0e",
+      "restored_status": "193e5bdb7f8deafcc84d6baff11bdf0becbeae0e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/custom-styles.liquid",
+      "old_PR4_status": "21a58d12d4178b9b69a7aa462b620c9b18db1425",
+      "restored_status": "21a58d12d4178b9b69a7aa462b620c9b18db1425",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/disclosure.liquid",
+      "old_PR4_status": "046ce48afba08fbf163c7ee9b6d26089925df0bd",
+      "restored_status": "046ce48afba08fbf163c7ee9b6d26089925df0bd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/drawer.liquid",
+      "old_PR4_status": "d785bb76ec89b48c37ac25843ae4f9857b196469",
+      "restored_status": "d785bb76ec89b48c37ac25843ae4f9857b196469",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/feedback-bar.liquid",
+      "old_PR4_status": "02505e10b42ef6c2fc498b7e61eee3bac9b6118a",
+      "restored_status": "02505e10b42ef6c2fc498b7e61eee3bac9b6118a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/filter.liquid",
+      "old_PR4_status": "528035eb8f1c563361ada64f8f83c44a6bf6e406",
+      "restored_status": "528035eb8f1c563361ada64f8f83c44a6bf6e406",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/icon-block.liquid",
+      "old_PR4_status": "195eb54ea68fa16cfb8ee7feabd4dc0edc83afb9",
+      "restored_status": "195eb54ea68fa16cfb8ee7feabd4dc0edc83afb9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/icons.liquid",
+      "old_PR4_status": "ceb0517c4f5495b0f9a036d279196af7ff708443",
+      "restored_status": "ceb0517c4f5495b0f9a036d279196af7ff708443",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/image.liquid",
+      "old_PR4_status": "b23418374ee0058ceeb9eb0d37bf84ff43b9653d",
+      "restored_status": "b23418374ee0058ceeb9eb0d37bf84ff43b9653d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/large-promotion.liquid",
+      "old_PR4_status": "d800aba1558e20d1b2cceb13cc186454c146cf3e",
+      "restored_status": "d800aba1558e20d1b2cceb13cc186454c146cf3e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/layout--navigation.liquid",
+      "old_PR4_status": "889201d569a6a7480ad961b2cb7caeabb4970ddd",
+      "restored_status": "889201d569a6a7480ad961b2cb7caeabb4970ddd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/localization.liquid",
+      "old_PR4_status": "767068af802a5a3f669bf41e60bc2e4bf42ef565",
+      "restored_status": "767068af802a5a3f669bf41e60bc2e4bf42ef565",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/main-search.liquid",
+      "old_PR4_status": "d6ea99724de2b75915072305c73cc2d0ed263308",
+      "restored_status": "d6ea99724de2b75915072305c73cc2d0ed263308",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/menu-blocks.liquid",
+      "old_PR4_status": "10595c8ee4ba668885f7a6fce1a8879828e5275b",
+      "restored_status": "10595c8ee4ba668885f7a6fce1a8879828e5275b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/meta-tags.liquid",
+      "old_PR4_status": "8707ae6dd8e0b05d147ae7f323da4e8a94a0da23",
+      "restored_status": "8707ae6dd8e0b05d147ae7f323da4e8a94a0da23",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/mobile-nav.liquid",
+      "old_PR4_status": "52e22a8676f31b289d3e4ca0b98d32d9732737c8",
+      "restored_status": "52e22a8676f31b289d3e4ca0b98d32d9732737c8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/nav-arrow.liquid",
+      "old_PR4_status": "0a7f005368cc318c3064dda2a1e8c255a58a8988",
+      "restored_status": "0a7f005368cc318c3064dda2a1e8c255a58a8988",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/navigation.liquid",
+      "old_PR4_status": "03997254b97c9c7c5b1f2f812c3da6302b8de1d9",
+      "restored_status": "03997254b97c9c7c5b1f2f812c3da6302b8de1d9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/newsletter-popup.liquid",
+      "old_PR4_status": "c6e79826a1b5ba92022a5e425b602609ff4cde1e",
+      "restored_status": "c6e79826a1b5ba92022a5e425b602609ff4cde1e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/pagination.liquid",
+      "old_PR4_status": "35a3973206e33a99e943974e7395f855cbe23b42",
+      "restored_status": "35a3973206e33a99e943974e7395f855cbe23b42",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/placeholder.liquid",
+      "old_PR4_status": "4a4c6cc58610d97fade665f70bb2e4943155c439",
+      "restored_status": "4a4c6cc58610d97fade665f70bb2e4943155c439",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/predictive-search--item.liquid",
+      "old_PR4_status": "f189841caa953df8e7c39b9ae5c16857e95f2023",
+      "restored_status": "f189841caa953df8e7c39b9ae5c16857e95f2023",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/predictive-search.liquid",
+      "old_PR4_status": "165308a17ddaea95152c46fbffc7351997c6cab5",
+      "restored_status": "165308a17ddaea95152c46fbffc7351997c6cab5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/preload.liquid",
+      "old_PR4_status": "c46044a8b46a9f70856ded4aae4f55a424a18731",
+      "restored_status": "c46044a8b46a9f70856ded4aae4f55a424a18731",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/price-range.liquid",
+      "old_PR4_status": "fa62ddfc7224b6de17fa8cd81477fcadbe84110f",
+      "restored_status": "fa62ddfc7224b6de17fa8cd81477fcadbe84110f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-buy-buttons.liquid",
+      "old_PR4_status": "55dcae201c47934aec3332ad81677bebc8869ae5",
+      "restored_status": "55dcae201c47934aec3332ad81677bebc8869ae5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-card--mini.liquid",
+      "old_PR4_status": "5d608eb3be37d71a0178c42c8ee1759df91749bd",
+      "restored_status": "5d608eb3be37d71a0178c42c8ee1759df91749bd",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-card--price.liquid",
+      "old_PR4_status": "966c2cff2e57193c8fa43904733b98da1b599dc2",
+      "restored_status": "966c2cff2e57193c8fa43904733b98da1b599dc2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-card.liquid",
+      "old_PR4_status": "9f309d6d925d283a3da36b31503f0a36e10be251",
+      "restored_status": "9f309d6d925d283a3da36b31503f0a36e10be251",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-carousel.liquid",
+      "old_PR4_status": "93149e05c614ddc4e062c2a5c661cafb3bacaaa0",
+      "restored_status": "93149e05c614ddc4e062c2a5c661cafb3bacaaa0",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-form.liquid",
+      "old_PR4_status": "c9fb916778f3c5ee03953a27062281a29001d22e",
+      "restored_status": "c9fb916778f3c5ee03953a27062281a29001d22e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-low-stock.liquid",
+      "old_PR4_status": "acf7fc8a813f1c32905aaf2d7369b18528d2e251",
+      "restored_status": "acf7fc8a813f1c32905aaf2d7369b18528d2e251",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-media--variants.liquid",
+      "old_PR4_status": "1e5576d01f7bb8a6277206e732328ce7139a9a58",
+      "restored_status": "1e5576d01f7bb8a6277206e732328ce7139a9a58",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-media.liquid",
+      "old_PR4_status": "b391cdbf925f362675aa97fb7fea2556f35f828a",
+      "restored_status": "b391cdbf925f362675aa97fb7fea2556f35f828a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-options.liquid",
+      "old_PR4_status": "c2af57299f057ac13ac444cb85915535402b1aa9",
+      "restored_status": "c2af57299f057ac13ac444cb85915535402b1aa9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-pickup.liquid",
+      "old_PR4_status": "88a5035875ae76bb81b72174ebe42260fb4c7a12",
+      "restored_status": "88a5035875ae76bb81b72174ebe42260fb4c7a12",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-price.liquid",
+      "old_PR4_status": "73ce25624db9766a82e14d6e6604ca3cba86bff6",
+      "restored_status": "73ce25624db9766a82e14d6e6604ca3cba86bff6",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-quick-add.liquid",
+      "old_PR4_status": "f8cbf08766d164bd83c0bd3e1dd6661deafc9bd5",
+      "restored_status": "f8cbf08766d164bd83c0bd3e1dd6661deafc9bd5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-rating.liquid",
+      "old_PR4_status": "e92b6a3e811aa1241efe9555156f77fd53cb3b82",
+      "restored_status": "e92b6a3e811aa1241efe9555156f77fd53cb3b82",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/product-unavailable-form.liquid",
+      "old_PR4_status": "b44182ceee2b01d6ea0bc4af68bf98e7cd2e8cb6",
+      "restored_status": "b44182ceee2b01d6ea0bc4af68bf98e7cd2e8cb6",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/quantity-selector.liquid",
+      "old_PR4_status": "196e63f7be46165406a9e59c8ba4d68d73fe007c",
+      "restored_status": "196e63f7be46165406a9e59c8ba4d68d73fe007c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/radios.liquid",
+      "old_PR4_status": "73d0dec91ddabc264e3707f8373db89e1125eaa1",
+      "restored_status": "73d0dec91ddabc264e3707f8373db89e1125eaa1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/routes.liquid",
+      "old_PR4_status": "7c8b51ec9a07ddbbd87426464cb663cb9da03a2b",
+      "restored_status": "7c8b51ec9a07ddbbd87426464cb663cb9da03a2b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/section-blocks.liquid",
+      "old_PR4_status": "2d01a19590e687041966be2c47f3b51b999457e4",
+      "restored_status": "2d01a19590e687041966be2c47f3b51b999457e4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/sizes-cover.liquid",
+      "old_PR4_status": "fa7097fadee77c4135647de45566832f5cfa85cf",
+      "restored_status": "fa7097fadee77c4135647de45566832f5cfa85cf",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/sizes-grid.liquid",
+      "old_PR4_status": "7ccad1ea459bf8d35ee7326e31d9ec321a972528",
+      "restored_status": "7ccad1ea459bf8d35ee7326e31d9ec321a972528",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/slideshow-blocks.liquid",
+      "old_PR4_status": "a8915716873d1fef9a3b7e5ccbe7a08c811d25c4",
+      "restored_status": "a8915716873d1fef9a3b7e5ccbe7a08c811d25c4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/slideshow-carousel.liquid",
+      "old_PR4_status": "350b91144a114a38930e82cc19ee2d366cd81ddb",
+      "restored_status": "350b91144a114a38930e82cc19ee2d366cd81ddb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/slideshow-pagination.liquid",
+      "old_PR4_status": "6f309047c6e6db305391db981c1148fe69947b9b",
+      "restored_status": "6f309047c6e6db305391db981c1148fe69947b9b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/small-logo.liquid",
+      "old_PR4_status": "032c9363ba617d4c6465ed50539b1663d902a1e5",
+      "restored_status": "032c9363ba617d4c6465ed50539b1663d902a1e5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/small-promotion.liquid",
+      "old_PR4_status": "4ecde648d7ff8f9ed448e8265039f0669ef31ba4",
+      "restored_status": "4ecde648d7ff8f9ed448e8265039f0669ef31ba4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/social-media.liquid",
+      "old_PR4_status": "bd76cfbd58e679f085a45caaa15971fc453e301d",
+      "restored_status": "bd76cfbd58e679f085a45caaa15971fc453e301d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/stacked-text.liquid",
+      "old_PR4_status": "22077addf71644271b3d30d298007d8bf7ea8bea",
+      "restored_status": "22077addf71644271b3d30d298007d8bf7ea8bea",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/subscribe-form.liquid",
+      "old_PR4_status": "d3de2417c7d7c511c2ac99506e2d72ce798a5c86",
+      "restored_status": "d3de2417c7d7c511c2ac99506e2d72ce798a5c86",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/swatches.liquid",
+      "old_PR4_status": "aab9f8f366fd438e2076bc21e4aba49c272b9763",
+      "restored_status": "aab9f8f366fd438e2076bc21e4aba49c272b9763",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/utils.liquid",
+      "old_PR4_status": "5df66fc1723af6e2ff9ebee9896339b3db3e1830",
+      "restored_status": "5df66fc1723af6e2ff9ebee9896339b3db3e1830",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/video-play-button.liquid",
+      "old_PR4_status": "26036b2aed303b1b37b11b3f377488936922aa60",
+      "restored_status": "26036b2aed303b1b37b11b3f377488936922aa60",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/video.liquid",
+      "old_PR4_status": "293bbf215f856e75535a0168b55591005496ed32",
+      "restored_status": "293bbf215f856e75535a0168b55591005496ed32",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/x-menu.liquid",
+      "old_PR4_status": "f3e4762f39be8f4cfb6d4e89f01171e586533407",
+      "restored_status": "f3e4762f39be8f4cfb6d4e89f01171e586533407",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "snippets/y-menu.liquid",
+      "old_PR4_status": "2c6fd1e7000de73bc93e745225ec5f9d67eb648f",
+      "restored_status": "2c6fd1e7000de73bc93e745225ec5f9d67eb648f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/404.context.nl.json",
+      "old_PR4_status": "b83300facebe5bbc844b55510ea4e19f307b2c49",
+      "restored_status": "b83300facebe5bbc844b55510ea4e19f307b2c49",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/404.json",
+      "old_PR4_status": "663159884dae89d2961caf3c2e47a260fa998ea3",
+      "restored_status": "663159884dae89d2961caf3c2e47a260fa998ea3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/agents.md.liquid",
+      "old_PR4_status": "62c954cffd2d31e522d227b824aa4618158260c3",
+      "restored_status": "62c954cffd2d31e522d227b824aa4618158260c3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/article.json",
+      "old_PR4_status": "45a8200a05960a6aca3890bfd9b105d203c7f124",
+      "restored_status": "45a8200a05960a6aca3890bfd9b105d203c7f124",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/blog.blogs.json",
+      "old_PR4_status": "c62a07b1d385ab2db791a0d546f7d80076c88377",
+      "restored_status": "c62a07b1d385ab2db791a0d546f7d80076c88377",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/blog.json",
+      "old_PR4_status": "c62a07b1d385ab2db791a0d546f7d80076c88377",
+      "restored_status": "c62a07b1d385ab2db791a0d546f7d80076c88377",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/cart.json",
+      "old_PR4_status": "48da5c4f2d15dcdca24f0c5de4c73bae6adbbf77",
+      "restored_status": "48da5c4f2d15dcdca24f0c5de4c73bae6adbbf77",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.atelier-collect.context.nl.json",
+      "old_PR4_status": "1a0f5cecd7c630b9833c5aaac43593017f47d97a",
+      "restored_status": "1a0f5cecd7c630b9833c5aaac43593017f47d97a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.atelier-collect.json",
+      "old_PR4_status": "bac45d625b866a4fa5def9e8fec6db38fd16bf89",
+      "restored_status": "bac45d625b866a4fa5def9e8fec6db38fd16bf89",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.essential-steel.json",
+      "old_PR4_status": "8c4d203559aa4d5e1da7b070aea613cfe83dc55e",
+      "restored_status": "8c4d203559aa4d5e1da7b070aea613cfe83dc55e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.json",
+      "old_PR4_status": "4b398995d2a6e99d5261d1a56043f77a51e2b5fe",
+      "restored_status": "4b398995d2a6e99d5261d1a56043f77a51e2b5fe",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.minimalist-essentials.context.nl.json",
+      "old_PR4_status": "a68d281c4fd345d70b594d93899782d0dfee08ca",
+      "restored_status": "a68d281c4fd345d70b594d93899782d0dfee08ca",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/collection.minimalist-essentials.json",
+      "old_PR4_status": "4ec38859378deeee88670e61f2e1befc14869e6b",
+      "restored_status": "4ec38859378deeee88670e61f2e1befc14869e6b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/account.json",
+      "old_PR4_status": "edcec4645e74d3049b0cd2b0d2d2147657c52602",
+      "restored_status": "edcec4645e74d3049b0cd2b0d2d2147657c52602",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/activate_account.json",
+      "old_PR4_status": "e7f5f0362d65388584c999d6efd3328108b9389c",
+      "restored_status": "e7f5f0362d65388584c999d6efd3328108b9389c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/addresses.json",
+      "old_PR4_status": "342e16c56e83d6f2b950bf15973ece3356ab0815",
+      "restored_status": "342e16c56e83d6f2b950bf15973ece3356ab0815",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/login.json",
+      "old_PR4_status": "3828e0c5ed0bd61472b79210f4144077536e9900",
+      "restored_status": "3828e0c5ed0bd61472b79210f4144077536e9900",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/order.json",
+      "old_PR4_status": "07c2716f852f17f81a54295102b059968b8bfcc3",
+      "restored_status": "07c2716f852f17f81a54295102b059968b8bfcc3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/register.json",
+      "old_PR4_status": "fa982d6623cbb601add1caae66b3beb0ce91ad9a",
+      "restored_status": "fa982d6623cbb601add1caae66b3beb0ce91ad9a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/customers/reset_password.json",
+      "old_PR4_status": "b9f35c969c55f36004d0f224e9bef8bd4a6baa6c",
+      "restored_status": "b9f35c969c55f36004d0f224e9bef8bd4a6baa6c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/gift_card.liquid",
+      "old_PR4_status": "7637ae512d4253da991b5e498d6b527ac697af3b",
+      "restored_status": "7637ae512d4253da991b5e498d6b527ac697af3b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/index.json",
+      "old_PR4_status": "3c0bf3496dfbe7d431bdf5bbe3987b0d3e52436c",
+      "restored_status": "3c0bf3496dfbe7d431bdf5bbe3987b0d3e52436c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/list-collections.json",
+      "old_PR4_status": "5a1453b75e8a128983967149b2b95388d2428c9f",
+      "restored_status": "5a1453b75e8a128983967149b2b95388d2428c9f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/llms-full.txt.liquid",
+      "old_PR4_status": "42456627a6f6b0cd676cb8cc241da98bc712600f",
+      "restored_status": "42456627a6f6b0cd676cb8cc241da98bc712600f",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/llms.txt.liquid",
+      "old_PR4_status": "24f8d93a742278b7c5ebbbf43fa3b87f8550410b",
+      "restored_status": "24f8d93a742278b7c5ebbbf43fa3b87f8550410b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.about.json",
+      "old_PR4_status": "a11b23ab97bfe8c34fe517d81d4823b850046aa0",
+      "restored_status": "a11b23ab97bfe8c34fe517d81d4823b850046aa0",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.algemene-voorwaarden.json",
+      "old_PR4_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "restored_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.bedrijfsgegevens.json",
+      "old_PR4_status": "740ca5bca0d21e56c634a26bbcdcbd0b4436771d",
+      "restored_status": "740ca5bca0d21e56c634a26bbcdcbd0b4436771d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.contact.json",
+      "old_PR4_status": "b8a1a9293d513d12962cabed1eb2ed1f00f6feda",
+      "restored_status": "b8a1a9293d513d12962cabed1eb2ed1f00f6feda",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.duurzaamheid-2.json",
+      "old_PR4_status": "6f11f999e70fe6e1ffb1cd066adf0a123c030467",
+      "restored_status": "6f11f999e70fe6e1ffb1cd066adf0a123c030467",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.duurzaamheid.json",
+      "old_PR4_status": "869b4ab6a931cd95810567cbc52dcfca28adebfe",
+      "restored_status": "869b4ab6a931cd95810567cbc52dcfca28adebfe",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.faqs.json",
+      "old_PR4_status": "bae4b83cffaebbe78e721f4b6e14c24ae21da22c",
+      "restored_status": "bae4b83cffaebbe78e721f4b6e14c24ae21da22c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.json",
+      "old_PR4_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "restored_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.klant-beoordelingen.json",
+      "old_PR4_status": "4edcfa0c093a673cb870faf5c2c92cb4f2a79135",
+      "restored_status": "4edcfa0c093a673cb870faf5c2c92cb4f2a79135",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.lookbook.context.nl.json",
+      "old_PR4_status": "230d5f33ebb1d82b97a76f857f0c5c626e937be4",
+      "restored_status": "230d5f33ebb1d82b97a76f857f0c5c626e937be4",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.lookbook.json",
+      "old_PR4_status": "869b4ab6a931cd95810567cbc52dcfca28adebfe",
+      "restored_status": "869b4ab6a931cd95810567cbc52dcfca28adebfe",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.ons-proces-2.json",
+      "old_PR4_status": "6f11f999e70fe6e1ffb1cd066adf0a123c030467",
+      "restored_status": "6f11f999e70fe6e1ffb1cd066adf0a123c030467",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.ons-proces.json",
+      "old_PR4_status": "1258349bd7479c92a7761884dacd16f3a6245ff3",
+      "restored_status": "1258349bd7479c92a7761884dacd16f3a6245ff3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.privacy-beleid.json",
+      "old_PR4_status": "4d4e85f9ed4f30d06ad745f8e4f5717893147e16",
+      "restored_status": "4d4e85f9ed4f30d06ad745f8e4f5717893147e16",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.privacybeleid.json",
+      "old_PR4_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "restored_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.retourneren.json",
+      "old_PR4_status": "e0b8c6604dc1e6bf721d9cc09525783a0d102398",
+      "restored_status": "e0b8c6604dc1e6bf721d9cc09525783a0d102398",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.verzending.json",
+      "old_PR4_status": "46a3b7433189c6f8598fb78fb2c68ddd192c3d93",
+      "restored_status": "46a3b7433189c6f8598fb78fb2c68ddd192c3d93",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/page.volg-je-bestelling.json",
+      "old_PR4_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "restored_status": "fe32068c83d3db332ba21b098c9dd27d60acc07a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/password.json",
+      "old_PR4_status": "1efdcb0943592bc1d5a8e14cbca027fcfb07f104",
+      "restored_status": "1efdcb0943592bc1d5a8e14cbca027fcfb07f104",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.ajax-item.json",
+      "old_PR4_status": "f969573e3e849f678bab5372f8dd7263964609e3",
+      "restored_status": "f969573e3e849f678bab5372f8dd7263964609e3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.armband-eloise.json",
+      "old_PR4_status": "89033022b77ad6ff5e5db817913dfc447911f889",
+      "restored_status": "89033022b77ad6ff5e5db817913dfc447911f889",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.atelier-initial-ring.json",
+      "old_PR4_status": "8823f5766f73189d19d8df48b236eb8f62dcad42",
+      "restored_status": "8823f5766f73189d19d8df48b236eb8f62dcad42",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.atelier-irregular-hoops.context.nl.json",
+      "old_PR4_status": "0f88b7968e28ab55bf6705ed1557efa0043efed5",
+      "restored_status": "0f88b7968e28ab55bf6705ed1557efa0043efed5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.atelier-irregular-hoops.json",
+      "old_PR4_status": "5dd32faa3ebb93f096ab0ca077cf9f186b6ef351",
+      "restored_status": "5dd32faa3ebb93f096ab0ca077cf9f186b6ef351",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.atelier-parel-oorbel.json",
+      "old_PR4_status": "cf38ac8d0fac32227dc22fb7684c11419ae4d045",
+      "restored_status": "cf38ac8d0fac32227dc22fb7684c11419ae4d045",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.atelier-sieraden.json",
+      "old_PR4_status": "b52d88f880a3308cca73ae6127962a1a44b19b6e",
+      "restored_status": "b52d88f880a3308cca73ae6127962a1a44b19b6e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.bandeau-body.json",
+      "old_PR4_status": "9684ad7b2ec527637f51719c2595fd19e30f8715",
+      "restored_status": "9684ad7b2ec527637f51719c2595fd19e30f8715",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.bloem-armband.context.nl.json",
+      "old_PR4_status": "776ab4b49315f7b7df8703413f9699746cff35a9",
+      "restored_status": "776ab4b49315f7b7df8703413f9699746cff35a9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.bloem-armband.json",
+      "old_PR4_status": "bcdcefde8b9d6f01e722ed72f52e6548edaec099",
+      "restored_status": "bcdcefde8b9d6f01e722ed72f52e6548edaec099",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.blue-stone-atelier-ring.json",
+      "old_PR4_status": "bda1135ec30a864c40831fdd1b23329879b8824e",
+      "restored_status": "bda1135ec30a864c40831fdd1b23329879b8824e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.blush-structure-suit.json",
+      "old_PR4_status": "df312d7aa167353b97c56a4a7622df9669560fb1",
+      "restored_status": "df312d7aa167353b97c56a4a7622df9669560fb1",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.body-met-kant.json",
+      "old_PR4_status": "c5549c84077bf55176a53e83163b13a46a250071",
+      "restored_status": "c5549c84077bf55176a53e83163b13a46a250071",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.brede-oorringen.json",
+      "old_PR4_status": "048a19783c4e828ff911769cd8be2f6ad207db04",
+      "restored_status": "048a19783c4e828ff911769cd8be2f6ad207db04",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.celeste-armband.json",
+      "old_PR4_status": "e883b22a3349d9bed6b0c9a1319cbe4eda9e71eb",
+      "restored_status": "e883b22a3349d9bed6b0c9a1319cbe4eda9e71eb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.classic-tennis-armband.json",
+      "old_PR4_status": "421ef29ad68c302be13d5c3f955594021943fe15",
+      "restored_status": "421ef29ad68c302be13d5c3f955594021943fe15",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.context.nl.json",
+      "old_PR4_status": "70030d4ffecf5b5b0c202cdbb26e41fd0e4f0ba9",
+      "restored_status": "70030d4ffecf5b5b0c202cdbb26e41fd0e4f0ba9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.crossed-huggies.json",
+      "old_PR4_status": "e308b2a977479f9f7a54392d9cecd0749ea1ddf8",
+      "restored_status": "e308b2a977479f9f7a54392d9cecd0749ea1ddf8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.double-layer-armband.json",
+      "old_PR4_status": "42299b2782d24862b9cb35c6a9ffea2c85356daf",
+      "restored_status": "42299b2782d24862b9cb35c6a9ffea2c85356daf",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.drop-hoops.json",
+      "old_PR4_status": "9b705a78d2dd8e3c3c6bb7bb227aca796ba3473a",
+      "restored_status": "9b705a78d2dd8e3c3c6bb7bb227aca796ba3473a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.elise-oorbellen.json",
+      "old_PR4_status": "85ace12ae8a8390888e3b6323df42174f84db206",
+      "restored_status": "85ace12ae8a8390888e3b6323df42174f84db206",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.eloise-katoenen-blouse.json",
+      "old_PR4_status": "b21a5f04a677deec5674993fd3a9749d743ab630",
+      "restored_status": "b21a5f04a677deec5674993fd3a9749d743ab630",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.essential-365-oorringen.json",
+      "old_PR4_status": "05fbcd2377d7f26c7fcf2d8c2a23ecb6b49e2445",
+      "restored_status": "05fbcd2377d7f26c7fcf2d8c2a23ecb6b49e2445",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.essential-steel.json",
+      "old_PR4_status": "0bd915236ed921eda4a148a4508c54e769f8bb10",
+      "restored_status": "0bd915236ed921eda4a148a4508c54e769f8bb10",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.essentials.json",
+      "old_PR4_status": "c6a3964ef2713bfa21e956ef4efd674bbc2c01b3",
+      "restored_status": "c6a3964ef2713bfa21e956ef4efd674bbc2c01b3",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.fringe-oorbellen.json",
+      "old_PR4_status": "2e2e997fccd6c9badc741d3909bbb76191d50956",
+      "restored_status": "2e2e997fccd6c9badc741d3909bbb76191d50956",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.gestreepte-strik-blouse.json",
+      "old_PR4_status": "c9cdb578eed588eed314c2df34a2f8d97d3acbef",
+      "restored_status": "c9cdb578eed588eed314c2df34a2f8d97d3acbef",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.gestreepte-zijden-blouse.json",
+      "old_PR4_status": "5a47f38c311a62c99e0fc89794003f71338d0cff",
+      "restored_status": "5a47f38c311a62c99e0fc89794003f71338d0cff",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.gouden-oorringen-diamond.json",
+      "old_PR4_status": "c35411d1ff00852d1980667bdc4521c4c0475ba6",
+      "restored_status": "c35411d1ff00852d1980667bdc4521c4c0475ba6",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.heavyweight-t-shirt.json",
+      "old_PR4_status": "9ededd81d555488e325970c757b0aedbf619b698",
+      "restored_status": "9ededd81d555488e325970c757b0aedbf619b698",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.high-neck-lace-jurk.json",
+      "old_PR4_status": "dbdfaf8a20872a58adfbc6d854b04f690cf23e31",
+      "restored_status": "dbdfaf8a20872a58adfbc6d854b04f690cf23e31",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.infinity-armband.json",
+      "old_PR4_status": "6cc8325ac183bffe6b33657eb2c634bb47d12858",
+      "restored_status": "6cc8325ac183bffe6b33657eb2c634bb47d12858",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.json",
+      "old_PR4_status": "03bf57f92e9d3bfb08accdb1b9d8b4424ead7e1a",
+      "restored_status": "03bf57f92e9d3bfb08accdb1b9d8b4424ead7e1a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.kasjmier-trui-met-kraag.json",
+      "old_PR4_status": "f5fd8cbad678ca69f60d3aebe1fa0bdb10242138",
+      "restored_status": "f5fd8cbad678ca69f60d3aebe1fa0bdb10242138",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.lange-fringe-oorbellen-2.json",
+      "old_PR4_status": "e800d3dd66e15a4c77540eafa1ebaa103604f045",
+      "restored_status": "e800d3dd66e15a4c77540eafa1ebaa103604f045",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.lange-fringe-oorbellen.json",
+      "old_PR4_status": "76e80f4ddda1b42fab5e25aab954132a32df852c",
+      "restored_status": "76e80f4ddda1b42fab5e25aab954132a32df852c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.large-curve-hoop-oorbelle.json",
+      "old_PR4_status": "2e2e997fccd6c9badc741d3909bbb76191d50956",
+      "restored_status": "2e2e997fccd6c9badc741d3909bbb76191d50956",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.leren-biker-jas.json",
+      "old_PR4_status": "d10ed3114b5d79f05c5ee1734aaae63f9c969503",
+      "restored_status": "d10ed3114b5d79f05c5ee1734aaae63f9c969503",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.liquid-drop-oorbellen.json",
+      "old_PR4_status": "282acf34f3d52783e8241b56addd630476a2254e",
+      "restored_status": "282acf34f3d52783e8241b56addd630476a2254e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.moissanite-ring.json",
+      "old_PR4_status": "3201cd3bb26370528ec7542b57bfe31b396fa18c",
+      "restored_status": "3201cd3bb26370528ec7542b57bfe31b396fa18c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.mulberry-zijden-jurk.json",
+      "old_PR4_status": "deeed8d0fca6aa0ca7a527e652e3094a0273be50",
+      "restored_status": "deeed8d0fca6aa0ca7a527e652e3094a0273be50",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.natuursteen-armband.json",
+      "old_PR4_status": "2ce746c96c94caed28b166e44ea711fb2e9d7db9",
+      "restored_status": "2ce746c96c94caed28b166e44ea711fb2e9d7db9",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.onyx-studs.json",
+      "old_PR4_status": "d66444589d7e19ae1bc8d6408e8810bd4f66ced2",
+      "restored_status": "d66444589d7e19ae1bc8d6408e8810bd4f66ced2",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.organic-light-climbers.json",
+      "old_PR4_status": "267434e5c930ce51b92d6b3b6c6187aab0c3770b",
+      "restored_status": "267434e5c930ce51b92d6b3b6c6187aab0c3770b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.parel-armband.json",
+      "old_PR4_status": "ca669e363f478524bad41428be9251589ae6dafa",
+      "restored_status": "ca669e363f478524bad41428be9251589ae6dafa",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.parel-ketting.json",
+      "old_PR4_status": "d9fa852b6dc517f487e98085a0d5135a085f1748",
+      "restored_status": "d9fa852b6dc517f487e98085a0d5135a085f1748",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.parel-oorknoppen.json",
+      "old_PR4_status": "c8d83e7231100744704b53931143c4620959047c",
+      "restored_status": "c8d83e7231100744704b53931143c4620959047c",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.pave-atelier-ring.json",
+      "old_PR4_status": "11af4e4db357b45f6e9f166ca9408a9c52ff1075",
+      "restored_status": "11af4e4db357b45f6e9f166ca9408a9c52ff1075",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.pave-hart-ketting.json",
+      "old_PR4_status": "81925448013694d561538ccb25918f4fbac57e32",
+      "restored_status": "81925448013694d561538ccb25918f4fbac57e32",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.pave-hoop-oorbellen.json",
+      "old_PR4_status": "e69ff3889585449d19f6306788cc044042d2da4d",
+      "restored_status": "e69ff3889585449d19f6306788cc044042d2da4d",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.regenboog-moissanite.json",
+      "old_PR4_status": "64a72cd46c018c0d57fc405bb9c71ec16b490e8b",
+      "restored_status": "64a72cd46c018c0d57fc405bb9c71ec16b490e8b",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.relaxed-cotton-blouse.json",
+      "old_PR4_status": "a7a91c85e26fb07da7cd2c0d07e6ba4994178fdf",
+      "restored_status": "a7a91c85e26fb07da7cd2c0d07e6ba4994178fdf",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.ruffle-jurk.json",
+      "old_PR4_status": "ebb4aab1d22ab1d78f205fbe278c16216a39dfeb",
+      "restored_status": "ebb4aab1d22ab1d78f205fbe278c16216a39dfeb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.sculptural-drop-oorbellen.json",
+      "old_PR4_status": "404475729b097d66792657540911637d96cef70e",
+      "restored_status": "404475729b097d66792657540911637d96cef70e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.sculptural-hoop-oorbellen.json",
+      "old_PR4_status": "03b2e1f4ca0991fa195e5440572fc4435898442e",
+      "restored_status": "03b2e1f4ca0991fa195e5440572fc4435898442e",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.soft-curve-oorbellen.json",
+      "old_PR4_status": "71f7aefffe3f2817a6ab439aecda86d8bdd90f36",
+      "restored_status": "71f7aefffe3f2817a6ab439aecda86d8bdd90f36",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.soft-touch-body.context.nl.json",
+      "old_PR4_status": "64089071f38014ee154447234fe8dcce06c7cb67",
+      "restored_status": "64089071f38014ee154447234fe8dcce06c7cb67",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.soft-touch-body.json",
+      "old_PR4_status": "d22f8faec890617e2835c5e92256631e2190b54a",
+      "restored_status": "d22f8faec890617e2835c5e92256631e2190b54a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.suede-trenchcoat.context.nl.json",
+      "old_PR4_status": "9838f46af14814fd7bff5b531a7f25d39ab15d28",
+      "restored_status": "9838f46af14814fd7bff5b531a7f25d39ab15d28",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.suede-trenchcoat.json",
+      "old_PR4_status": "4e65010efce71660941ffad3824c4517aeee1bc8",
+      "restored_status": "4e65010efce71660941ffad3824c4517aeee1bc8",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.tencel-linnen-oversized.json",
+      "old_PR4_status": "37396b6c03689954546d880e65d881781fb46516",
+      "restored_status": "37396b6c03689954546d880e65d881781fb46516",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.vormgevende-body.json",
+      "old_PR4_status": "4c9e1398f558b2546c018fc35bc28bd9368e6462",
+      "restored_status": "4c9e1398f558b2546c018fc35bc28bd9368e6462",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/product.waterdruppel-oorbellen.json",
+      "old_PR4_status": "5e92b7e26533d352a0a025f003928d58a904f626",
+      "restored_status": "5e92b7e26533d352a0a025f003928d58a904f626",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "templates/search.json",
+      "old_PR4_status": "d236a0bd4926099532ab594d8b3d83b2e9848787",
+      "restored_status": "d236a0bd4926099532ab594d8b3d83b2e9848787",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/e2e/storefront.spec.mjs",
+      "old_PR4_status": "05cb4fb378442cdb4637d1566ae87f269f4edceb",
+      "restored_status": "05cb4fb378442cdb4637d1566ae87f269f4edceb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/js-allowed-changes.cjs",
+      "old_PR4_status": "d98dd88f088b0a8310b767f844f7998f689fcf2a",
+      "restored_status": "d98dd88f088b0a8310b767f844f7998f689fcf2a",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/liquid-helper.cjs",
+      "old_PR4_status": "9d25c443895c1b6a314fbf737536d309274ab962",
+      "restored_status": "9d25c443895c1b6a314fbf737536d309274ab962",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/locales.test.cjs",
+      "old_PR4_status": "f3a3b290f909276a0a015085d56421b112fde803",
+      "restored_status": "f3a3b290f909276a0a015085d56421b112fde803",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/performance.test.cjs",
+      "old_PR4_status": "2f52fdd39696e2b4f06c67099c99f2cc680cc3cb",
+      "restored_status": "2f52fdd39696e2b4f06c67099c99f2cc680cc3cb",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/preview.test.cjs",
+      "old_PR4_status": "d08e648010ad97acdb3e158f07c161a7251329ca",
+      "restored_status": "d08e648010ad97acdb3e158f07c161a7251329ca",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/prices.test.cjs",
+      "old_PR4_status": "7db5d2c68c4b56d14b66fffe0dd0bf84f310ee65",
+      "restored_status": "7db5d2c68c4b56d14b66fffe0dd0bf84f310ee65",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/reviews.test.cjs",
+      "old_PR4_status": "5a9785f683b39982605b0c9398f9f5140248e339",
+      "restored_status": "5a9785f683b39982605b0c9398f9f5140248e339",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/theme.test.cjs",
+      "old_PR4_status": "4f6858347041ebb651d86cb88f97056d20b54005",
+      "restored_status": "4f6858347041ebb651d86cb88f97056d20b54005",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "tests/transitions.test.cjs",
+      "old_PR4_status": "ce6cc02a16a07a773fdc68016615ef3ff87258d5",
+      "restored_status": "ce6cc02a16a07a773fdc68016615ef3ff87258d5",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    },
+    {
+      "file": "theme_export__nouvelthelabel-com-nouvel-the-label__05OCT2026-0901am.zip",
+      "old_PR4_status": "c5b06c8601eb05966538add0a12eb2211eaf2907",
+      "restored_status": "c5b06c8601eb05966538add0a12eb2211eaf2907",
+      "difference": "none",
+      "reason": "Exact original PR4 content",
+      "status": "PASS"
+    }
+  ]
+}

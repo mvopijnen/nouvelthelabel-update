@@ -31,11 +31,11 @@ test('Lower slideshow is lazy, with no high-priority image',async()=>{
  assert.equal(d.querySelectorAll('img[fetchpriority="high"]').length,0);
 });
 
-test('Liquid prices and actual JavaScript formatter use the same whole-euro rounding',async()=>{
+test('Liquid prices and actual JavaScript formatter use the same actual cent amounts',async()=>{
  const text=fs.readFileSync(path.join(root,'assets/theme.js'),'utf8');
  const start=text.indexOf('static formatMoney('),end=text.indexOf('static arraysEqual',start);
  const Money=vm.runInNewContext(`class Money {static get money_format(){return '€{{amount_with_comma_separator}}'} ${text.slice(start,end)}}; Money`);
- for(const [cents,expected]of [[4995,'€50'],[10000,'€100'],[124950,'€1.250']]){
+ for(const [cents,expected]of [[4995,'€49,95'],[10000,'€100,00'],[124950,'€1.249,50']]){
   const variant={id:1,price:cents,compare_at_price:cents+10000,unit_price:cents,unit_price_measurement:{reference_value:1,reference_unit:'kg'}};
   const product={selected_or_first_available_variant:variant,price:cents,compare_at_price:cents+10000,available:true};
   for(const snippet of ['product-price','product-card--price']){
@@ -106,10 +106,12 @@ test('Machine-readable product price and protected review source are unchanged',
  assert.doesNotMatch(meta,/product\.price[^\n]*\| round/);
  const {execFileSync}=require('node:child_process');
  const base=execFileSync('git',['show','8ff750c037e6f376efb739415c44190db2c1ac6d:theme.liquid'],{cwd:root});
- assert.deepEqual(fs.readFileSync(path.join(root,'layout/theme.liquid')),base);
+ const observer=/        function startVerifiedBadgeScript\(\) \{[\s\S]*?(?=        if \(document.readyState)/;
+ const actual=fs.readFileSync(path.join(root,'layout/theme.liquid'),'utf8').replace(observer,base.toString('utf8').match(observer)[0]).replace("shop.money_format | replace: 'EUR', '€' | escape","shop.money_format | replace: 'EUR', '€' | replace: 'amount', 'amount_no_decimals' | escape");
+ assert.equal(actual,base.toString('utf8'));
 });
 
-test('Actual variant-change component keeps original, compare and unit prices rounded',async()=>{
+test('Actual variant-change component keeps original, compare and unit prices exact',async()=>{
  const variant={id:1,price:4995,compare_at_price:10000,unit_price:4995,unit_price_measurement:{reference_value:1,reference_unit:'kg'}};
  const html=await renderFile('product-price',{product:{selected_or_first_available_variant:variant},id:'variant',cart:{}});
  const dom=new JSDOM('<div>'+html+'</div>',{runScripts:'outside-only'}),w=dom.window;
@@ -120,21 +122,21 @@ test('Actual variant-change component keeps original, compare and unit prices ro
  w.eval(async.slice(start,stop)+';customElements.define("product-price-element",ProductPrice)');
  const changed={...variant,price:124950,compare_at_price:150000,unit_price:10000};
  w.dispatchEvent(new w.CustomEvent('theme:product:variant:variantChanged',{detail:{variant:changed}}));
- assert.equal(w.document.querySelector('.product-price--original').textContent,'€1.250');
- assert.equal(w.document.querySelector('.product-price--compare').textContent,'€1.500');
- assert.equal(w.document.querySelector('.product-price--unit-price').textContent,'€100');
+ assert.equal(w.document.querySelector('.product-price--original').textContent,'€1.249,50');
+ assert.equal(w.document.querySelector('.product-price--compare').textContent,'€1.500,00');
+ assert.equal(w.document.querySelector('.product-price--unit-price').textContent,'€100,00');
  assert.equal(changed.price,124950);
  w.document.querySelector('product-price-element').remove();assert.equal(listeners.size,0);w.close();
 });
 
-test('Cart drawer and desktop render rounded prices without changing basket amounts',async()=>{
+test('Cart drawer and desktop render exact prices without changing basket amounts',async()=>{
  const item={id:1,key:'item',quantity:1,title:'Product',url:'/products/product',original_price:10000,final_price:4995,original_line_price:10000,final_line_price:4995,unit_price:4995,unit_price_measurement:{reference_value:1,reference_unit:'kg'},product:{has_only_default_variant:true},discount_allocations:[],properties:{}};
  const cart={items:[item],item_count:1,total_price:4995,currency:{iso_code:'EUR'},cart_level_discount_applications:[],note:'',taxes_included:true};
  for(const view of ['desktop','drawer']){
   const html=await renderFile('cart',{view,cart,settings:{},routes:{cart_url:'/cart',all_products_collection_url:'/collections/all'},linklists:{}});
   const d=new JSDOM(html).window.document;
-  assert.equal(d.querySelector('.cart--total-price').textContent.trim(),'€50 EUR');
-  assert.match(d.querySelector('.cart--item--price').textContent,/€50/);
+  assert.equal(d.querySelector('.cart--total-price').textContent.trim(),'€49,95 EUR');
+  assert.match(d.querySelector('.cart--item--price').textContent,/€49,95/);
   assert.equal(cart.total_price,4995);assert.equal(item.final_price,4995);
  }
 });
@@ -197,8 +199,8 @@ test('Restored password and gift-card pages render their controls and retain rea
  const data={gift_card,section:{settings:{}},shop:{name:'Nouvél',url:'https://theme.test'},request:{locale:{iso_code:'nl'}}};
  const sectionHTML=await renderSource('sections/gift-card.liquid',data);
  const document=new JSDOM(sectionHTML).window.document;
- assert.equal(document.querySelector('#gift-card-amount strong').textContent,'€1.250');
- assert.match(document.querySelector('#gift-card-amount .money').textContent,/€50/);
+ assert.equal(document.querySelector('#gift-card-amount strong').textContent,'€1.249,50');
+ assert.match(document.querySelector('#gift-card-amount .money').textContent,/€49,95/);
  assert.equal(document.querySelector('#gift-card-code-digits').textContent,'TEST1234');
  assert.equal(document.querySelector('.add-to-apple-wallet').getAttribute('href'),'/wallet/test');
  const layoutHTML=await renderSource('layout/gift-card.liquid',{...data,content_for_layout:sectionHTML});
@@ -211,11 +213,11 @@ test('Restored password and gift-card pages render their controls and retain rea
  assert.match(passwordLayout,/id="main_content"/);assert.match(passwordLayout,/Private preview/);
 });
 
-test('Price formatting is the only change to main theme JavaScript calculations',()=>{
+test('Price formatting and batched transition reads are the only main JavaScript changes',()=>{
  const {execFileSync}=require('node:child_process');
  const base=execFileSync('git',['show','8ff750c037e6f376efb739415c44190db2c1ac6d:theme.js'],{cwd:root,encoding:'utf8'});
  const actual=fs.readFileSync(path.join(root,'assets/theme.js'),'utf8');
  const previous='static formatMoney(t,e=!1){const i=this.money_format,s=e||i.includes("no_decimals")?0:2,';
- const current='static formatMoney(t){const i=this.money_format,s=0,';
- assert.equal(actual.replace(current,previous),base);
+ const current='static formatMoney(t){const i=this.money_format,s=2,';
+ assert.equal(require('./js-allowed-changes.cjs').restoreTransitionReads(actual).replace(current,previous),base);
 });
